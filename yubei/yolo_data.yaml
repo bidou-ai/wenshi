@@ -1,0 +1,6 @@
+path: .
+train: train/images
+val: val/images
+names:
+  0: rice
+  1: flower

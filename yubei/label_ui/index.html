@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wenshi 数据标注</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="topbar"><div><span class="eyebrow">WENSHI / YUBEI</span><h1>水稻视觉数据标注</h1></div><div id="progress">0 / 0</div></header>
+  <main class="layout">
+    <aside class="sidebar"><div class="toolbar"><select id="filter"><option value="all">全部图片</option><option value="unlabelled">未标注</option><option value="ambiguous">存在歧义</option><option value="labelled">已标注</option></select><button id="prev">上一张</button><button id="next">下一张</button></div><div id="image-list"></div></aside>
+    <section class="workspace"><div class="canvas-wrap"><canvas id="canvas"></canvas><div id="empty">请选择一张图片开始标注</div></div><div class="controls"><button id="rice" class="class active">rice</button><button id="flower" class="class">flower</button><button id="undo">撤销</button><button id="redo">重做</button><button id="copy">复制上一张框</button><button id="delete">删除选中框</button><button id="skip">跳过/歧义</button><button id="save" class="primary">保存</button></div><p class="hint">拖动鼠标画框；点击已有框可移动。轻微交叠可以分别标注，无法确认归属时标记为歧义。</p></section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

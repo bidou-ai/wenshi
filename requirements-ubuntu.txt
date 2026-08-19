@@ -3,3 +3,7 @@ numpy
 opencv-python
 PyYAML
 
+# Optional visual training/inference dependency. Install on the machine with
+# the available CUDA/CPU build; yubei training prints an actionable error when
+# it is not installed.
+ultralytics
