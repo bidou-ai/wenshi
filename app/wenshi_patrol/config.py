@@ -15,8 +15,15 @@ class ConfigError(ValueError):
 
 DEFAULTS: dict[str, dict[str, Any]] = {
     "camera": {"required_for_route": False},
-    "vision": {"enabled": False, "motion_enable": False, "model_path": ""},
+    "vision": {
+        "enabled": False, "motion_enable": False, "model_path": "", "target_class_names": ["rice"],
+        "stability_window": 5, "stability_min_hits": 3, "station_safety_band_m": 0.50,
+        "dedupe_ttl_s": 7200.0, "neighbor_suppression_radius_m": 0.30,
+        "target_reverse_speed_mps": 0.05, "target_reverse_limit_m": 0.60,
+    },
     "safety": {"reverse_motion_allowed": False, "allow_unverified_reverse": False},
+    "dashboard": {"admin_pin": "", "host": "127.0.0.1", "port": 8088},
+    "patrol_target": {"enabled": False},
 }
 
 
@@ -92,4 +99,3 @@ def require_joint_pose(viewpoints: dict[str, Any], name: str) -> list[float]:
     if not isinstance(joint, list) or len(joint) != 6:
         raise ConfigError(f"示教点 {name} 必须包含 6 个关节角")
     return [float(value) for value in joint]
-

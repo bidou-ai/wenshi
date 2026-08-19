@@ -10,10 +10,31 @@ from typing import Any
 
 
 SIDES = ("right", "left")
+HOME_SAFE_POSE = "home_safe"
 SIDE_POSES = {
     "right": ("camera_right", "right_pre", "right_photo"),
     "left": ("camera_left", "left_pre", "left_photo"),
 }
+
+
+def validate_home_safe(viewpoints: dict[str, Any]) -> list[str]:
+    pose = viewpoints.get(HOME_SAFE_POSE)
+    joint = pose.get("joint") if isinstance(pose, dict) else None
+    if not isinstance(joint, list) or len(joint) != 6:
+        return ["缺少或无效示教点 home_safe"]
+    return []
+
+
+def bounded_composition_delta(side: str, pixel_error: tuple[float, float], limits: dict[str, float]) -> dict[int, float]:
+    if side not in SIDES:
+        raise ValueError(f"unknown side: {side}")
+    horizontal, vertical = (float(pixel_error[0]), float(pixel_error[1]))
+    j4_limit = abs(float(limits.get("j4_deg", 2.0)))
+    j5_limit = abs(float(limits.get("j5_deg", 3.0)))
+    j6_limit = abs(float(limits.get("j6_deg", 1.0)))
+    horizontal = max(-1.0, min(1.0, horizontal))
+    vertical = max(-1.0, min(1.0, vertical))
+    return {3: max(-j4_limit, min(j4_limit, vertical * j4_limit)), 4: max(-j5_limit, min(j5_limit, horizontal * j5_limit)), 5: max(-j6_limit, min(j6_limit, horizontal * j6_limit * 0.5))}
 
 
 def load_fixed_targets(path: str | Path) -> dict[str, Any]:

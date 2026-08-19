@@ -9,7 +9,7 @@ class VisionRunStore:
     def __init__(self, run_dir: str | Path):
         self.run_dir = Path(run_dir).expanduser().resolve()
         if not self.run_dir.name.startswith("run_"):
-            raise ValueError("视觉产物只能写入 runtime/run_* 目录")
+            raise ValueError("视觉产物只能写入 runtime/runs/run_* 目录")
         self.data_dir = self.run_dir / "vision"
         self.image_dir = self.data_dir / "images"
         self.record_path = self.data_dir / "detections.jsonl"
@@ -25,4 +25,3 @@ class VisionRunStore:
             self.image_dir / f"{prefix}_depth.png",
             self.image_dir / f"{prefix}_annotated.jpg",
         )
-

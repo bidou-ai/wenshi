@@ -29,7 +29,7 @@ class RunLogger:
         self.logger.setLevel(logging.INFO)
         self.logger.propagate = False
         formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
-        file_handler = logging.FileHandler(self.run_dir / "demo.log", encoding="utf-8")
+        file_handler = logging.FileHandler(self.run_dir / "system.log", encoding="utf-8")
         file_handler.setFormatter(formatter)
         self.logger.addHandler(file_handler)
 

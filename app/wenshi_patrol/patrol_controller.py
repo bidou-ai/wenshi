@@ -31,6 +31,11 @@ from .map_utils import load_station_poses, make_occupancy_grid, make_station_mar
 from .arm_controller import ArmSweepWorker
 from .vision.frame_policy import FrameStaleError, require_current_color_frame
 from .vision.storage import VisionRunStore
+from .vision.run_store import PatrolRunStore, TargetStore
+from .vision.targeting import side_from_bbox
+from .patrol_target_runtime import PatrolTargetRuntime, RuntimeConfig, TargetEvent
+from .target_task import TargetTask, TaskObservation
+from .near_capture import choose_best_frame
 
 from .control.route_math import (
     Segment,
@@ -53,9 +58,14 @@ TEST_BACKWARD = "TEST_BACKWARD"
 ARM_TEST = "ARM_TEST"
 ARM_HOME = "ARM_HOME"
 ARM_FIXED = "ARM_FIXED"
+TARGET_ALIGN_REVERSE = "TARGET_ALIGN_REVERSE"
+TARGET_RELOCALIZE = "TARGET_RELOCALIZE"
+TARGET_FIXED = "TARGET_FIXED"
+TARGET_RECOVER = "TARGET_RECOVER"
 
 MOTION_STATES = {ROUTE_MOVE, TEST_FORWARD, TEST_BACKWARD}
 ROUTE_STATES = {ROUTE_MOVE, END_PAUSE}
+TARGET_STATES = {TARGET_ALIGN_REVERSE, TARGET_RELOCALIZE, TARGET_FIXED, TARGET_RECOVER}
 
 
 class WenshiPatrolNode(Node):
@@ -95,6 +105,24 @@ class WenshiPatrolNode(Node):
         self._detector: Any | None = None
         self._detector_checked = False
         self._detector_message = ""
+        target_config = config.get("patrol_target", {})
+        self.target_enabled = bool(target_config.get("enabled", False))
+        self._target_runtime = PatrolTargetRuntime(RuntimeConfig(
+            stability_window=int(self.vision.get("stability_window", 5)),
+            stability_min_hits=int(self.vision.get("stability_min_hits", 3)),
+            station_safety_band_m=float(self.vision.get("station_safety_band_m", 0.50)),
+            dedupe_ttl_s=float(self.vision.get("dedupe_ttl_s", 7200.0)),
+            neighbor_suppression_radius_m=float(self.vision.get("neighbor_suppression_radius_m", 0.30)),
+        ))
+        self._target_task: TargetTask | None = None
+        self._target_store: TargetStore | None = None
+        self._target_event: TargetEvent | None = None
+        self._target_frames: list[tuple[np.ndarray, Any, Any]] = []
+        self._target_near_saved = False
+        self._target_near_rounds = 0
+        self._target_reverse_start_along: float | None = None
+        self._target_loop_id = 0
+        self._target_recovery_started = False
 
         logs_root = resolve_config_path(config, str(config["logging"]["root_dir"]))
         self.run_log = RunLogger(logs_root)
@@ -103,6 +131,7 @@ class WenshiPatrolNode(Node):
         self.vision_data_dir = self.vision_store.data_dir
         self.vision_image_dir = self.vision_store.image_dir
         self.vision_log_path = self.vision_store.record_path
+        self.patrol_run_store = PatrolRunStore(self.run_log.run_dir)
 
         agv = config["agv"]
         self.agv_status = AGVStatusClient(
@@ -626,6 +655,14 @@ class WenshiPatrolNode(Node):
             if not ok:
                 self._transition(ERROR, message)
                 return False, message
+            if self.target_enabled:
+                model_path = self._resolve_vision_model_path()
+                if not bool(self.vision.get("enabled", False)):
+                    return False, "patrol_target 已启用，但 vision.enabled 未启用"
+                if not model_path or not Path(model_path).exists():
+                    return False, "patrol_target 已启用，但 rice 模型不存在"
+                if not bool(self.config.get("fixed_approach", {}).get("enabled", False)):
+                    return False, "patrol_target 已启用，但 fixed_approach.enabled 未启用"
 
             status = self.agv_status.get_status()
             first = self.station_order[0]
@@ -640,6 +677,9 @@ class WenshiPatrolNode(Node):
                 self._transition(ERROR, message)
                 return False, message
 
+            self.patrol_run_store.reopen()
+            self._target_runtime.reset_target()
+            self._target_loop_id = 0
             self._route_loop = bool(loop or self.default_loop)
             self._active_segments = make_segments(
                 self.stations,
@@ -744,14 +784,231 @@ class WenshiPatrolNode(Node):
             self.agv_motion.stop()
             self._last_vx = self._last_w = 0.0
             self.arm.stop()
+            self._abort_target(detail)
+            self.patrol_run_store.finish("stopped")
             self._transition(STOPPED, detail)
+
+    def _abort_target(self, reason: str) -> None:
+        if self._target_task is not None:
+            self._target_task.stop(reason)
+        self.arm.stop_target_follow()
+        self._target_task = None
+        self._target_store = None
+        self._target_event = None
+        self._target_frames = []
+        self._target_near_saved = False
+        self._target_near_rounds = 0
+        self._target_reverse_start_along = None
+        self._target_recovery_started = False
+        self._target_runtime.reset_target()
+
+    def _detector_detections(self, image: np.ndarray) -> list[Any]:
+        detector, _message = self._load_detector()
+        if detector is None:
+            return []
+        try:
+            return detector.detect(image.copy())
+        except Exception as exc:
+            self.run_log.event("detector_error", error=str(exc))
+            return []
+
+    def _maybe_start_target(self, status: dict[str, Any], progress) -> bool:
+        if not self.target_enabled or self.state != ROUTE_MOVE:
+            return False
+        color, depth = self._latest_images()
+        if color is None or not self._camera_is_fresh():
+            return False
+        detections = self._detector_detections(color["image"])
+        event = self._target_runtime.observe(
+            color["image"], detections, int(color["image"].shape[1]), int(color["image"].shape[0]),
+            self._route_label(), progress.along_track, self._target_loop_id, time.monotonic(), progress.length,
+        )
+        if event is None:
+            return False
+        target = self.patrol_run_store.create_target()
+        depth_summary = None
+        if depth is not None:
+            from .vision.targeting import robust_bbox_depth
+            depth_summary = robust_bbox_depth(depth["image"], event.detection)
+        target.save_far(color["image"], {
+            "route_segment": event.route_segment,
+            "side": event.side,
+            "along_track_m": event.along_track_m,
+            "bbox": event.detection.to_dict(),
+            "depth": depth_summary.__dict__ if depth_summary else None,
+        }, int(self.vision.get("far_jpeg_quality", 95)))
+        self._target_store = target
+        self._target_event = event
+        self._target_task = TargetTask(
+            event.side,
+            float(self.vision.get("target_reverse_speed_mps", 0.05)),
+            float(self.vision.get("target_reverse_limit_m", 0.60)),
+            float(self.safety.get("camera_timeout_s", 2.0)),
+        )
+        self._target_reverse_start_along = progress.along_track
+        self._target_frames = []
+        self._target_near_saved = False
+        self.agv_motion.stop()
+        self._last_vx = self._last_w = 0.0
+        self.arm.stop()
+        ok, message = self.arm.start_target_follow(int(color["image"].shape[1]))
+        if not ok:
+            self._abort_target(f"J5跟随启动失败: {message}")
+            self._transition(ROUTE_MOVE, "目标任务放弃，继续路线")
+            return False
+        self.run_log.event("target_far_captured", target_id=target.target_id, side=event.side, route_segment=event.route_segment)
+        self._transition(TARGET_ALIGN_REVERSE, f"目标 {target.target_id} {event.side} 侧：受控后退对位（车尾雷达未验证，请人工看护）")
+        return True
+
+    def _begin_target_recovery(self, message: str, fixed_side: str | None = None) -> None:
+        """Return through a known arm path before resuming the original route."""
+        self.agv_motion.stop()
+        self._last_vx = self._last_w = 0.0
+        self.arm.stop()
+        if fixed_side in {"left", "right"}:
+            ok, detail = self.arm.start_retract(fixed_side)
+        else:
+            ok, detail = self.arm.start_centering()
+        if not ok:
+            self._fail(f"目标任务回巡视失败: {detail}; 原因: {message}")
+            return
+        if self._target_store is not None:
+            self._target_store.write_metadata({"status": "failed", "failure_reason": message})
+        self._target_recovery_started = True
+        self._transition(TARGET_RECOVER, f"目标任务失败，回巡视: {message}")
+
+    def _locked_detection(self, image: np.ndarray) -> Any | None:
+        detections = [item for item in self._detector_detections(image) if item.class_name.lower() == "rice"]
+        if not detections or self._target_event is None:
+            return None
+        same_side = [item for item in detections if side_from_bbox(item, image.shape[1]) == self._target_event.side]
+        if not same_side:
+            return None
+        return min(same_side, key=lambda item: abs(item.cx - self._target_event.detection.cx))
+
+    def _run_target_align(self, status: dict[str, Any]):
+        if self._target_task is None or self._target_event is None:
+            self._fail("目标任务状态缺少上下文")
+            return
+        failure = self._runtime_safety(status, require_arm=True)
+        if failure:
+            self._fail(f"目标抵近安全失败: {failure}")
+            return
+        color, depth = self._latest_images()
+        detection = self._locked_detection(color["image"]) if color is not None else None
+        if detection is None:
+            self._begin_target_recovery("目标跟随失败: target_lost")
+            return
+        self.arm.update_target_follow(detection, int(color["image"].shape[1]))
+        from .control.route_math import segment_progress
+        progress = segment_progress(status, self._current_segment(), cross_track_gain=0.0)
+        start = float(self._target_reverse_start_along or progress.along_track)
+        moved = max(0.0, start - progress.along_track)
+        distance_remaining = float(self.vision.get("target_reverse_limit_m", 0.60)) - moved
+        command = self._target_task.tick(TaskObservation(
+            camera_age_s=self._latest_frame_age(color), target_visible=True,
+            distance_remaining_m=distance_remaining, j5_speed_deg_s=0.0,
+            depth_valid=depth is not None, agv_blocked=bool(status.get("blocked")), emergency=bool(status.get("emergency")),
+        ))
+        if command.stop:
+            self.agv_motion.stop()
+            self._last_vx = self._last_w = 0.0
+            if command.state == "RELOCALIZE":
+                self.arm.stop_target_follow()
+                self._transition(TARGET_RELOCALIZE, "后退对位完成，重新确认目标")
+            else:
+                self._fail(f"目标抵近停止: {command.reason}")
+            return
+        self.agv_motion.set_velocity(command.reverse_velocity_mps, 0.0)
+        self._last_vx, self._last_w = command.reverse_velocity_mps, 0.0
+        self.state_detail = f"目标后退对位 moved={moved:.3f}m remaining={distance_remaining:.3f}m J5跟随"
+
+    def _run_target_relocalize(self, status: dict[str, Any]):
+        self.agv_motion.stop()
+        color, depth = self._latest_images()
+        detection = self._locked_detection(color["image"]) if color is not None else None
+        if detection is None or depth is None:
+            self._begin_target_recovery("目标后退后重新定位失败")
+            return
+        side = self._target_event.side if self._target_event else "left"
+        ok, message = self.arm.start_fixed_sequence(side)
+        if not ok:
+            self._fail(f"固定示教启动失败: {message}")
+            return
+        self._transition(TARGET_FIXED, f"固定{side}侧示教靠近")
+
+    def _run_target_fixed(self, status: dict[str, Any]):
+        self.agv_motion.stop()
+        arm = self.arm.snapshot()
+        if arm["state"] == "ERROR":
+            side = self._target_event.side if self._target_event else None
+            self._begin_target_recovery(f"固定抵近失败: {arm['error']}", side)
+            return
+        color, depth = self._latest_images()
+        if arm.get("sequence_phase") == "PHOTO_HOLD" and color is not None and self._target_event is not None:
+            detection = self._locked_detection(color["image"])
+            if detection is not None:
+                from .vision.targeting import robust_bbox_depth
+                summary = robust_bbox_depth(depth["image"], detection) if depth is not None else None
+                self._target_frames.append((color["image"], detection, summary))
+            required = int(self.vision.get("near_burst_count", 5))
+            if len(self._target_frames) >= required and not self._target_near_saved:
+                best = choose_best_frame(self._target_frames, 1, required)
+                max_rounds = max(1, int(self.vision.get("near_retry_rounds", 3)))
+                if best.quality.ok:
+                    self._target_store.save_near(best.image, {"bbox": best.detection.to_dict(), "quality": best.quality.__dict__}, int(self.vision.get("near_jpeg_quality", 95)))
+                    self._target_near_saved = True
+                    self.run_log.event("target_near_captured", target_id=self._target_store.target_id, quality=best.quality.score, round=self._target_near_rounds + 1)
+                elif self._target_near_rounds + 1 < max_rounds:
+                    self._target_near_rounds += 1
+                    self._target_frames = []
+                    side = self._target_event.side if self._target_event else "left"
+                    ok, detail = self.arm.start_fixed_sequence(side, resume=True)
+                    if not ok:
+                        self._begin_target_recovery(f"近拍质量不合格且重拍启动失败: {detail}", side)
+                    else:
+                        self.state_detail = f"近拍质量不合格，重拍第 {self._target_near_rounds + 1}/{max_rounds} 轮"
+                    return
+                else:
+                    self._target_store.write_metadata({"status": "near_failed", "failure_reason": "近拍质量不合格: " + ", ".join(best.quality.reasons)})
+                    self._begin_target_recovery("近拍质量不合格，已达到重拍上限", self._target_event.side if self._target_event else None)
+                    return
+        if arm.get("sequence_completed"):
+            if not self._target_near_saved and self._target_store is not None:
+                self._target_store.write_metadata({"status": "near_failed", "failure_reason": "近拍姿态未获得合格帧"})
+            self.run_log.event("target_task_completed", target_id=self._target_store.target_id if self._target_store else None)
+            self._abort_target("target completed")
+            self._transition(ROUTE_MOVE, "目标任务完成，恢复原方向巡检")
 
     def _fail(self, message: str):
         with self._lock:
             self.agv_motion.stop()
             self._last_vx = self._last_w = 0.0
             self.arm.stop()
+            self.patrol_run_store.finish("error")
             self._transition(ERROR, message)
+
+    def _run_target_recover(self, status: dict[str, Any]):
+        self.agv_motion.stop()
+        self._last_vx = self._last_w = 0.0
+        failure = self._runtime_safety(status, require_arm=False)
+        if failure:
+            self._fail(f"目标回巡视期间安全失败: {failure}")
+            return
+        arm = self.arm.snapshot()
+        if arm["state"] == "ERROR":
+            self._fail(f"目标回巡视失败: {arm['error']}")
+            return
+        if not arm.get("sequence_completed"):
+            self.state_detail = f"底盘停止，目标失败回巡视: {arm['state']}"
+            return
+        self.run_log.event(
+            "target_task_failed_resume",
+            target_id=self._target_store.target_id if self._target_store else None,
+            reason=self._target_store.metadata().get("failure_reason") if self._target_store else None,
+        )
+        self._abort_target("target failed; resumed route")
+        self._transition(ROUTE_MOVE, "目标任务失败已回巡视，恢复原方向巡检")
 
     def _enter_blocked(self, status: dict[str, Any]):
         self._resume_state = self.state
@@ -856,6 +1113,9 @@ class WenshiPatrolNode(Node):
             self._fail(f"横向偏差超过硬限制: {progress.cross_track:.3f}m")
             return
 
+        if self._maybe_start_target(status, progress):
+            return
+
         speed = endpoint_approach_speed(
             distance_m=progress.remaining_along,
             cruise_speed_mps=float(self.control["patrol_speed_mps"]),
@@ -917,10 +1177,12 @@ class WenshiPatrolNode(Node):
         if self._route_index >= len(self._active_segments):
             if self._route_loop:
                 self._route_index = 0
+                self._target_loop_id += 1
             else:
                 self.agv_motion.stop()
                 self._last_vx = self._last_w = 0.0
                 self.arm.stop()
+                self.patrol_run_store.finish("finished")
                 self._transition(
                     STOPPED,
                     f"wens1 路线完成，已到 {self.station_order[-1]}",
@@ -989,6 +1251,14 @@ class WenshiPatrolNode(Node):
                 self._run_route_state(status)
             elif state == END_PAUSE:
                 self._handle_end_pause(status)
+            elif state == TARGET_ALIGN_REVERSE:
+                self._run_target_align(status)
+            elif state == TARGET_RELOCALIZE:
+                self._run_target_relocalize(status)
+            elif state == TARGET_FIXED:
+                self._run_target_fixed(status)
+            elif state == TARGET_RECOVER:
+                self._run_target_recover(status)
             elif state in {TEST_FORWARD, TEST_BACKWARD}:
                 self._run_test_state(status, state)
             elif state == ARM_TEST:
@@ -1190,6 +1460,12 @@ class WenshiPatrolNode(Node):
                 pass
             try:
                 self.arm.cleanup()
+            except Exception:
+                pass
+            try:
+                run = json.loads(self.patrol_run_store.run_path.read_text(encoding="utf-8"))
+                if run.get("status") == "running":
+                    self.patrol_run_store.finish("terminated")
             except Exception:
                 pass
             self.agv_motion.disconnect()

@@ -5,6 +5,8 @@ from __future__ import annotations
 import math
 from typing import Any
 
+import threading
+
 
 FORWARD_TO_LM5 = 1
 BACKWARD_TO_LM4 = -1
@@ -18,6 +20,40 @@ def reverse_motion_allowed(safety: dict) -> bool:
     rear_verified = bool(safety.get("rear_radar_verified", False))
     unverified_override = bool(safety.get("allow_unverified_reverse", False))
     return reverse_enabled and (rear_verified or unverified_override)
+
+
+class MotionOwner:
+    """Exclusive owner token for JAKA/AGV task-level commands."""
+
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._owner: str | None = None
+
+    def acquire(self, owner: str) -> bool:
+        with self._lock:
+            if self._owner is not None:
+                return self._owner == owner
+            self._owner = str(owner)
+            return True
+
+    def release(self, owner: str) -> None:
+        with self._lock:
+            if self._owner == owner:
+                self._owner = None
+
+    def assert_owner(self, owner: str) -> None:
+        with self._lock:
+            if self._owner != owner:
+                raise RuntimeError(f"motion owner is {self._owner!r}, not {owner!r}")
+
+
+def reverse_target_velocity(state: str, distance_remaining_m: float, configured_speed_mps: float, hard_limit_m: float) -> float:
+    if state != "ALIGN_REVERSE":
+        raise ValueError("negative velocity is only permitted in ALIGN_REVERSE")
+    distance = float(distance_remaining_m)
+    if distance <= 0.0 or distance > float(hard_limit_m):
+        return 0.0
+    return -min(abs(float(configured_speed_mps)), 0.05)
 
 
 def unverified_reverse_override_active(safety: dict) -> bool:

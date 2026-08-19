@@ -8,10 +8,12 @@ from typing import Any
 from .config import load_viewpoints, require_joint_pose, resolve_config_path
 from .fixed_approach import (
     SIDE_POSES,
+    HOME_SAFE_POSE,
     plan_home_return,
     plan_teach_return,
 )
 from .jaka import JakaClient
+from .target_follow import TargetFollowController
 
 
 class ArmSweepWorker:
@@ -24,6 +26,7 @@ class ArmSweepWorker:
         self.left: list[float] = []
         self.right: list[float] = []
         self.fixed_poses: dict[str, list[float]] = {}
+        self.home_safe: list[float] = []
         self.reload_viewpoints()
         self.move_speed = float(arm.get("move_to_camera_speed_deg_s", 20.0))
         self.center_tolerance = float(arm.get("center_tolerance_deg", 5.0))
@@ -64,6 +67,13 @@ class ArmSweepWorker:
         self._sequence_side: str | None = None
         self._sequence_phase = ""
         self._sequence_completed = False
+        self._follow_detection = None
+        self._follow_image_width = 0
+        self._follow_controller = TargetFollowController(
+            gain=float(arm.get("target_follow_gain", 0.8)),
+            max_speed_deg_s=float(arm.get("target_follow_max_speed_deg_s", 10.0)),
+            deadband_ratio=float(arm.get("target_follow_deadband_ratio", 0.03)),
+        )
 
     def reload_viewpoints(self):
         viewpoints = load_viewpoints(self.config)
@@ -77,6 +87,9 @@ class ArmSweepWorker:
             viewpoints, str(self.arm_config.get("right_pose", "camera_right"))
         )
         self.fixed_poses = {}
+        home_pose = viewpoints.get(HOME_SAFE_POSE)
+        if isinstance(home_pose, dict) and isinstance(home_pose.get("joint"), list) and len(home_pose["joint"]) == 6:
+            self.home_safe = [float(value) for value in home_pose["joint"]]
         for names in SIDE_POSES.values():
             for name in names:
                 pose = viewpoints.get(name)
@@ -261,6 +274,55 @@ class ArmSweepWorker:
         with self._lock:
             if self._state != "ERROR":
                 self._state = "STOPPED"
+
+    def start_target_follow(self, image_width: int) -> tuple[bool, str]:
+        with self._lock:
+            if self._thread and self._thread.is_alive():
+                return False, "机械臂已有动作线程"
+            snapshot = self.client.snapshot()
+            if not snapshot["connected"] or not snapshot["joint"]:
+                return False, "JAKA 未连接或无关节状态"
+            self._follow_image_width = int(image_width)
+            self._follow_detection = None
+            self._stop.clear()
+            self._state = "TARGET_FOLLOW"
+            self._error = ""
+            self._sequence_completed = False
+            self._thread = threading.Thread(target=self._run_target_follow, name="j5-target-follow", daemon=True)
+            self._thread.start()
+        return True, "J5 目标跟随已启动"
+
+    def update_target_follow(self, detection, image_width: int | None = None) -> None:
+        with self._lock:
+            self._follow_detection = detection
+            if image_width is not None:
+                self._follow_image_width = int(image_width)
+
+    def stop_target_follow(self) -> None:
+        self.stop()
+
+    def _run_target_follow(self):
+        while not self._stop.wait(0.10):
+            with self._lock:
+                detection = self._follow_detection
+                width = self._follow_image_width
+            if detection is None or width <= 0:
+                continue
+            snapshot = self.client.snapshot()
+            joint = snapshot.get("joint")
+            if not joint or len(joint) != 6:
+                self._set_state("ERROR", "目标跟随时无有效关节状态")
+                return
+            command = self._follow_controller.update(detection, width, 0.10)
+            if abs(command.speed_deg_s) <= 1e-6:
+                continue
+            target = list(joint)
+            target[4] += command.speed_deg_s * 0.10
+            if not self.client.joint_move(target, max(abs(command.speed_deg_s), 1.0), self.accel, timeout=1.0):
+                if not self._stop.is_set():
+                    self._set_state("ERROR", self.client.last_error or "J5 目标跟随失败")
+                return
+        self._set_state("STOPPED")
 
     def cleanup(self):
         self.stop()

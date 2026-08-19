@@ -30,3 +30,15 @@ cd /home/ubuntu/jaka/wenshi
 `start` 要求底盘位于 LM1 附近、AGV 定位新鲜且无报警、JAKA 可读关节并处于巡视姿态。
 `goto home` 不是通用避障规划，只能从已知示教回撤通道或近端姿态执行。
 
+正式目标任务在 `config/wenshi.yaml` 的 `patrol_target.enabled` 下单独受控。启用前必须同时满足视觉模型存在、
+固定抵近示教已验证、J5 跟随和相机画面方向已现场确认。运行时顺序为：远端 rice 初筛 -> 锁定一株并记录路线段/左右侧/前后顺序
+-> 低速目标对齐 -> 当前近拍姿态连拍并只保留质量最高的一张 -> 继续原路线。普通巡检路线段不允许倒车；
+目标对齐阶段的慢速后退是独立状态，仍受 `vision.target_reverse_speed_mps`、`vision.target_reverse_limit_m` 和停止条件约束。
+
+结果查看后台：
+
+```bash
+python3 dashboard/server.py --root runtime/runs --host 127.0.0.1 --port 8088
+```
+
+浏览器打开 `http://127.0.0.1:8088/`。后台没有运动控制接口；管理员 PIN 只用于软删除目标/运行和重置本次去重标记。

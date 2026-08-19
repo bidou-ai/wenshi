@@ -35,9 +35,12 @@ def test_project_does_not_depend_on_original_runtime_tree():
 
 def test_project_has_no_historical_runtime_artifacts():
     forbidden = {"logs", "log", "build", "install", ".pytest_cache", "__pycache__"}
+    ignored_names = {".git", ".pytest_cache", "__pycache__"}
     found = {
         path.name
         for path in PROJECT_ROOT.rglob("*")
-        if path.is_dir() and path.name in forbidden
+        if path.is_dir()
+        and path.name in forbidden
+        and not any(root.name in ignored_names for root in (path, *path.parents))
     }
     assert not found

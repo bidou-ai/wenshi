@@ -46,12 +46,27 @@ vision:
   enabled: false
   motion_enable: false
   data_dir: "../runtime"
+  target_root: "../runtime/runs"
   image_dir: "images"
   log_file: "detections.jsonl"
   model_path: ""
   conf_threshold: 0.35
   depth_max_lag_s: 1.0
-  target_class_names: ["rice_marker", "white_marker", "anther", "pin", "target", "marker"]
+  target_class_names: ["rice"]
+  stability_window: 5
+  stability_min_hits: 3
+  station_safety_band_m: 0.50
+  dedupe_ttl_s: 7200.0
+  neighbor_suppression_radius_m: 0.30
+  far_jpeg_quality: 95
+  near_jpeg_quality: 95
+  near_retry_rounds: 3
+  near_burst_count: 5
+  target_follow_gain: 0.8
+  target_follow_max_speed_deg_s: 10.0
+  target_follow_deadband_ratio: 0.03
+  target_reverse_speed_mps: 0.05
+  target_reverse_limit_m: 0.60
 
 map:
   smap_file: "../map/wenshi.smap"
@@ -87,6 +102,14 @@ fixed_approach:
   max_joint_step_deg: 120.0
   teach_return_corridor_deg: 15.0
   home_nearby_tolerance_deg: 35.0
+
+dashboard:
+  admin_pin: ""
+  host: "127.0.0.1"
+  port: 8088
+
+patrol_target:
+  enabled: false
 
 safety:
   status_timeout_s: 0.60

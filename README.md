@@ -15,7 +15,11 @@
 ./scripts/start_wenshi.sh
 ```
 
-控制台命令、硬件前置条件和故障处理见 [操作手册](docs/OPERATIONS.md)。
+控制台命令、硬件前置条件和故障处理见 [操作手册](docs/OPERATIONS.md)；完整的软件、控制和数据流程见
+[用户手册](docs/USER_MANUAL.md)。巡检结果后台可用 `python3 dashboard/server.py --root runtime/runs` 启动。
+
+准备工具全部位于独立的 `yubei/`，可单独用于相机/网络/设备检查、YOLO 数据集采集、框选标注、数据集验证和训练，
+不会被正式巡检运行时导入。
 
 Ubuntu 的 Python 依赖见 `requirements-ubuntu.txt`；Windows D435 服务的依赖见
 `windows/requirements-windows.txt`。模型、数据集和标定文件不纳入源码仓库。
