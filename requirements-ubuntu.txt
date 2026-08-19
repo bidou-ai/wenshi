@@ -1,0 +1,5 @@
+# ROS2 Humble 的 rclpy、消息包和 RViz 请使用系统 apt 安装。
+numpy
+opencv-python
+PyYAML
+

@@ -1,0 +1,112 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+  - Class: rviz_common/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 0.5
+      Cell Size: 1
+      Class: rviz_default_plugins/Grid
+      Color: 160; 160; 164
+      Enabled: true
+      Line Style:
+        Line Width: 0.03
+        Value: Lines
+      Name: Grid
+      Plane: XY
+      Plane Cell Count: 40
+      Reference Frame: <Fixed Frame>
+      Value: true
+    - Alpha: 0.75
+      Class: rviz_default_plugins/Map
+      Color Scheme: map
+      Draw Behind: true
+      Enabled: true
+      Name: Corridor Map
+      Topic:
+        Depth: 1
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /map
+      Update Topic: /map_updates
+      Value: true
+    - Class: rviz_default_plugins/Pose
+      Alpha: 1
+      Axes Length: 0.6
+      Axes Radius: 0.08
+      Color: 255; 50; 50
+      Enabled: true
+      Head Length: 0.3
+      Head Radius: 0.12
+      Name: AGV Pose
+      Shaft Length: 0.5
+      Shaft Radius: 0.05
+      Shape: Arrow
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /rice/chassis/pose
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: LM Stations
+      Namespaces:
+        route_edges: true
+        station_labels: true
+        stations: true
+      Topic:
+        Depth: 1
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /rice/patrol/map_markers
+      Value: true
+    - Class: rviz_default_plugins/Image
+      Enabled: true
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: D435 RGB
+      Normalize Range: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /camera/color/image_raw
+      Value: true
+  Enabled: true
+  Global Options:
+    Background Color: 45; 45; 48
+    Fixed Frame: map
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+  Value: true
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 7
+      Focal Point:
+        X: 1.0
+        Y: -1.1
+        Z: 0
+      Name: Current View
+      Pitch: 1.5708
+      Target Frame: <Fixed Frame>
+      Value: Orbit
+      Yaw: 0
+    Saved: ~
+Window Geometry:
+  Height: 900
+  Width: 1400
+  X: 60
+  Y: 60

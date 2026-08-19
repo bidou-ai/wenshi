@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+pytest-of-*/
+runtime/*
+!runtime/.gitkeep
+models/*
+!models/README.md
+datasets/*
+!datasets/README.md
+calibration/*
+!calibration/README.md
+*.log

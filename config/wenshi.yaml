@@ -1,0 +1,115 @@
+# Wens1 正式配置。相对路径均相对于本文件所在目录解析。
+agv:
+  ip: "192.168.192.5"
+  status_port: 19204
+  motion_port: 19205
+  status_interval_ms: 200
+  status_response_timeout_s: 0.8
+  connect_timeout_s: 3.0
+
+jaka:
+  ip: "192.168.192.160"
+  port: 10001
+  viewpoints_file: "viewpoints.json"
+  center_pose: "camera"
+  left_pose: "camera_left"
+  right_pose: "camera_right"
+  connect_timeout_s: 3.0
+  move_to_camera_speed_deg_s: 60.0
+  center_tolerance_deg: 5.0
+  startup_pose_tolerance_deg: 5.0
+  startup_joint_wait_s: 1.0
+  sweep_speed_deg_s: 60.0
+  accel_deg_s2: 80.0
+  joint_tolerance_deg: 0.5
+  command_interval_s: 0.10
+  motion_start_wait_s: 0.50
+  motion_stall_timeout_s: 10.0
+  motion_progress_epsilon_deg: 0.05
+  motion_progress_log_s: 5.0
+  motion_timeout_s: 120.0
+  fixed_transition_speed_deg_s: 60.0
+  fixed_approach_speed_deg_s: 50.0
+  fixed_photo_speed_deg_s: 40.0
+  fixed_retract_speed_deg_s: 50.0
+
+camera:
+  server_url: "http://192.168.192.203:18080"
+  rate_hz: 10.0
+  timeout_s: 1.5
+  startup_wait_s: 3.0
+  frame_max_age_s: 1.0
+  required_for_route: false
+  frame_id: "camera_color_optical_frame"
+
+vision:
+  enabled: false
+  motion_enable: false
+  data_dir: "../runtime"
+  image_dir: "images"
+  log_file: "detections.jsonl"
+  model_path: ""
+  conf_threshold: 0.35
+  depth_max_lag_s: 1.0
+  target_class_names: ["rice_marker", "white_marker", "anther", "pin", "target", "marker"]
+
+map:
+  smap_file: "../map/wenshi.smap"
+
+route:
+  station_order: ["LM1", "LM4", "LM3", "LM2"]
+  loop: false
+  start_station_tolerance_m: 0.35
+
+control:
+  rate_hz: 20.0
+  patrol_speed_mps: 0.25
+  test_speed_mps: 0.05
+  test_max_distance_m: 0.50
+  endpoint_tolerance_m: 0.10
+  endpoint_slowdown_distance_m: 0.60
+  endpoint_min_speed_mps: 0.025
+  endpoint_pause_s: 0.70
+  linear_accel_limit_mps2: 0.12
+  angular_accel_limit_rad_s2: 0.45
+  cross_track_gain: 0.80
+  heading_gain: 1.60
+  max_angular_speed_rad_s: 0.35
+  correction_threshold_m: 0.04
+  rotate_in_place_threshold_deg: 30.0
+  heading_slowdown_threshold_deg: 10.0
+  min_heading_scale: 0.20
+
+fixed_approach:
+  enabled: false
+  targets_file: "fixed_targets.json"
+  photo_hold_s: 3.0
+  max_joint_step_deg: 120.0
+  teach_return_corridor_deg: 15.0
+  home_nearby_tolerance_deg: 35.0
+
+safety:
+  status_timeout_s: 0.60
+  camera_timeout_s: 2.0
+  camera_recovery_s: 2.0
+  camera_fail_s: 5.0
+  command_watchdog_s: 0.30
+  hard_cross_track_m: 0.25
+  blocked_clear_s: 2.0
+  rear_radar_verified: false
+  reverse_motion_allowed: false
+  allow_unverified_reverse: false
+
+topics:
+  map: "/map"
+  markers: "/rice/patrol/map_markers"
+  agv_pose: "/rice/chassis/pose"
+  state: "/rice/system/state"
+  color: "/camera/color/image_raw"
+  depth: "/camera/aligned_depth_to_color/image_raw"
+  camera_info: "/camera/color/camera_info"
+  camera_status: "/rice/camera/status"
+
+logging:
+  root_dir: "../runtime"
+  sample_period_s: 0.20
