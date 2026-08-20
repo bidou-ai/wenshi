@@ -6,7 +6,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_manual_mentions_required_runtime_operations():
     text = (ROOT / "docs" / "USER_MANUAL.md").read_text(encoding="utf-8")
-    for item in ("yubei", "runtime/runs", "events.jsonl", "camera.log", "agv.csv", "jaka.csv", "LM1 -> LM4 -> LM3 -> LM2", "J5跟随", "管理员 PIN", "--preview"):
+    for item in ("yubei", "runtime/runs", "events.jsonl", "camera.log", "agv.csv", "jaka.csv", "LM1 -> LM4 -> LM3 -> LM2", "J5跟随", "管理员 PIN", "--preview", "start_dashboard.sh", "127.0.0.1"):
         assert item in text
 
 

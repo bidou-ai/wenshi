@@ -44,7 +44,8 @@ Wi-Fi 密码只保护 Wi-Fi 加入权限；外部 SSH 是否能连取决于公�
 结果查看后台：
 
 ```bash
-python3 dashboard/server.py --root runtime/runs --host 127.0.0.1 --port 8088
+./scripts/start_dashboard.sh
 ```
 
-浏览器打开 `http://127.0.0.1:8088/`。后台没有运动控制接口；管理员 PIN 只用于软删除目标/运行和重置本次去重标记。
+脚本会在 Ubuntu 本机启动后台并尝试自动打开浏览器，地址为 `http://127.0.0.1:8088/`；终端保持运行，按 `Ctrl+C` 停止。
+后台没有运动控制接口；管理员 PIN 只用于软删除目标/运行和重置本次去重标记。

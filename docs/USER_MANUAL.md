@@ -222,23 +222,26 @@ ToDesk 通常由设备主动连接服务，因此一般不需要为 Ubuntu 单�
 
 ### 9.3 远程后台
 
-后台默认只绑定 `127.0.0.1`，适合在 Ubuntu 本机或 ToDesk 中查看：
+当前阶段后台只在 Ubuntu 本机打开，不做局域网和公网暴露。使用一键脚本：
 
 ```bash
-python3 dashboard/server.py --root runtime/runs --host 127.0.0.1 --port 8088
+cd /home/ubuntu/jaka/wenshi
+./scripts/start_dashboard.sh
 ```
 
-以后如果需要从外部浏览器直接打开后台，必须额外提供网络入站路径并增加后台认证；在此之前通过 SSH 端口转发或 ToDesk 查看，不把后台端口直接暴露给公网。
+脚本会启动后台服务、自动打开 Ubuntu 本机浏览器，并在终端显示 `http://127.0.0.1:8088/`。终端保持运行，按 `Ctrl+C` 停止后台。
+后台服务本身由 `dashboard/server.py` 提供，浏览器页面位于 `dashboard/static/`；普通使用者不需要单独运行 Python 文件。
 
 ## 10. 后台
 
 默认本机访问：
 
 ```bash
-python3 dashboard/server.py --root runtime/runs --host 127.0.0.1 --port 8088
+./scripts/start_dashboard.sh
 ```
 
-温室局域网访问时显式绑定工作站地址或 `0.0.0.0`，不要映射到公网。后台展示当前/历史巡检、目标计数、路线段、侧别、远景/近景、质量和失败原因，不提供运动按钮。
+后台展示当前/历史巡检、目标计数、路线段、侧别、远景/近景、质量和失败原因，不提供运动按钮。
+前期不配置外部浏览器访问；需要远程查看时使用 ToDesk 进入 Ubuntu 桌面。
 
 ## 11. 故障恢复
 
