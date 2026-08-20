@@ -30,6 +30,12 @@ cd /home/ubuntu/jaka/wenshi
 `start` 要求底盘位于 LM1 附近、AGV 定位新鲜且无报警、JAKA 可读关节并处于巡视姿态。
 `goto home` 不是通用避障规划，只能从已知示教回撤通道或近端姿态执行。
 
+网络布局必须保持为“两条路径”：Ubuntu 网卡 A 连接机器人内部网，Ubuntu 网卡 B 通过工作站 Wi-Fi 上公网。
+AGV、JAKA 和机器人上的 Windows 相机电脑不进入公网；网卡 A 不设置默认网关，默认路由只放在网卡 B。
+
+外部 SSH 不是由“Ubuntu 能上网”自动产生的。要从温室外 SSH，公网路由器还必须把端口转发到 Ubuntu；如果 Wi-Fi 没有公网 IPv4 或运营商使用 CGNAT，则普通公网 SSH 不成立。ToDesk 可用于远程查看桌面，机器人设备不安装 ToDesk。
+Wi-Fi 密码只保护 Wi-Fi 加入权限；外部 SSH 是否能连取决于公网地址、端口转发和 Ubuntu 的 SSH 服务。
+
 正式目标任务在 `config/wenshi.yaml` 的 `patrol_target.enabled` 下单独受控。启用前必须同时满足视觉模型存在、
 固定抵近示教已验证、J5 跟随和相机画面方向已现场确认。运行时顺序为：远端 rice 初筛 -> 锁定一株并记录路线段/左右侧/前后顺序
 -> 低速目标对齐 -> 当前近拍姿态连拍并只保留质量最高的一张 -> 继续原路线。普通巡检路线段不允许倒车；

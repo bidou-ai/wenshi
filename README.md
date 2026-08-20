@@ -18,6 +18,8 @@
 控制台命令、硬件前置条件和故障处理见 [操作手册](docs/OPERATIONS.md)；完整的软件、控制和数据流程见
 [用户手册](docs/USER_MANUAL.md)。巡检结果后台可用 `python3 dashboard/server.py --root runtime/runs` 启动。
 
+联网布局、Ubuntu 双网卡、外部 SSH 和 ToDesk 的边界见用户手册第 4、9 节：机器人设备保持内部网，只有 Ubuntu 通过 Wi-Fi/NAT 上公网。
+
 准备工具全部位于独立的 `yubei/`，可单独用于相机/网络/设备检查、YOLO 数据集采集、框选标注、数据集验证和训练，
 不会被正式巡检运行时导入。
 
