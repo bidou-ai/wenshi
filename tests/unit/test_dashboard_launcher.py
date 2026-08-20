@@ -19,3 +19,10 @@ def test_dashboard_launcher_does_not_bind_external_interfaces_by_default():
     text = (ROOT / "scripts" / "start_dashboard.sh").read_text(encoding="utf-8")
     assert "0.0.0.0" not in text
     assert "--host \"$HOST\"" in text
+
+
+def test_dashboard_launcher_bypasses_http_proxy_for_local_health_check():
+    text = (ROOT / "scripts" / "start_dashboard.sh").read_text(encoding="utf-8")
+    assert "no_proxy" in text
+    assert "NO_PROXY" in text
+    assert "ProxyHandler({})" in text

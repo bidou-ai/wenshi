@@ -8,6 +8,9 @@ RUN_ROOT="${WENSHI_RUN_ROOT:-$ROOT/runtime/runs}"
 URL="http://${HOST}:${PORT}/"
 LOG_PATH="$ROOT/runtime/dashboard.log"
 
+export no_proxy="${no_proxy:+$no_proxy,}127.0.0.1,localhost"
+export NO_PROXY="${NO_PROXY:+$NO_PROXY,}127.0.0.1,localhost"
+
 mkdir -p "$RUN_ROOT" "$(dirname "$LOG_PATH")"
 cd "$ROOT"
 
@@ -37,7 +40,8 @@ import urllib.request
 
 host, port = sys.argv[1:]
 try:
-    with urllib.request.urlopen(f"http://{host}:{port}/", timeout=0.3) as response:
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+    with opener.open(f"http://{host}:{port}/", timeout=0.3) as response:
         raise SystemExit(0 if response.status == 200 else 1)
 except Exception:
     raise SystemExit(1)
