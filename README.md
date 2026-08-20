@@ -23,3 +23,6 @@
 
 Ubuntu 的 Python 依赖见 `requirements-ubuntu.txt`；Windows D435 服务的依赖见
 `windows/requirements-windows.txt`。模型、数据集和标定文件不纳入源码仓库。
+
+GitHub 私有仓库的首次配置、日常同步、换电脑恢复和错误处理见
+[GitHub 同步操作手册](docs/GITHUB_SYNC.md)。

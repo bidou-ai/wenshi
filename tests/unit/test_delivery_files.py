@@ -20,3 +20,12 @@ def test_chinese_handover_documents_and_windows_server_exist():
         assert (ROOT / "docs" / name).is_file()
     assert (ROOT / "windows" / "windows_realsense_server.py").is_file()
 
+
+def test_github_sync_guide_and_offline_ci_exist():
+    guide = ROOT / "docs" / "GITHUB_SYNC.md"
+    workflow = ROOT / ".github" / "workflows" / "tests.yml"
+    assert guide.is_file()
+    assert workflow.is_file()
+    workflow_text = workflow.read_text(encoding="utf-8")
+    assert "python -m pytest -q" in workflow_text
+    assert "PYTHONPATH" in workflow_text
