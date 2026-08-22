@@ -80,8 +80,9 @@ def main(argv=None) -> int:
     args = parser.parse_args(argv)
     if args.preview:
         return preview(args.url, args.timeout)
-    print(json.dumps(probe_camera(args.url, args.samples, args.interval, args.timeout), ensure_ascii=False, indent=2))
-    return 0
+    report = probe_camera(args.url, args.samples, args.interval, args.timeout)
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+    return 0 if report.get("ok") else 1
 
 
 if __name__ == "__main__":

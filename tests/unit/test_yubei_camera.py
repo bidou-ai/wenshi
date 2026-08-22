@@ -5,6 +5,7 @@ from contextlib import contextmanager
 import cv2
 import numpy as np
 
+import yubei.camera_check as camera_check
 from yubei.http_camera import HttpCameraClient
 
 
@@ -77,3 +78,13 @@ def test_camera_client_rejects_bad_packet():
         assert "decode" in str(exc).lower()
     else:
         raise AssertionError("bad frame was accepted")
+
+
+def test_camera_check_main_returns_failure_when_probe_is_not_ok(monkeypatch):
+    monkeypatch.setattr(
+        camera_check,
+        "probe_camera",
+        lambda *_args, **_kwargs: {"ok": False, "health_error": "offline", "samples": []},
+    )
+
+    assert camera_check.main(["--samples", "1"]) == 1

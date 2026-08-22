@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 import pytest
 
+import yubei.dataset_validate as dataset_validate
 from yubei.dataset_validate import split_images, validate_dataset, write_yolo_dataset_yaml
 from yubei.publish_model import publish_model
 
@@ -26,6 +27,19 @@ def test_validate_dataset_accepts_valid_yolo_files(tmp_path):
     assert report.ok is True
     assert report.image_count == 3
     assert report.label_count == 3
+    assert report.class_counts == {"rice": 3, "flower": 0}
+
+
+def test_validate_dataset_counts_flower_boxes(tmp_path):
+    root = _dataset(tmp_path, 1)
+    (root / "labels" / "00.txt").write_text(
+        "0 0.5 0.5 0.5 0.5\n1 0.4 0.4 0.1 0.1\n",
+        encoding="utf-8",
+    )
+
+    report = validate_dataset(root)
+
+    assert report.class_counts == {"rice": 1, "flower": 1}
 
 
 def test_validate_dataset_rejects_out_of_range_box(tmp_path):
@@ -34,6 +48,20 @@ def test_validate_dataset_rejects_out_of_range_box(tmp_path):
     report = validate_dataset(root)
     assert report.ok is False
     assert any("range" in issue for issue in report.issues)
+
+
+def test_validate_dataset_rejects_empty_or_all_excluded_session(tmp_path):
+    empty = _dataset(tmp_path / "empty", 0)
+    assert validate_dataset(empty).ok is False
+
+    excluded = _dataset(tmp_path / "excluded", 1)
+    (excluded / "labels" / "00.json").write_text(
+        json.dumps({"image": "00.jpg", "status": "ambiguous", "boxes": []}),
+        encoding="utf-8",
+    )
+    report = validate_dataset(excluded)
+    assert report.ok is False
+    assert any("trainable" in issue for issue in report.issues)
 
 
 def test_split_is_deterministic_and_disjoint(tmp_path):
@@ -52,6 +80,55 @@ def test_write_yaml_contains_classes(tmp_path):
     assert "rice" in text and "flower" in text
 
 
+def test_prepare_creates_train_val_tree_and_excludes_ambiguous_images(tmp_path):
+    root = _dataset(tmp_path, 4)
+    for index in range(4):
+        status = "ambiguous" if index == 3 else "labelled"
+        (root / "labels" / f"{index:02d}.json").write_text(
+            json.dumps({"image": f"{index:02d}.jpg", "status": status, "boxes": []}),
+            encoding="utf-8",
+        )
+    output = tmp_path / "prepared"
+
+    result = dataset_validate.prepare_yolo_dataset(root, output, val_ratio=0.34, seed=17)
+
+    prepared_images = list((output / "train" / "images").glob("*.jpg")) + list(
+        (output / "val" / "images").glob("*.jpg")
+    )
+    assert result["included_images"] == 3
+    assert result["excluded_images"] == 1
+    assert len(prepared_images) == 3
+    assert not any(path.name == "03.jpg" for path in prepared_images)
+    assert (output / "data.yaml").is_file()
+    assert str(output.resolve()) in (output / "data.yaml").read_text(encoding="utf-8")
+
+
+def test_prepare_stratifies_flower_images_between_train_and_val(tmp_path):
+    root = _dataset(tmp_path, 6)
+    for index in (0, 1):
+        (root / "labels" / f"{index:02d}.txt").write_text(
+            "0 0.5 0.5 0.5 0.5\n1 0.4 0.4 0.1 0.1\n",
+            encoding="utf-8",
+        )
+    output = tmp_path / "prepared"
+
+    result = dataset_validate.prepare_yolo_dataset(root, output, val_ratio=0.25, seed=4)
+
+    train_has_flower = any(
+        line.startswith("1 ")
+        for path in (output / "train" / "labels").rglob("*.txt")
+        for line in path.read_text(encoding="utf-8").splitlines()
+    )
+    val_has_flower = any(
+        line.startswith("1 ")
+        for path in (output / "val" / "labels").rglob("*.txt")
+        for line in path.read_text(encoding="utf-8").splitlines()
+    )
+    assert train_has_flower is True
+    assert val_has_flower is True
+    assert result["class_counts"]["flower"] == 2
+
+
 def test_publish_model_archives_existing_and_writes_sha(tmp_path):
     source = tmp_path / "best.pt"
     source.write_bytes(b"model-v2")
@@ -68,5 +145,5 @@ def test_publish_model_archives_existing_and_writes_sha(tmp_path):
 
 
 def test_publish_refuses_non_pt(tmp_path):
-    with pytest.raises(ValueError, match="\.pt"):
+    with pytest.raises(ValueError, match=r"\.pt"):
         publish_model(tmp_path / "best.onnx", tmp_path / "models", {})

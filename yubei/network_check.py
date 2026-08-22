@@ -32,7 +32,10 @@ def probe_tcp(host: str, port: int, timeout_s: float) -> ProbeResult:
 
 def default_route() -> str | None:
     """Return the local source address used for a public UDP route probe."""
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    except OSError:
+        return None
     try:
         sock.connect(("192.0.2.1", 9))
         return str(sock.getsockname()[0])
@@ -65,4 +68,3 @@ def main(argv=None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

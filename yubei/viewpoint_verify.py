@@ -6,6 +6,7 @@ import argparse
 from dataclasses import dataclass, field
 from datetime import datetime
 import json
+import math
 from pathlib import Path
 import shutil
 
@@ -27,16 +28,27 @@ def verify_viewpoints(path: Path, max_joint_step_deg: float = 120.0) -> Verifica
     except (OSError, json.JSONDecodeError) as exc:
         return VerificationReport(False, [f"无法读取示教文件: {exc}"])
     errors = []
+    joints: dict[str, list[float]] = {}
     for name in VIEWPOINT_NAMES:
         entry = value.get(name) if isinstance(value, dict) else None
         joint = entry.get("joint") if isinstance(entry, dict) else None
         if not isinstance(joint, list) or len(joint) != 6:
             errors.append(f"缺少或无效示教点: {name}")
+            continue
+        try:
+            converted = [float(item) for item in joint]
+        except (TypeError, ValueError):
+            errors.append(f"示教点关节值无效: {name}")
+            continue
+        if not all(math.isfinite(item) for item in converted):
+            errors.append(f"示教点关节值无效: {name}")
+            continue
+        joints[name] = converted
     for left, right in zip(VIEWPOINT_NAMES, VIEWPOINT_NAMES[1:]):
-        first = value.get(left, {}).get("joint") if isinstance(value, dict) else None
-        second = value.get(right, {}).get("joint") if isinstance(value, dict) else None
-        if isinstance(first, list) and isinstance(second, list) and len(first) == len(second) == 6:
-            delta = max(abs(float(second[i]) - float(first[i])) for i in range(6))
+        first = joints.get(left)
+        second = joints.get(right)
+        if first is not None and second is not None:
+            delta = max(abs(second[i] - first[i]) for i in range(6))
             if delta > float(max_joint_step_deg):
                 errors.append(f"{left}->{right} 关节变化 {delta:.1f}deg 超过 {float(max_joint_step_deg):.1f}deg")
     return VerificationReport(not errors, errors)

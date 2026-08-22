@@ -22,7 +22,6 @@ DEFAULTS: dict[str, dict[str, Any]] = {
         "target_reverse_speed_mps": 0.05, "target_reverse_limit_m": 0.60,
     },
     "safety": {"reverse_motion_allowed": False, "allow_unverified_reverse": False},
-    "dashboard": {"admin_pin": "", "host": "127.0.0.1", "port": 8088},
     "patrol_target": {"enabled": False},
 }
 

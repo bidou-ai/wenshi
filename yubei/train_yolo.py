@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 from datetime import datetime
 from pathlib import Path
+import sys
 
 
 def run_training(args: argparse.Namespace) -> int:
@@ -27,9 +28,12 @@ def main(argv=None) -> int:
     parser.add_argument("--imgsz", type=int, default=640)
     parser.add_argument("--device", default="cpu")
     args = parser.parse_args(argv)
-    return run_training(args)
+    try:
+        return run_training(args)
+    except RuntimeError as exc:
+        print(f"训练未启动: {exc}", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+import cv2
+import numpy as np
 import pytest
 
 from yubei.label_server import LabelStore
@@ -11,8 +13,31 @@ def _session(tmp_path: Path) -> Path:
     (root / "images").mkdir(parents=True)
     (root / "labels").mkdir()
     (root / "ambiguous").mkdir()
-    (root / "images" / "a.jpg").write_bytes(b"not-an-image-but-a-fixture")
+    assert cv2.imwrite(str(root / "images" / "a.jpg"), np.zeros((1000, 1000, 3), dtype=np.uint8))
     return root
+
+
+def test_label_store_exposes_capture_batch_metadata(tmp_path):
+    root = _session(tmp_path)
+    (root / "manifest.json").write_text(
+        json.dumps({"images": [{"filename": "images/a.jpg", "capture_tag": "flower", "seq": 9}]}),
+        encoding="utf-8",
+    )
+    item = LabelStore(root).list_images()[0]
+    assert item["capture_tag"] == "flower"
+    assert item["seq"] == 9
+
+
+def test_label_store_preserves_nested_capture_metadata(tmp_path):
+    root = _session(tmp_path)
+    (root / "images" / "nested").mkdir()
+    cv2.imwrite(str(root / "images" / "nested" / "a.jpg"), np.zeros((1000, 1000, 3), dtype=np.uint8))
+    (root / "manifest.json").write_text(
+        json.dumps({"images": [{"filename": "images/nested/a.jpg", "capture_tag": "flower"}]}),
+        encoding="utf-8",
+    )
+    item = next(value for value in LabelStore(root).list_images() if value["name"] == "nested/a.jpg")
+    assert item["capture_tag"] == "flower"
 
 
 def test_label_store_lists_images_and_round_trips_boxes(tmp_path):
@@ -21,7 +46,8 @@ def test_label_store_lists_images_and_round_trips_boxes(tmp_path):
     store.save("a.jpg", [{"class_name": "rice", "x": 10, "y": 20, "width": 100, "height": 200}], "labelled")
     value = store.load("a.jpg")
     assert value["boxes"][0]["class_name"] == "rice"
-    output = store.export_yolo("a.jpg", image_width=1000, image_height=1000)
+    output = store.labels_dir / "a.txt"
+    assert output.is_file()
     assert output.read_text(encoding="utf-8").strip() == "0 0.06 0.12 0.1 0.2"
 
 
@@ -38,3 +64,13 @@ def test_label_store_rejects_out_of_bounds_box(tmp_path):
     with pytest.raises(ValueError, match="bounds"):
         store.save("a.jpg", [{"class_name": "rice", "x": -1, "y": 0, "width": 2, "height": 2}], "labelled")
 
+
+def test_ambiguous_image_cannot_keep_a_trainable_yolo_label(tmp_path):
+    store = LabelStore(_session(tmp_path))
+    box = {"class_name": "rice", "x": 10, "y": 20, "width": 100, "height": 200}
+    store.save("a.jpg", [box], "labelled")
+    assert (store.labels_dir / "a.txt").is_file()
+
+    store.save("a.jpg", [box], "ambiguous")
+
+    assert not (store.labels_dir / "a.txt").exists()

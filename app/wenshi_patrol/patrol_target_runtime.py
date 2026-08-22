@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import json
+from pathlib import Path
 
 import numpy as np
 
@@ -37,6 +39,7 @@ class PatrolTargetRuntime:
         self.dedupe = DedupeRegistry(config.dedupe_ttl_s, config.neighbor_suppression_radius_m)
         self.locked_side: str | None = None
         self.locked_key: TargetKey | None = None
+        self._last_reset_request_id = ""
 
     def detection_allowed(self, segment: str, along_track_m: float, segment_length_m: float) -> bool:
         band = max(float(self.config.station_safety_band_m), 0.0)
@@ -46,6 +49,24 @@ class PatrolTargetRuntime:
         self.tracker.reset()
         self.locked_side = None
         self.locked_key = None
+
+    def reject_current(self) -> None:
+        if self.locked_key is not None:
+            self.dedupe.forget(self.locked_key)
+        self.reset_target()
+
+    def apply_reset_marker(self, marker: Path) -> bool:
+        try:
+            value = json.loads(Path(marker).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return False
+        request_id = str(value.get("request_id", "")).strip() if isinstance(value, dict) else ""
+        if not request_id or request_id == self._last_reset_request_id:
+            return False
+        self.dedupe.reset()
+        self.reset_target()
+        self._last_reset_request_id = request_id
+        return True
 
     def observe(self, image: np.ndarray, detections: list[Detection], image_width: int, image_height: int, segment: str, along_track_m: float, loop_id: int, now: float, segment_length_m: float | None = None) -> TargetEvent | None:
         del image

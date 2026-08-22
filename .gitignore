@@ -11,3 +11,8 @@ datasets/*
 calibration/*
 !calibration/README.md
 *.log
+yubei/data/
+yubei/datasets/
+yubei/training/
+yubei/backups/
+yubei/viewpoints_staged.json

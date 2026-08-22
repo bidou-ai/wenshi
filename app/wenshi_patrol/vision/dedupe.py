@@ -64,3 +64,7 @@ class DedupeRegistry:
     def reset(self) -> None:
         self._selected.clear()
         self._deferred.clear()
+
+    def forget(self, key: TargetKey) -> None:
+        self._selected = [item for item in self._selected if item.key != key]
+        self._deferred = [item for item in self._deferred if item.key != key]

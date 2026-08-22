@@ -13,6 +13,7 @@
 | 远程查看 Ubuntu 图形界面 | 第 9 节 ToDesk |
 | 查看巡检照片和后台 | 第 10 节 后台 |
 | 处理断网、断流或误配置 | 第 11 节 故障恢复 |
+| 明天按顺序做现场验收 | [现场测试清单](FIELD_TEST_CHECKLIST.md) |
 
 ## 1. 项目边界
 
@@ -25,6 +26,19 @@ LM1 -> LM4 -> LM3 -> LM2 -> LM1 -> ...
 ```
 
 正常路线只向前行驶。检测到水稻后进入受控目标任务，允许底盘低速后退对位；普通路线和普通手动测试不开放倒车。后退时 J5 实时跟随目标，完成后执行锁定侧的机械臂示教路径并恢复原方向。
+
+当前代码已经包含目标选择、远近景质量检查、2小时去重、当前圈30cm邻株暂缓、J5跟随、固定示教抵近、失败回撤和后台整理；但当前配置故意保持以下状态：
+
+| 条件 | 当前值 | 结论 |
+|---|---|---|
+| rice 模型 | 未发布 | 不能做真实 rice 初筛 |
+| 八点示教 | 正式文件缺 `home_safe` | 不能启用固定抵近 |
+| `vision.enabled` | `false` | 识别关闭 |
+| `fixed_approach.enabled` | `false` | 抵近关闭 |
+| `patrol_target.enabled` | `false` | 目标任务关闭 |
+| 倒车安全锁 | 未放行 | 目标对齐后退关闭 |
+
+因此，基础路线可以单独验收，完整视觉抵近必须等上述项目和现场距离标定通过后再启用。
 
 ## 2. 控制框架
 
@@ -44,8 +58,10 @@ LM1 -> LM4 -> LM3 -> LM2 -> LM1 -> ...
 wenshi/runtime/runs/run_<timestamp>/
   run.json                 # 运行状态和开始/结束时间
   events.jsonl             # 状态、检测、抵近、失败、管理员事件
-  demo.log 或 system.log   # 主程序日志（旧兼容日志可能叫 demo.log）
-  camera.log               # D435 HTTP/桥接日志
+  system.log               # 控制器事件和硬件状态日志
+  console.log              # 控制台输出和 Python 异常
+  camera.log               # D435 桥内部日志
+  camera_console.log       # 相机桥标准输出和异常
   agv.csv                  # AGV状态和速度命令采样
   jaka.csv                 # JAKA关节状态采样
   targets/T0001/
@@ -107,40 +123,52 @@ Ubuntu 虚拟机需要两张网卡：
 ### 4.4 只做连通性检查
 
 ```bash
-ip -4 -br address
-ip route
-ip route get 192.168.192.5
-ip route get 192.168.192.160
-ip route get 192.168.192.203
-ip route get 1.1.1.1
-python3 yubei/network_check.py
-python3 yubei/camera_check.py --url http://192.168.192.203:18080 --samples 10
+./yubei/start_yubei.sh check
 ```
 
-前三个机器人地址必须走网卡 A；`1.1.1.1` 必须走网卡 B。Windows D435 服务仍需在相机电脑上人工启动，Ubuntu 只检查它是否在线。
+这个入口从 `config/wenshi.yaml` 读取 AGV、JAKA 和 D435 地址，执行默认路由、TCP 端口、D435
+健康状态和连续帧解码检查。Windows D435 服务仍需在相机电脑上人工启动，Ubuntu 只检查它是否在线。
+遇到网络布局问题时，再用 `ip -4 -br address`、`ip route` 和 `ip route get` 做底层诊断；这些不是日常启动步骤。
 
 ## 5. yubei 数据集采集和标注
 
+所有预备工具统一从一个文件进入：
+
 ```bash
-python3 yubei/dataset_capture.py --output yubei/data --preview
+./yubei/start_yubei.sh
 ```
+
+如果当天只采照片，不需要 AGV/JAKA 全设备检查，使用 `./yubei/start_yubei.sh camera-check`；该命令只访问
+Windows D435 服务，不发送任何机器人运动指令。完整 `check` 才会同时检查 AGV、JAKA 和 D435。
+
+菜单选择“回车采集 RGB 数据集”。专门采集开花照片时直接运行 `./yubei/start_yubei.sh capture --focus flower`。
+预览中回车保存当前帧；`f`、`r`、`n` 只切换后续照片的批次标记，`q` 结束。
 
 实时窗口只显示 RGB。输入回车保存一张 JPG；中间可以人工移动机械臂；输入 `q` 结束。每个 bbox 是一个完整水稻植株，一个图片允许多个 bbox。轻微交叠分别标注，严重交叠选择歧义，不合成一个框。
 
 启动标注网页：
 
-```bash
-python3 yubei/label_server.py --session yubei/data/dataset_<timestamp>
-```
+采集结束先运行 `./yubei/start_yubei.sh audit`，检查模糊、曝光异常和重复图。菜单选择“标注最新数据集”，或运行
+`./yubei/start_yubei.sh label`。脚本自动选择最新会话并打开本地浏览器。
 
-网页支持画框、移动/删除、撤销/重做、复制上一张框、缩放、rice/flower、歧义跳过和 YOLO TXT 导出。初期只标 rice。
+网页支持按开花/水稻批次筛选、画框、移动/删除、撤销/重做、复制上一张框、选中框改类别、保存并下一张、
+rice/flower、歧义跳过和 YOLO TXT 导出。初期可先标 rice，同时对有明确花部的照片标 `flower`。
 
 ## 6. 检查、训练和发布
 
+菜单依次选择“验证并生成训练数据集”和“训练 YOLO 模型”，对应直接命令为：
+
 ```bash
-python3 yubei/dataset_validate.py yubei/data/dataset_<timestamp>
-python3 yubei/train_yolo.py --data yubei/yolo_data.yaml --device cpu --epochs 100
-python3 yubei/publish_model.py yubei/training/<timestamp>/weights/best.pt --models models
+./yubei/start_yubei.sh prepare
+./yubei/start_yubei.sh train
+```
+
+`prepare` 只纳入状态为 `labelled` 的图片，排除 `ambiguous`、`skipped` 和未标注图片，生成独立的
+`yubei/datasets/<会话_时间>/train/`、`val/` 和可直接训练的 `data.yaml`。静态示例 YAML 不再作为训练入口。
+训练不会自动覆盖正式模型；人工确认评估结果后从同一菜单选择“发布已确认的模型”，或执行：
+
+```bash
+./yubei/start_yubei.sh publish-model yubei/training/<训练名>/weights/best.pt --confirm
 ```
 
 训练不会自动覆盖正式模型；发布会计算 SHA256 并备份旧模型。当前 Ubuntu 在 VMware 中，显卡方案见 `liuyi666.md`。
@@ -154,24 +182,26 @@ home_safe, camera, camera_left, camera_right,
 left_pre, left_photo, right_pre, right_photo
 ```
 
-读取/保存示教点：
+菜单选择“依次保存八个示教点”，或运行：
 
 ```bash
-python3 yubei/teach_viewpoints.py --output yubei/viewpoints_staged.json --name camera --save
-python3 yubei/viewpoint_verify.py yubei/viewpoints_staged.json
+./yubei/start_yubei.sh teach
+./yubei/start_yubei.sh verify
 ```
 
-工具不会自动上电或使能。验证通过后，显式发布才覆盖正式 `config/viewpoints.json`，旧文件会备份到 `yubei/backups/`。如果没有现场保存的 `home_safe`，不得伪造或启用固定抵近。
+工具不会自动上电或使能。验证通过后，用菜单“发布已验证的示教点”或
+`./yubei/start_yubei.sh publish-viewpoints --confirm` 才覆盖正式 `config/viewpoints.json`，旧文件会备份到 `yubei/backups/`。如果没有现场保存的 `home_safe`，不得伪造或启用固定抵近。
 
 ## 8. 正式巡检
 
-启动前：
+正式巡检只启动一个文件：
 
 ```bash
-./scripts/check_environment.sh
-./scripts/check_hardware_links.sh
 ./scripts/start_wenshi.sh
 ```
+
+脚本内部顺序固定为 ROS2 加载 -> 离线配置/地图/示教检查 -> AGV/JAKA/D435 连通检查 -> 创建唯一
+`run_id` -> 相机桥/RViz/控制器。只检查使用 `./scripts/start_wenshi.sh --check`。
 
 控制台命令包括 `start`（一圈）、`start loop`（循环）、`status`、`stop`、`goto home`、`collect`、`detect`、`test arm`、固定抵近测试和 `q`。初步 Demo 启用视觉和固定抵近前，必须完成模型、八点示教、相机和人工看护验证。
 
@@ -205,9 +235,9 @@ SSH 成功后的查看位置：
 
 ```bash
 cd /home/ubuntu/jaka/wenshi
-tail -f runtime/runs/run_*/system.log
 ls -lt runtime/runs
-python3 dashboard/server.py --root runtime/runs --host 127.0.0.1 --port 8088
+tail -f runtime/runs/run_<终端中看到的具体时间>/system.log
+tail -f runtime/runs/run_<终端中看到的具体时间>/console.log
 ```
 
 ### 9.2 ToDesk
@@ -243,9 +273,15 @@ cd /home/ubuntu/jaka/wenshi
 后台展示当前/历史巡检、目标计数、路线段、侧别、远景/近景、质量和失败原因，不提供运动按钮。
 前期不配置外部浏览器访问；需要远程查看时使用 ToDesk 进入 Ubuntu 桌面。
 
+默认不设置管理员 PIN 时，所有查看功能可用，删除与去重重置明确禁用。需要管理功能时启动：
+
+```bash
+WENSHI_ADMIN_PIN='现场设置的PIN' ./scripts/start_dashboard.sh
+```
+
 ## 11. 故障恢复
 
-- 相机断流：立即停止相关运动，查看 `camera.log` 和 Windows服务 `/health`，恢复后由人工决定是否结束本次运行。
+- 相机断流：立即停止相关运动，查看 `camera.log`、`camera_console.log` 和 Windows服务 `/health`，恢复后由人工决定是否结束本次运行。
 - 目标丢失：抵近后退立即停底盘，目标任务通过已知回撤/巡视路径回到巡视姿态，并沿正方向继续；失败原因写入目标 metadata。
 - AGV阻挡/急停：AGV和JAKA都停，排除现场原因后重新执行前置检查。
 - JAKA错误或路径不在回撤通道：不得强行发送下一点，保存日志并人工回到安全姿态。
@@ -262,3 +298,6 @@ python3 dashboard/cleanup.py --root runtime/runs --execute run_<timestamp> --con
 ```
 
 清理工具拒绝正在运行的目录、路径穿越和不完整确认。不要对 `runtime/` 根目录使用递归删除。
+
+Windows 相机电脑日常只需双击 `windows/start_camera_server.bat`。第一次缺依赖时按窗口提示执行一次
+`py -m pip install -r requirements-windows.txt`，之后不要再用多条命令启动服务。

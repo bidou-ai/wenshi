@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 from pathlib import Path
 
 from .config import ConfigError, load_config, load_viewpoints, resolve_config_path
+from .controller_math import reverse_motion_allowed
 from .control.route_math import make_segments
 from .control.route_policy import RoutePolicyError, validate_route
-from .fixed_approach import validate_side_arm_path
+from .fixed_approach import validate_home_safe, validate_side_arm_path
 from .map_utils import load_station_poses
 
 
@@ -37,8 +39,33 @@ def validate_project(config_path: str | Path) -> list[str]:
         maximum = float(config.get("fixed_approach", {}).get("max_joint_step_deg", 120.0))
         for side in ("right", "left"):
             errors.extend(validate_side_arm_path(viewpoints, side, maximum))
+        if bool(config.get("fixed_approach", {}).get("enabled", False)) or bool(
+            config.get("patrol_target", {}).get("enabled", False)
+        ):
+            errors.extend(validate_home_safe(viewpoints))
     except (ConfigError, OSError, ValueError) as exc:
         errors.append(f"示教点无效: {exc}")
+
+    if bool(config.get("patrol_target", {}).get("enabled", False)):
+        vision = config.get("vision", {})
+        if not bool(vision.get("enabled", False)):
+            errors.append("patrol_target 已启用，但 vision.enabled 未启用")
+        model_value = str(vision.get("model_path", "")).strip()
+        if not model_value:
+            errors.append("patrol_target 已启用，但未配置 rice 模型")
+        else:
+            try:
+                model_path = resolve_config_path(config, model_value)
+                if not model_path.is_file():
+                    errors.append(f"patrol_target 模型文件不存在: {model_path}")
+                elif importlib.util.find_spec("ultralytics") is None:
+                    errors.append("patrol_target 已启用，但当前 Python 环境未安装 ultralytics")
+            except ConfigError as exc:
+                errors.append(f"patrol_target 模型路径无效: {exc}")
+        if not bool(config.get("fixed_approach", {}).get("enabled", False)):
+            errors.append("patrol_target 已启用，但 fixed_approach.enabled 未启用")
+        if not reverse_motion_allowed(config.get("safety", {})):
+            errors.append("patrol_target 已启用，但目标对齐倒车安全锁未放行")
 
     return errors
 
@@ -57,4 +84,3 @@ def main(argv=None):
 
 if __name__ == "__main__":
     main()
-

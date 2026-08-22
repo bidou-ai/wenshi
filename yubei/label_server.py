@@ -9,7 +9,9 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 import posixpath
 import shutil
+import threading
 from urllib.parse import parse_qs, unquote, urlparse
+import webbrowser
 
 import cv2
 
@@ -41,8 +43,21 @@ class LabelStore:
         self.images_dir = (self.root / "images").resolve()
         self.labels_dir = (self.root / "labels").resolve()
         self.ambiguous_dir = (self.root / "ambiguous").resolve()
+        self._capture_metadata: dict[str, dict] = {}
         if not self.images_dir.is_dir() or not self.labels_dir.is_dir():
             raise ValueError("session must contain images/ and labels/")
+        manifest_path = self.root / "manifest.json"
+        if manifest_path.exists():
+            try:
+                manifest = load_json(manifest_path)
+                for item in manifest.get("images", []):
+                    filename = str(item.get("filename", ""))
+                    if filename.startswith("images/"):
+                        filename = filename.removeprefix("images/")
+                    if filename:
+                        self._capture_metadata[filename] = dict(item)
+            except (OSError, ValueError, json.JSONDecodeError):
+                self._capture_metadata = {}
 
     def _image_path(self, name: str) -> Path:
         path = _safe_name(self.images_dir, name)
@@ -52,7 +67,13 @@ class LabelStore:
 
     def _label_path(self, name: str) -> Path:
         image = self._image_path(name)
-        return self.labels_dir / f"{image.stem}.json"
+        relative = image.relative_to(self.images_dir)
+        return self.labels_dir / relative.with_suffix(".json")
+
+    def _yolo_path(self, name: str) -> Path:
+        image = self._image_path(name)
+        relative = image.relative_to(self.images_dir)
+        return self.labels_dir / relative.with_suffix(".txt")
 
     def _dimensions(self, name: str) -> tuple[int, int] | None:
         image = cv2.imread(str(self._image_path(name)), cv2.IMREAD_UNCHANGED)
@@ -70,18 +91,33 @@ class LabelStore:
                 label = self.load(name)
             except ValueError:
                 label = {"status": "unlabelled", "boxes": []}
-            values.append({"name": name, "status": label["status"], "box_count": len(label["boxes"])})
+            capture = self._capture_metadata.get(name, {})
+            values.append({
+                "name": name,
+                "status": label["status"],
+                "box_count": len(label["boxes"]),
+                "capture_tag": capture.get("capture_tag", "neutral"),
+                "seq": capture.get("seq"),
+                "quality": capture.get("quality"),
+                "duplicate_of": capture.get("duplicate_of", ""),
+            })
         return values
 
     def load(self, name: str) -> dict:
         self._image_path(name)
         path = self._label_path(name)
         if not path.exists():
-            return {"image": name, "status": "unlabelled", "boxes": []}
+            return {
+                "image": name,
+                "status": "unlabelled",
+                "boxes": [],
+                "capture": self._capture_metadata.get(name, {}),
+            }
         value = load_json(path)
         value.setdefault("image", name)
         value.setdefault("status", "unlabelled")
         value.setdefault("boxes", [])
+        value.setdefault("capture", self._capture_metadata.get(name, {}))
         self._validate(name, value["boxes"], value["status"])
         return value
 
@@ -125,6 +161,11 @@ class LabelStore:
                 "updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             },
         )
+        yolo_path = self._yolo_path(name)
+        if status == "labelled":
+            self.export_yolo(name)
+        elif yolo_path.exists():
+            yolo_path.unlink()
         if status == "ambiguous":
             self.ambiguous_dir.mkdir(parents=True, exist_ok=True)
 
@@ -134,7 +175,8 @@ class LabelStore:
         width, height = dimensions or (image_width, image_height)
         if not width or not height:
             raise ValueError("image dimensions are required for YOLO export")
-        output = self.labels_dir / f"{Path(name).stem}.txt"
+        output = self._yolo_path(name)
+        output.parent.mkdir(parents=True, exist_ok=True)
         lines = []
         for box in label["boxes"]:
             x = float(box["x"])
@@ -219,6 +261,7 @@ def main(argv=None) -> int:
     parser.add_argument("--session", type=Path, required=True)
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8090)
+    parser.add_argument("--open-browser", action="store_true")
     args = parser.parse_args(argv)
     store = LabelStore(args.session)
     handler = type("YubeiLabelHandler", (LabelRequestHandler,), {})
@@ -226,6 +269,11 @@ def main(argv=None) -> int:
     handler.static_dir = Path(__file__).resolve().parent / "label_ui"
     server = ThreadingHTTPServer((args.host, args.port), handler)
     print(f"标注网页: http://{args.host}:{args.port}/")
+    if args.open_browser:
+        threading.Timer(
+            0.2,
+            lambda: webbrowser.open(f"http://{args.host}:{args.port}/"),
+        ).start()
     try:
         server.serve_forever()
     except KeyboardInterrupt:

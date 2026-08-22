@@ -97,16 +97,10 @@ control:
 
 fixed_approach:
   enabled: false
-  targets_file: "fixed_targets.json"
   photo_hold_s: 3.0
   max_joint_step_deg: 120.0
   teach_return_corridor_deg: 15.0
   home_nearby_tolerance_deg: 35.0
-
-dashboard:
-  admin_pin: ""
-  host: "127.0.0.1"
-  port: 8088
 
 patrol_target:
   enabled: false

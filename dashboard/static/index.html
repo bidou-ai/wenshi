@@ -1,3 +1,173 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Wenshi 巡检后台</title><link rel="stylesheet" href="/style.css"></head>
-<body><header><div><span>WENSHI / PATROL</span><h1>巡检结果</h1></div><div class="header-actions"><button id="admin">管理员</button><button id="refresh">刷新</button></div></header><main><aside><h2>巡检记录</h2><div id="runs"></div></aside><section><div id="summary"></div><div id="targets"></div><div id="detail"><p>选择一株水稻查看远景、近景、质量和路线段。</p></div></section></main><dialog id="adminDialog"><form method="dialog"><h2>管理员操作</h2><label>PIN <input id="pin" type="password" inputmode="numeric" autocomplete="off"></label><div class="dialog-actions"><button value="cancel">取消</button><button id="login" value="default">登录</button></div><p id="adminStatus" class="muted"></p></form></dialog><script src="/app.js"></script></body></html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Wenshi 温室巡检</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="product-title">
+        <p>WENSHI PATROL</p>
+        <h1>温室巡检复核台</h1>
+      </div>
+
+      <div class="run-control">
+        <label for="runSelector">巡检批次</label>
+        <select id="runSelector" aria-label="选择巡检批次">
+          <option value="">正在读取巡检记录</option>
+        </select>
+        <span id="selectedRun">未选择</span>
+      </div>
+
+      <div class="connection-panel">
+        <div id="systemStatus" class="connection-state status-neutral" role="status">
+          <span class="status-dot" aria-hidden="true"></span>
+          <strong id="systemStatusText">正在连接</strong>
+        </div>
+        <div class="refresh-meta">
+          <span>最后更新</span>
+          <strong id="lastRefresh">--:--:--</strong>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="admin" class="button button-quiet" type="button">管理员</button>
+        <button id="refresh" class="button button-primary" type="button">
+          <span class="button-symbol" aria-hidden="true">↻</span>
+          <span>刷新</span>
+        </button>
+      </div>
+    </header>
+
+    <div id="errorBanner" class="error-banner" role="alert" hidden></div>
+
+    <section class="overview-strip" aria-label="本次巡检概览">
+      <div class="overview-identity">
+        <span class="overview-label">本次巡检</span>
+        <strong id="overviewTitle">等待巡检数据</strong>
+      </div>
+      <div id="summary" class="overview-values" role="status" aria-live="polite">
+        <div><span>运行状态</span><strong>等待数据</strong></div>
+        <div><span>识别植株</span><strong>0 株</strong></div>
+        <div><span>近景完成</span><strong>0 株</strong></div>
+        <div><span>异常</span><strong>0 项</strong></div>
+        <div><span>当前路线段</span><strong>--</strong></div>
+      </div>
+    </section>
+
+    <main class="workbench-grid">
+      <aside id="targetNavigator" class="target-navigator" aria-labelledby="targetNavigatorTitle">
+        <div class="navigator-heading">
+          <div>
+            <p class="section-code">PLANT INDEX</p>
+            <h2 id="targetNavigatorTitle">逐株记录</h2>
+          </div>
+          <strong id="targetCount">0 株</strong>
+        </div>
+
+        <div id="targetFilters" class="target-filters" role="group" aria-label="目标筛选">
+          <button class="filter-button selected" type="button" data-filter="all" aria-pressed="true">全部</button>
+          <button class="filter-button" type="button" data-filter="complete" aria-pressed="false">已完成</button>
+          <button class="filter-button" type="button" data-filter="issues" aria-pressed="false">异常</button>
+        </div>
+
+        <div id="targets" class="plant-records" aria-live="polite">
+          <div class="navigator-empty">选择巡检批次后查看目标</div>
+        </div>
+      </aside>
+
+      <section id="inspectionWorkspace" class="inspection-workspace" aria-labelledby="inspectionTitle">
+        <header class="inspection-header">
+          <div class="inspection-title-block">
+            <p class="section-code">PLANT REVIEW</p>
+            <div class="inspection-title-line">
+              <h2 id="inspectionTitle">目标详情</h2>
+              <span id="inspectionStatus" class="status-tag status-neutral">等待选择</span>
+            </div>
+            <p id="inspectionLocation">选择一株水稻开始复核</p>
+          </div>
+          <div class="target-stepper" aria-label="连续浏览目标">
+            <button id="previousTarget" class="step-button" type="button" disabled>
+              <span aria-hidden="true">←</span>
+              <span>上一株</span>
+            </button>
+            <span id="targetPosition">0 / 0</span>
+            <button id="nextTarget" class="step-button" type="button" disabled>
+              <span>下一株</span>
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </header>
+
+        <div id="photoComparison" class="photo-comparison" aria-label="远景与近景对比">
+          <section id="farViewport" class="photo-pane photo-pane-far" aria-label="远景定位影像">
+            <header class="photo-pane-header">
+              <div><span class="photo-index">A</span><strong>远景 · 定位影像</strong></div>
+              <span>等待目标</span>
+            </header>
+            <div class="image-stage"><div class="image-placeholder">远景未加载</div></div>
+            <footer class="photo-pane-footer"><span>路线段位置</span><strong>--</strong></footer>
+          </section>
+
+          <section id="nearViewport" class="photo-pane photo-pane-near" aria-label="近景花期复核影像">
+            <header class="photo-pane-header">
+              <div><span class="photo-index">B</span><strong>近景 · 花期复核</strong></div>
+              <span>等待目标</span>
+            </header>
+            <div class="image-stage"><div class="image-placeholder">近景未加载</div></div>
+            <footer class="photo-pane-footer"><span>图像质量</span><strong>--</strong></footer>
+          </section>
+        </div>
+
+        <section class="evidence-section" aria-labelledby="evidenceTitle">
+          <div class="evidence-heading">
+            <div>
+              <p class="section-code">INSPECTION EVIDENCE</p>
+              <h3 id="evidenceTitle">巡检证据</h3>
+            </div>
+            <div id="adminTools" class="admin-tools" hidden>
+              <button id="resetDedupe" class="button button-quiet" type="button">重置本次去重</button>
+              <button id="deleteTarget" class="button button-danger" type="button">删除此目标</button>
+            </div>
+          </div>
+          <dl id="evidence" class="evidence-table">
+            <div><dt>目标编号</dt><dd>--</dd></div>
+            <div><dt>拍摄时间</dt><dd>--</dd></div>
+            <div><dt>路线段位置</dt><dd>--</dd></div>
+            <div><dt>图像质量</dt><dd>--</dd></div>
+            <div class="evidence-wide"><dt>异常说明</dt><dd>无</dd></div>
+          </dl>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="imageDialog" class="image-dialog" aria-labelledby="imageDialogTitle">
+    <div class="image-dialog-header">
+      <h2 id="imageDialogTitle">查看原图</h2>
+      <button id="closeImage" class="icon-button" type="button" aria-label="关闭原图">×</button>
+    </div>
+    <img id="imageDialogImage" alt="巡检原图">
+  </dialog>
+
+  <dialog id="adminDialog" class="admin-dialog" aria-labelledby="adminDialogTitle">
+    <form method="dialog">
+      <p class="section-code">ADMINISTRATION</p>
+      <h2 id="adminDialogTitle">管理员登录</h2>
+      <label class="field-label" for="pin">管理员 PIN</label>
+      <input id="pin" type="password" inputmode="numeric" autocomplete="off">
+      <p id="adminStatus" class="form-status" role="status"></p>
+      <div class="dialog-actions">
+        <button class="button button-quiet" value="cancel">取消</button>
+        <button id="login" class="button button-primary" value="default">登录</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -2,6 +2,7 @@ import math
 
 import pytest
 
+import wenshi_patrol.controller_math as controller_math
 from wenshi_patrol.controller_math import (
     BACKWARD_TO_LM4,
     FORWARD_TO_LM5,
@@ -32,6 +33,17 @@ def test_reverse_uses_wenshi_configuration_key():
     assert reverse_motion_allowed(
         {"rear_radar_verified": True, "reverse_motion_allowed": True}
     )
+
+
+def test_target_patrol_always_requires_fresh_camera_on_route():
+    assert controller_math.route_camera_required({}, target_enabled=True) is True
+    assert controller_math.route_camera_required({"required_for_route": True}, target_enabled=False) is True
+    assert controller_math.route_camera_required({"required_for_route": False}, target_enabled=False) is False
+
+
+def test_reverse_distance_accepts_zero_as_a_real_start_position():
+    assert controller_math.reverse_distance_travelled(0.0, -0.2) == pytest.approx(0.2)
+    assert controller_math.reverse_distance_travelled(1.0, 1.1) == 0.0
 
 
 def test_endpoint_speed_slows_before_stop():

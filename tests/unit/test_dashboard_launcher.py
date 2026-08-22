@@ -26,3 +26,11 @@ def test_dashboard_launcher_bypasses_http_proxy_for_local_health_check():
     assert "no_proxy" in text
     assert "NO_PROXY" in text
     assert "ProxyHandler({})" in text
+
+
+def test_dashboard_launcher_passes_explicit_admin_pin_setting():
+    text = (ROOT / "scripts" / "start_dashboard.sh").read_text(encoding="utf-8")
+
+    assert "WENSHI_ADMIN_PIN" in text
+    assert '--pin "$ADMIN_PIN"' in text
+    assert '>>"$LOG_PATH"' in text

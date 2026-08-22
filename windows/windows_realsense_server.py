@@ -6,9 +6,9 @@ Run this on the robot Windows computer that has the USB RealSense connected:
     pip install flask opencv-python numpy pyrealsense2
     python windows_realsense_server.py --host 0.0.0.0 --port 18080
 
-The Ubuntu workstation can then consume:
-    http://192.168.192.2:18080/frame
-    http://192.168.192.2:18080/stream.mjpg
+The Ubuntu workstation can then consume (with the current project addressing):
+    http://192.168.192.203:18080/frame
+    http://192.168.192.203:18080/stream.mjpg
 """
 
 from __future__ import annotations

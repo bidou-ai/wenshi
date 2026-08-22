@@ -25,7 +25,12 @@ from visualization_msgs.msg import MarkerArray
 
 from .agv import AGVMotionClient, AGVStatusClient
 from .config import load_config, resolve_config_path
-from .controller_math import reverse_motion_allowed, slew_rate
+from .controller_math import (
+    reverse_distance_travelled,
+    reverse_motion_allowed,
+    route_camera_required,
+    slew_rate,
+)
 from .logging_utils import RunLogger
 from .map_utils import load_station_poses, make_occupancy_grid, make_station_markers
 from .arm_controller import ArmSweepWorker
@@ -35,7 +40,7 @@ from .vision.run_store import PatrolRunStore, TargetStore
 from .vision.targeting import side_from_bbox
 from .patrol_target_runtime import PatrolTargetRuntime, RuntimeConfig, TargetEvent
 from .target_task import TargetTask, TaskObservation
-from .near_capture import choose_best_frame
+from .near_capture import accept_near_frame, choose_best_frame, near_burst_action
 
 from .control.route_math import (
     Segment,
@@ -117,9 +122,11 @@ class WenshiPatrolNode(Node):
         self._target_task: TargetTask | None = None
         self._target_store: TargetStore | None = None
         self._target_event: TargetEvent | None = None
+        self._target_locked_detection: Any | None = None
         self._target_frames: list[tuple[np.ndarray, Any, Any]] = []
         self._target_near_saved = False
         self._target_near_rounds = 0
+        self._target_last_frame_stamp_s: float | None = None
         self._target_reverse_start_along: float | None = None
         self._target_loop_id = 0
         self._target_recovery_started = False
@@ -623,7 +630,7 @@ class WenshiPatrolNode(Node):
         return None
 
     def _camera_required_for_state(self, state: str) -> bool:
-        return bool(self.camera_config.get("required_for_route", False)) and state in {
+        return route_camera_required(self.camera_config, self.target_enabled) and state in {
             ROUTE_MOVE,
             END_PAUSE,
         }
@@ -646,7 +653,7 @@ class WenshiPatrolNode(Node):
             if self.state not in {IDLE, STOPPED, ERROR}:
                 return False, f"当前状态不能 start: {self.state}"
             ok, message = self._agv_precheck(
-                require_camera=bool(self.camera_config.get("required_for_route", False))
+                require_camera=route_camera_required(self.camera_config, self.target_enabled)
             )
             if not ok:
                 self._transition(ERROR, message)
@@ -663,6 +670,8 @@ class WenshiPatrolNode(Node):
                     return False, "patrol_target 已启用，但 rice 模型不存在"
                 if not bool(self.config.get("fixed_approach", {}).get("enabled", False)):
                     return False, "patrol_target 已启用，但 fixed_approach.enabled 未启用"
+                if not reverse_motion_allowed(self.safety):
+                    return False, "patrol_target 已启用，但目标对齐倒车安全锁未放行"
 
             status = self.agv_status.get_status()
             first = self.station_order[0]
@@ -795,9 +804,11 @@ class WenshiPatrolNode(Node):
         self._target_task = None
         self._target_store = None
         self._target_event = None
+        self._target_locked_detection = None
         self._target_frames = []
         self._target_near_saved = False
         self._target_near_rounds = 0
+        self._target_last_frame_stamp_s = None
         self._target_reverse_start_along = None
         self._target_recovery_started = False
         self._target_runtime.reset_target()
@@ -815,6 +826,9 @@ class WenshiPatrolNode(Node):
     def _maybe_start_target(self, status: dict[str, Any], progress) -> bool:
         if not self.target_enabled or self.state != ROUTE_MOVE:
             return False
+        reset_marker = self.run_log.run_dir / "dedupe_reset.json"
+        if self._target_runtime.apply_reset_marker(reset_marker):
+            self.run_log.event("dedupe_reset_applied", marker=str(reset_marker))
         color, depth = self._latest_images()
         if color is None or not self._camera_is_fresh():
             return False
@@ -825,29 +839,58 @@ class WenshiPatrolNode(Node):
         )
         if event is None:
             return False
-        target = self.patrol_run_store.create_target()
         depth_summary = None
         if depth is not None:
             from .vision.targeting import robust_bbox_depth
-            depth_summary = robust_bbox_depth(depth["image"], event.detection)
+            depth_summary = robust_bbox_depth(
+                depth["image"],
+                event.detection,
+                source_size=(color["image"].shape[1], color["image"].shape[0]),
+            )
+        from .vision.quality import score_frame
+        far_quality = score_frame(color["image"], event.detection, depth_summary, expected_upper_body=True)
+        if depth_summary is None or not depth_summary.valid:
+            self._target_runtime.reject_current()
+            self.run_log.event(
+                "target_far_rejected",
+                route_segment=event.route_segment,
+                side=event.side,
+                reasons=["目标框内没有有效深度"],
+            )
+            return False
+        if not far_quality.ok:
+            self._target_runtime.reject_current()
+            self.run_log.event(
+                "target_far_rejected",
+                route_segment=event.route_segment,
+                side=event.side,
+                reasons=far_quality.reasons,
+                quality=far_quality.score,
+            )
+            return False
+        target = self.patrol_run_store.create_target()
         target.save_far(color["image"], {
             "route_segment": event.route_segment,
             "side": event.side,
             "along_track_m": event.along_track_m,
             "bbox": event.detection.to_dict(),
             "depth": depth_summary.__dict__ if depth_summary else None,
+            "quality": far_quality.__dict__,
         }, int(self.vision.get("far_jpeg_quality", 95)))
         self._target_store = target
         self._target_event = event
+        self._target_locked_detection = event.detection
         self._target_task = TargetTask(
             event.side,
             float(self.vision.get("target_reverse_speed_mps", 0.05)),
             float(self.vision.get("target_reverse_limit_m", 0.60)),
             float(self.safety.get("camera_timeout_s", 2.0)),
+            reverse_permitted=reverse_motion_allowed(self.safety),
         )
         self._target_reverse_start_along = progress.along_track
         self._target_frames = []
         self._target_near_saved = False
+        self._target_last_frame_stamp_s = None
         self.agv_motion.stop()
         self._last_vx = self._last_w = 0.0
         self.arm.stop()
@@ -881,10 +924,12 @@ class WenshiPatrolNode(Node):
         detections = [item for item in self._detector_detections(image) if item.class_name.lower() == "rice"]
         if not detections or self._target_event is None:
             return None
-        same_side = [item for item in detections if side_from_bbox(item, image.shape[1]) == self._target_event.side]
-        if not same_side:
-            return None
-        return min(same_side, key=lambda item: abs(item.cx - self._target_event.detection.cx))
+        from .vision.targeting import match_locked_detection
+        previous = self._target_locked_detection or self._target_event.detection
+        matched = match_locked_detection(detections, previous)
+        if matched is not None:
+            self._target_locked_detection = matched
+        return matched
 
     def _run_target_align(self, status: dict[str, Any]):
         if self._target_task is None or self._target_event is None:
@@ -902,13 +947,26 @@ class WenshiPatrolNode(Node):
         self.arm.update_target_follow(detection, int(color["image"].shape[1]))
         from .control.route_math import segment_progress
         progress = segment_progress(status, self._current_segment(), cross_track_gain=0.0)
-        start = float(self._target_reverse_start_along or progress.along_track)
-        moved = max(0.0, start - progress.along_track)
+        start = (
+            float(progress.along_track)
+            if self._target_reverse_start_along is None
+            else float(self._target_reverse_start_along)
+        )
+        moved = reverse_distance_travelled(start, progress.along_track)
         distance_remaining = float(self.vision.get("target_reverse_limit_m", 0.60)) - moved
+        from .vision.targeting import depth_valid_for_detection
         command = self._target_task.tick(TaskObservation(
             camera_age_s=self._latest_frame_age(color), target_visible=True,
             distance_remaining_m=distance_remaining, j5_speed_deg_s=0.0,
-            depth_valid=depth is not None, agv_blocked=bool(status.get("blocked")), emergency=bool(status.get("emergency")),
+            depth_valid=bool(
+                depth is not None
+                and depth_valid_for_detection(
+                    depth["image"],
+                    detection,
+                    source_size=(color["image"].shape[1], color["image"].shape[0]),
+                )
+            ),
+            agv_blocked=bool(status.get("blocked")), emergency=bool(status.get("emergency")),
         ))
         if command.stop:
             self.agv_motion.stop()
@@ -927,7 +985,12 @@ class WenshiPatrolNode(Node):
         self.agv_motion.stop()
         color, depth = self._latest_images()
         detection = self._locked_detection(color["image"]) if color is not None else None
-        if detection is None or depth is None:
+        from .vision.targeting import depth_valid_for_detection
+        if detection is None or depth is None or not depth_valid_for_detection(
+            depth["image"],
+            detection,
+            source_size=(color["image"].shape[1], color["image"].shape[0]),
+        ):
             self._begin_target_recovery("目标后退后重新定位失败")
             return
         side = self._target_event.side if self._target_event else "left"
@@ -946,28 +1009,48 @@ class WenshiPatrolNode(Node):
             return
         color, depth = self._latest_images()
         if arm.get("sequence_phase") == "PHOTO_HOLD" and color is not None and self._target_event is not None:
-            detection = self._locked_detection(color["image"])
+            frame_age = self._latest_frame_age(color)
+            frame_stamp = float(color["stamp_s"])
+            frame_is_usable = accept_near_frame(
+                self._target_last_frame_stamp_s,
+                frame_stamp,
+                float(frame_age if frame_age is not None else math.inf),
+                float(self.camera_config.get("frame_max_age_s", 1.0)),
+            )
+            detection = self._locked_detection(color["image"]) if frame_is_usable else None
             if detection is not None:
                 from .vision.targeting import robust_bbox_depth
-                summary = robust_bbox_depth(depth["image"], detection) if depth is not None else None
+                summary = (
+                    robust_bbox_depth(
+                        depth["image"],
+                        detection,
+                        source_size=(color["image"].shape[1], color["image"].shape[0]),
+                    )
+                    if depth is not None
+                    else None
+                )
                 self._target_frames.append((color["image"], detection, summary))
+                self._target_last_frame_stamp_s = frame_stamp
             required = int(self.vision.get("near_burst_count", 5))
             if len(self._target_frames) >= required and not self._target_near_saved:
                 best = choose_best_frame(self._target_frames, 1, required)
                 max_rounds = max(1, int(self.vision.get("near_retry_rounds", 3)))
-                if best.quality.ok:
+                action = near_burst_action(
+                    best.quality.ok,
+                    self._target_near_rounds,
+                    max_rounds,
+                )
+                if action == "save":
                     self._target_store.save_near(best.image, {"bbox": best.detection.to_dict(), "quality": best.quality.__dict__}, int(self.vision.get("near_jpeg_quality", 95)))
                     self._target_near_saved = True
                     self.run_log.event("target_near_captured", target_id=self._target_store.target_id, quality=best.quality.score, round=self._target_near_rounds + 1)
-                elif self._target_near_rounds + 1 < max_rounds:
+                elif action == "retry_hold":
                     self._target_near_rounds += 1
                     self._target_frames = []
-                    side = self._target_event.side if self._target_event else "left"
-                    ok, detail = self.arm.start_fixed_sequence(side, resume=True)
-                    if not ok:
-                        self._begin_target_recovery(f"近拍质量不合格且重拍启动失败: {detail}", side)
-                    else:
-                        self.state_detail = f"近拍质量不合格，重拍第 {self._target_near_rounds + 1}/{max_rounds} 轮"
+                    self.state_detail = (
+                        "近拍质量不合格，保持当前姿态继续连拍 "
+                        f"{self._target_near_rounds + 1}/{max_rounds} 轮"
+                    )
                     return
                 else:
                     self._target_store.write_metadata({"status": "near_failed", "failure_reason": "近拍质量不合格: " + ", ".join(best.quality.reasons)})

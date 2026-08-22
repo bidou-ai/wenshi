@@ -70,9 +70,13 @@ class ArmSweepWorker:
         self._follow_detection = None
         self._follow_image_width = 0
         self._follow_controller = TargetFollowController(
-            gain=float(arm.get("target_follow_gain", 0.8)),
-            max_speed_deg_s=float(arm.get("target_follow_max_speed_deg_s", 10.0)),
-            deadband_ratio=float(arm.get("target_follow_deadband_ratio", 0.03)),
+            gain=float(config.get("vision", {}).get("target_follow_gain", 0.8)),
+            max_speed_deg_s=float(
+                config.get("vision", {}).get("target_follow_max_speed_deg_s", 10.0)
+            ),
+            deadband_ratio=float(
+                config.get("vision", {}).get("target_follow_deadband_ratio", 0.03)
+            ),
         )
 
     def reload_viewpoints(self):

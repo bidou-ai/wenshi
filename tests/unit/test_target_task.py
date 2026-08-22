@@ -30,3 +30,18 @@ def test_target_task_aborts_on_stale_camera():
     command = task.tick(TaskObservation(camera_age_s=3.0, target_visible=True, distance_remaining_m=0.5, j5_speed_deg_s=0.0))
     assert command.stop is True
     assert task.state == "ABORT"
+
+
+def test_target_task_refuses_reverse_without_explicit_safety_permission():
+    task = TargetTask(side="left", reverse_speed_mps=0.05, reverse_limit_m=0.6)
+    command = task.tick(
+        TaskObservation(
+            camera_age_s=0.1,
+            target_visible=True,
+            distance_remaining_m=0.5,
+            j5_speed_deg_s=0.0,
+        )
+    )
+    assert command.stop is True
+    assert command.reason == "reverse_not_permitted"
+    assert task.state == "ABORT"

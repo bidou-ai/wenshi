@@ -22,6 +22,14 @@ def reverse_motion_allowed(safety: dict) -> bool:
     return reverse_enabled and (rear_verified or unverified_override)
 
 
+def route_camera_required(camera: dict, target_enabled: bool) -> bool:
+    return bool(target_enabled) or bool(camera.get("required_for_route", False))
+
+
+def reverse_distance_travelled(start_along_m: float, current_along_m: float) -> float:
+    return max(0.0, float(start_along_m) - float(current_along_m))
+
+
 class MotionOwner:
     """Exclusive owner token for JAKA/AGV task-level commands."""
 

@@ -1,14 +1,14 @@
 # 操作手册
 
-先在 Ubuntu 加载 ROS2 环境，并确认 AGV、JAKA 已由现场人员完成上电、使能和急停检查。
-项目不会执行这些动作。
+先确认 AGV、JAKA 已由现场人员完成上电、使能和急停检查。项目不会执行这些动作。
+正式入口会自动加载 ROS2，并依次执行环境和真实硬件连通检查：
 
 ```bash
 cd /home/ubuntu/jaka/wenshi
-./scripts/check_environment.sh
-./scripts/check_hardware_links.sh
 ./scripts/start_wenshi.sh
 ```
+
+只检查不启动使用 `./scripts/start_wenshi.sh --check`。任一检查失败都会在启动运动组件前退出。
 
 控制台命令：
 
@@ -48,4 +48,15 @@ Wi-Fi 密码只保护 Wi-Fi 加入权限；外部 SSH 是否能连取决于公�
 ```
 
 脚本会在 Ubuntu 本机启动后台并尝试自动打开浏览器，地址为 `http://127.0.0.1:8088/`；终端保持运行，按 `Ctrl+C` 停止。
-后台没有运动控制接口；管理员 PIN 只用于软删除目标/运行和重置本次去重标记。
+后台没有运动控制接口。默认未配置 PIN 时，查看功能正常，所有管理操作关闭。需要管理员操作时：
+
+```bash
+WENSHI_ADMIN_PIN='现场设置的PIN' ./scripts/start_dashboard.sh
+```
+
+管理员 PIN 只用于软删除目标/运行和重置本次去重标记。重置当前运行后，正式控制器会在下一次
+目标检测周期读取标记、清空本次去重并写入 `dedupe_reset_applied` 事件。
+
+明日必须按 [现场测试清单](FIELD_TEST_CHECKLIST.md) 分阶段验收。当前正式配置没有模型、没有
+`home_safe`，并且视觉、固定抵近和倒车安全锁均关闭，因此只具备基础路线和分项测试条件，
+不具备直接启用完整视觉抵近的条件。

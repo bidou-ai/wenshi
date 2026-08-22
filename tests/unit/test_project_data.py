@@ -14,6 +14,8 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_wenshi_config_map_and_arm_viewpoints():
     config = load_config(ROOT / "config" / "wenshi.yaml")
+    assert "targets_file" not in config["fixed_approach"]
+    assert not (ROOT / "config" / "fixed_targets.json").exists()
     assert tuple(config["route"]["station_order"]) == ROUTE_ORDER
     assert validate_route(config["route"]["station_order"]) == ROUTE_ORDER
     map_path = resolve_config_path(config, config["map"]["smap_file"])

@@ -32,13 +32,21 @@ class TaskCommand:
 
 
 class TargetTask:
-    def __init__(self, side: str, reverse_speed_mps: float = 0.05, reverse_limit_m: float = 0.6, camera_timeout_s: float = 2.0):
+    def __init__(
+        self,
+        side: str,
+        reverse_speed_mps: float = 0.05,
+        reverse_limit_m: float = 0.6,
+        camera_timeout_s: float = 2.0,
+        reverse_permitted: bool = False,
+    ):
         if side not in {"left", "right"}:
             raise ValueError("target side must be left or right")
         self.side = side
         self.reverse_speed_mps = abs(float(reverse_speed_mps))
         self.reverse_limit_m = abs(float(reverse_limit_m))
         self.camera_timeout_s = max(float(camera_timeout_s), 0.1)
+        self.reverse_permitted = bool(reverse_permitted)
         self.state: TargetTaskState = "ALIGN_REVERSE"
         self.reason = ""
 
@@ -54,6 +62,8 @@ class TargetTask:
         if observation.agv_blocked or observation.emergency:
             return self._abort("agv_safety")
         if self.state == "ALIGN_REVERSE":
+            if not self.reverse_permitted:
+                return self._abort("reverse_not_permitted")
             velocity = reverse_target_velocity(self.state, observation.distance_remaining_m, self.reverse_speed_mps, self.reverse_limit_m)
             if velocity == 0.0:
                 self.state = "RELOCALIZE"

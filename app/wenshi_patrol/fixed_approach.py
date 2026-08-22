@@ -1,11 +1,7 @@
-"""Fixed-target configuration and validation for the filmed approach demo."""
+"""Validated side-specific teaching paths for dynamic patrol targets."""
 
 from __future__ import annotations
 
-import json
-import os
-from datetime import datetime
-from pathlib import Path
 from typing import Any
 
 
@@ -35,96 +31,6 @@ def bounded_composition_delta(side: str, pixel_error: tuple[float, float], limit
     horizontal = max(-1.0, min(1.0, horizontal))
     vertical = max(-1.0, min(1.0, vertical))
     return {3: max(-j4_limit, min(j4_limit, vertical * j4_limit)), 4: max(-j5_limit, min(j5_limit, horizontal * j5_limit)), 5: max(-j6_limit, min(j6_limit, horizontal * j6_limit * 0.5))}
-
-
-def load_fixed_targets(path: str | Path) -> dict[str, Any]:
-    target_path = Path(path)
-    if not target_path.exists():
-        return {"order": list(SIDES), "targets": {}}
-    with target_path.open("r", encoding="utf-8") as stream:
-        value = json.load(stream)
-    if not isinstance(value, dict):
-        raise ValueError(f"固定目标文件不是 JSON 对象: {target_path}")
-    targets = value.get("targets")
-    if not isinstance(targets, dict):
-        value["targets"] = {}
-    return value
-
-
-def save_json_atomic(path: str | Path, value: dict[str, Any]):
-    output = Path(path)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    temporary = output.with_name(f".{output.name}.tmp-{os.getpid()}")
-    try:
-        with temporary.open("w", encoding="utf-8") as stream:
-            json.dump(value, stream, indent=2, ensure_ascii=False)
-            stream.write("\n")
-            stream.flush()
-            os.fsync(stream.fileno())
-        os.replace(temporary, output)
-    finally:
-        if temporary.exists():
-            temporary.unlink()
-
-
-def save_target_stop(path: str | Path, side: str, status: dict[str, Any]) -> dict[str, Any]:
-    if side not in SIDES:
-        raise ValueError(f"目标侧必须是 right 或 left: {side}")
-    for key in ("x", "y", "angle"):
-        if status.get(key) is None:
-            raise ValueError(f"AGV 状态缺少 {key}，不能保存目标停车位")
-    value = load_fixed_targets(path)
-    value["order"] = list(SIDES)
-    value.setdefault("targets", {})[side] = {
-        "side": side,
-        "stop_pose": {
-            "x": float(status["x"]),
-            "y": float(status["y"]),
-            "angle": float(status["angle"]),
-        },
-        "entry_pose": SIDE_POSES[side][0],
-        "pre_pose": SIDE_POSES[side][1],
-        "photo_pose": SIDE_POSES[side][2],
-        "updated_at": datetime.now().isoformat(timespec="seconds"),
-    }
-    save_json_atomic(path, value)
-    return value["targets"][side]
-
-
-def save_viewpoint(
-    path: str | Path,
-    name: str,
-    joint: list[float],
-    tcp: list[float] | None,
-) -> dict[str, Any]:
-    if name not in {"right_pre", "right_photo", "left_pre", "left_photo"}:
-        raise ValueError(f"不允许保存的示教点名称: {name}")
-    if len(joint) != 6:
-        raise ValueError("当前机械臂关节角不是 6 个")
-    viewpoint_path = Path(path)
-    with viewpoint_path.open("r", encoding="utf-8") as stream:
-        viewpoints = json.load(stream)
-    viewpoints[name] = {
-        "joint": [float(value) for value in joint],
-        "tcp": [float(value) for value in tcp[:6]] if tcp and len(tcp) >= 6 else None,
-        "updated_at": datetime.now().isoformat(timespec="seconds"),
-    }
-    save_json_atomic(viewpoint_path, viewpoints)
-    return viewpoints[name]
-
-
-def target_remaining_x(current_x: float, target_x: float, lm4_x: float, lm5_x: float) -> float:
-    """Distance remaining while travelling backward from LM5 toward LM4."""
-    travel_sign = 1.0 if float(lm4_x) > float(lm5_x) else -1.0
-    return (float(target_x) - float(current_x)) * travel_sign
-
-
-def next_target(data: dict[str, Any], completed: set[str]) -> dict[str, Any] | None:
-    targets = data.get("targets", {})
-    for side in SIDES:
-        if side not in completed and isinstance(targets.get(side), dict):
-            return targets[side]
-    return None
 
 
 def _joint_pose(viewpoints: dict[str, Any], name: str) -> list[float] | None:
@@ -268,41 +174,3 @@ def plan_home_return(
         f"近端限制={float(nearby_home_tolerance_deg):.1f}deg；"
         + "；".join(failures)
     )
-
-
-def validate_fixed_demo(
-    data: dict[str, Any],
-    viewpoints: dict[str, Any],
-    lm4_x: float,
-    lm5_x: float,
-    max_joint_step_deg: float,
-) -> list[str]:
-    errors: list[str] = []
-    targets = data.get("targets", {})
-    if not isinstance(targets, dict):
-        return ["固定目标 targets 字段无效"]
-
-    positions: dict[str, float] = {}
-    lower, upper = sorted((float(lm4_x), float(lm5_x)))
-    for side in SIDES:
-        target = targets.get(side)
-        if not isinstance(target, dict):
-            errors.append(f"尚未执行 mark {side}")
-            continue
-        stop_pose = target.get("stop_pose")
-        if not isinstance(stop_pose, dict) or stop_pose.get("x") is None:
-            errors.append(f"{side} 缺少底盘停车坐标")
-            continue
-        x = float(stop_pose["x"])
-        positions[side] = x
-        if not lower < x < upper:
-            errors.append(f"{side} 停车坐标 x={x:.3f} 不在 LM4-LM5 之间")
-
-        errors.extend(validate_side_arm_path(viewpoints, side, max_joint_step_deg))
-
-    if set(positions) == set(SIDES):
-        right_remaining = target_remaining_x(lm5_x, positions["right"], lm4_x, lm5_x)
-        left_remaining = target_remaining_x(lm5_x, positions["left"], lm4_x, lm5_x)
-        if right_remaining >= left_remaining:
-            errors.append("后退路线必须先经过 right，再经过 left；请重新保存停车位")
-    return errors
