@@ -20,7 +20,7 @@ Wenshi yubei 预备工具
   label [会话目录]      启动本地标注网页，默认使用最新会话
   prepare [会话目录]    验证并生成可训练的 train/val 数据集
   train [data.yaml]     启动 YOLO 训练
-  teach                 依次读取并保存八个 JAKA 示教点，不发送运动命令
+  teach                 只读依次保存八个 JAKA 示教点（现场动作测试使用 start_field_test.sh）
   verify                校验暂存的八点示教文件
   publish-viewpoints --confirm
                         备份并发布已验证的八点示教文件

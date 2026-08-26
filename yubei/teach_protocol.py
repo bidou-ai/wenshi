@@ -51,7 +51,10 @@ class TeachingClient:
                     return value
             elif self._buffer:
                 self._buffer = ""
-            data = self.sock.recv(8192)
+            try:
+                data = self.sock.recv(8192)
+            except socket.timeout as exc:
+                raise TimeoutError("JAKA teaching query timed out waiting for JSON") from exc
             if not data:
                 raise ConnectionError("JAKA closed teaching connection")
             self._buffer += data.decode("utf-8", errors="ignore")
@@ -64,11 +67,14 @@ class TeachingClient:
         if self.sock is None:
             raise RuntimeError("teaching client is not connected")
         self.sock.sendall(json.dumps({"cmdName": command}, separators=(",", ":")).encode("utf-8"))
-        return self._receive_object()
+        try:
+            return self._receive_object()
+        except TimeoutError as exc:
+            raise TimeoutError(f"JAKA did not answer read-only query {command!r}") from exc
 
     def read_joint(self) -> list[float]:
         value = self._query("get_joint_pos")
-        for key in ("jointPosition", "joint", "data"):
+        for key in ("joint_pos", "jointPosition", "joint", "data"):
             candidate = value.get(key)
             if isinstance(candidate, list) and len(candidate) == 6:
                 return [float(item) for item in candidate]
@@ -76,8 +82,17 @@ class TeachingClient:
 
     def read_tcp(self) -> list[float] | None:
         value = self._query("get_tcp_pos")
-        for key in ("tcpPosition", "tcp", "data"):
+        for key in ("tcp_pos", "tcpPosition", "tcp", "data"):
             candidate = value.get(key)
             if isinstance(candidate, list) and len(candidate) >= 6:
                 return [float(item) for item in candidate[:6]]
         return None
+
+    def read_snapshot(self) -> tuple[list[float], list[float] | None]:
+        """Connect, read both positions once, and close the read-only session."""
+        self.close()
+        try:
+            self.connect()
+            return self.read_joint(), self.read_tcp()
+        finally:
+            self.close()

@@ -10,6 +10,51 @@ cd /home/ubuntu/jaka/wenshi
 
 只检查不启动使用 `./scripts/start_wenshi.sh --check`。任一检查失败都会在启动运动组件前退出。
 
+## 现场示教与硬件测试入口
+
+明天只做相机、示教、底盘和机械臂测试时，使用一个入口：
+
+```bash
+./scripts/start_field_test.sh
+```
+
+默认启动脚本同时拉起 D435 ROS2 桥、RViz 和现场测试控制台，因此电脑上应出现一个 RViz 窗口：
+地图、LM 站点、AGV 位姿和 `/camera/color/image_raw` RGB 画面都在同一窗口中。现场测试的运动控制仍只有
+`yubei/field_test.py` 一个进程；ROS2 桥和 RViz 只负责显示。没有 ROS2 图形环境时可用
+`./scripts/start_field_test.sh --no-rviz` 做纯硬件测试。
+
+进入 `field>` 后：
+
+| 命令 | 含义 |
+|---|---|
+| `camera` / `camera stop` | 启动/停止 D435 RGB 预览 |
+| `teach` | 相机预览下依次保存八个只读 JAKA 示教点 |
+| `test route` | 从当前位置附近接入地图，先到 LM1，再跑 `LM1 -> LM4 -> LM3 -> LM2 -> LM1` 一圈，现场测试速度默认 0.10m/s |
+| `test arm` | 底盘停止，按八个示教点逐点运动，每一点前等待人工确认 |
+| `status` | 显示 AGV、相机和测试状态 |
+| `stop` | 立即停止 AGV/JAKA 动作 |
+| `q` | 停止客户端并退出 |
+
+普通地图路线只按地图方向前进，不发倒车速度。当前位置距离路线超过安全偏差、定位过期、急停、通信中断或人工输入停止时，程序停止。
+普通避障触发后底盘立即保持停止，障碍物连续解除 `2.0s` 后自动从当前路线段继续；急停不会自动恢复。到达 LM4/LM1 等拐角时，程序按地图改变航向并继续前进，绝不以负速度倒车。
+如果机器人刚到 LM4 才启动测试，程序会优先吸附到 LM4 站点，不会重复跑 `LM1 -> LM4`。示教期间 JAKA 只读，每次按回车重新建立短连接；单点查询超时会留在当前点等待再次回车，不会退出剩余点。
+
+现场测试每次生成独立目录：
+
+```text
+runtime/field_tests/field_test_<时间>/
+  field_test.log
+  events.jsonl
+  teach/viewpoints.json
+  teach/<示教点>.jpg
+runtime/field_tests/field_test_ros_<时间>/
+  camera.log
+  camera_console.log
+  rviz.log
+```
+
+现场测试不会覆盖正式 `config/viewpoints.json`。必须完成人工复核后，再运行现有的 `./yubei/start_yubei.sh publish-viewpoints --confirm` 发布示教点。
+
 控制台命令：
 
 | 命令 | 含义 |
@@ -30,8 +75,8 @@ cd /home/ubuntu/jaka/wenshi
 `start` 要求底盘位于 LM1 附近、AGV 定位新鲜且无报警、JAKA 可读关节并处于巡视姿态。
 `goto home` 不是通用避障规划，只能从已知示教回撤通道或近端姿态执行。
 
-网络布局必须保持为“两条路径”：Ubuntu 网卡 A 连接机器人内部网，Ubuntu 网卡 B 通过工作站 Wi-Fi 上公网。
-AGV、JAKA 和机器人上的 Windows 相机电脑不进入公网；网卡 A 不设置默认网关，默认路由只放在网卡 B。
+网络布局必须保持为“两条路径”：Ubuntu 网卡 A 进入机器人底盘内部路由器，Ubuntu 网卡 B 连接温室路由器 Wi-Fi 上公网。
+AGV、JAKA 和机器人上的 Windows 相机电脑不进入温室公网；网卡 A 不设置默认网关，默认路由只放在网卡 B。
 
 外部 SSH 不是由“Ubuntu 能上网”自动产生的。要从温室外 SSH，公网路由器还必须把端口转发到 Ubuntu；如果 Wi-Fi 没有公网 IPv4 或运营商使用 CGNAT，则普通公网 SSH 不成立。ToDesk 可用于远程查看桌面，机器人设备不安装 ToDesk。
 Wi-Fi 密码只保护 Wi-Fi 加入权限；外部 SSH 是否能连取决于公网地址、端口转发和 Ubuntu 的 SSH 服务。

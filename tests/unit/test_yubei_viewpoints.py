@@ -63,6 +63,29 @@ def test_capture_all_viewpoints_uses_one_read_only_session(tmp_path):
     assert "不会发送运动命令" in output.getvalue()
 
 
+def test_capture_all_viewpoints_retries_same_point_after_read_failure(tmp_path):
+    class FlakyClient:
+        def __init__(self):
+            self.calls = 0
+
+        def read_snapshot(self):
+            self.calls += 1
+            if self.calls == 1:
+                raise TimeoutError("JAKA response timeout")
+            return [float(self.calls)] * 6, [0.0] * 6
+
+    output = io.StringIO()
+    session = TeachingSession(tmp_path / "staged.json")
+    commands = io.StringIO("\n" * (len(VIEWPOINT_NAMES) + 1))
+
+    saved = teach_viewpoints.capture_all_viewpoints(
+        FlakyClient(), session, commands, output
+    )
+
+    assert saved == len(VIEWPOINT_NAMES)
+    assert "保存失败" in output.getvalue()
+
+
 def test_teaching_client_accepts_fragmented_json_response():
     class FragmentedSocket:
         def __init__(self):
@@ -79,6 +102,79 @@ def test_teaching_client_accepts_fragmented_json_response():
     client.sock = FragmentedSocket()
 
     assert client.read_joint() == [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
+
+
+def test_teaching_client_accepts_formal_jaka_position_fields():
+    class FormalSocket:
+        def __init__(self):
+            self.chunks = [
+                b'{"ret_code":0,"joint_pos":[1,2,3,4,5,6]}',
+                b'{"ret_code":0,"tcp_pos":[10,20,30,40,50,60]}',
+            ]
+
+        def sendall(self, _payload):
+            return None
+
+        def recv(self, _size):
+            return self.chunks.pop(0)
+
+    client = TeachingClient("127.0.0.1")
+    client.sock = FormalSocket()
+
+    assert client.read_joint() == [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
+    assert client.read_tcp() == [10.0, 20.0, 30.0, 40.0, 50.0, 60.0]
+
+
+def test_teaching_client_can_reconnect_for_one_snapshot():
+    sockets = []
+
+    class SnapshotSocket:
+        def __init__(self):
+            self.chunks = [
+                b'{"joint_pos":[1,2,3,4,5,6]}',
+                b'{"tcp_pos":[10,20,30,40,50,60]}',
+            ]
+            self.closed = False
+            sockets.append(self)
+
+        def settimeout(self, _timeout):
+            return None
+
+        def sendall(self, _payload):
+            return None
+
+        def recv(self, _size):
+            return self.chunks.pop(0)
+
+        def close(self):
+            self.closed = True
+
+    client = TeachingClient("127.0.0.1", socket_factory=lambda *_args, **_kwargs: SnapshotSocket())
+
+    joint, tcp = client.read_snapshot()
+
+    assert joint == [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
+    assert tcp == [10.0, 20.0, 30.0, 40.0, 50.0, 60.0]
+    assert sockets and sockets[0].closed
+
+
+def test_teach_main_reports_query_error_without_traceback(monkeypatch, tmp_path, capsys):
+    class BrokenClient:
+        def __init__(self, *_args, **_kwargs):
+            pass
+
+        def read_snapshot(self):
+            raise TimeoutError("JAKA did not answer read-only query 'get_joint_pos'")
+
+        def close(self):
+            return None
+
+    monkeypatch.setattr(teach_viewpoints, "TeachingClient", BrokenClient)
+
+    result = teach_viewpoints.main(["--output", str(tmp_path / "staged.json")])
+
+    assert result == 1
+    assert "get_joint_pos" in capsys.readouterr().out
 
 
 def test_verify_rejects_large_adjacent_joint_step(tmp_path):

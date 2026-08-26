@@ -95,6 +95,12 @@ control:
   heading_slowdown_threshold_deg: 10.0
   min_heading_scale: 0.20
 
+# yubei/field_test.py only. Formal patrol speed remains under control above.
+field_test:
+  route_speed_mps: 0.10
+  blocked_clear_s: 2.0
+  station_snap_m: 0.25
+
 fixed_approach:
   enabled: false
   photo_hold_s: 3.0

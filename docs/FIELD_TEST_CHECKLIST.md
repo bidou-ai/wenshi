@@ -24,8 +24,9 @@
 
 | 位置 | 只启动这个文件 | 作用 |
 |---|---|---|
-| Windows 相机电脑 | 双击 `start_camera_server.bat` | D435 HTTP 服务 |
+| 机器人 Windows 相机电脑 | 双击 `start_camera_server.bat`，或直接运行 `windows_realsense_server.py` | D435 HTTP 服务 |
 | Ubuntu 预备工具 | `./yubei/start_yubei.sh` | 检查、采集、标注、训练、示教 |
+| Ubuntu 现场测试 | `./scripts/start_field_test.sh` | 自动启动 D435 ROS2 桥、RViz、相机预览、示教、地图单圈、示教点运动 |
 | Ubuntu 正式巡检 | `./scripts/start_wenshi.sh` | 全预检后启动正式控制台 |
 | Ubuntu 结果后台 | `./scripts/start_dashboard.sh` | 本机浏览器复核远近景 |
 
@@ -48,10 +49,12 @@ cd /home/ubuntu/jaka/wenshi
 
 ## 4. 网络与 D435
 
-1. AGV、JAKA、Windows 相机电脑接内部路由器；Ubuntu 机器人网卡只走 `192.168.192.0/24`。
-2. Ubuntu 另一张网卡通过 Wi-Fi 上公网，机器人网卡不设默认网关。
-3. Windows 双击 `start_camera_server.bat`，保持窗口打开。
-4. Ubuntu 运行 `./yubei/start_yubei.sh check`，保存完整输出。
+1. AGV、JAKA、Windows 相机电脑保持接在**机器人底盘内部路由器**；不要把它们接到温室公网路由器。
+2. Ubuntu 必须有一条单独路径进入底盘内部路由器，机器人网卡只走 `192.168.192.0/24`，且不设默认网关。
+3. Ubuntu 另一张网卡连接温室路由器 Wi-Fi 上公网，承担默认路由。
+4. 在机器人 Windows 相机电脑启动服务并保持窗口打开：有 `start_camera_server.bat` 时双击；只有
+   `windows_realsense_server.py` 时在其目录运行 `py windows_realsense_server.py --host 0.0.0.0 --port 18080`。
+5. Ubuntu 运行 `./yubei/start_yubei.sh check`，保存完整输出。
 
 必须确认：AGV `192.168.192.5:19204`、JAKA `192.168.192.160:10001`、D435
 `192.168.192.203:18080` 可达；D435 `/health` 为 `ok=true`；连续 10 帧可解码且尺寸符合预期。
@@ -68,6 +71,23 @@ cd /home/ubuntu/jaka/wenshi
 按顺序人工移动并保存 `home_safe`、`camera`、`camera_left`、`camera_right`、`left_pre`、
 `left_photo`、`right_pre`、`right_photo`。工具只读关节/TCP，不发送运动命令。验证报告通过后，
 仍要人工复核每个点、左右方向、相机朝后关系、关节跨越和回撤通道，才能显式发布到正式配置。
+
+现场统一入口也可以完成同样示教和后续动作测试：
+
+```bash
+./scripts/start_field_test.sh
+field> teach
+field> test route
+field> test arm
+```
+
+启动后先确认 RViz 中能看到 `/map` 地图、LM 站点、红色 AGV 位姿箭头和 D435 RGB 画面；若只做无图形硬件测试，使用
+`./scripts/start_field_test.sh --no-rviz`。RViz/相机桥日志在 `runtime/field_tests/field_test_ros_<时间>/`。
+
+`test route` 允许底盘只放在路线附近，程序会沿闭环方向接入并到 LM1，然后完整运行
+`LM1 -> LM4 -> LM3 -> LM2 -> LM1`。`test arm` 必须在底盘停止时逐点确认；任一异常先按实体急停，再输入 `stop`。
+路线测试默认速度为 `0.10m/s`。普通避障触发时应立即停止，障碍物清除并连续稳定 `2.0s` 后从当前线段自动继续；急停、定位过期、横向偏差超限或通信中断必须保持停止并报告失败。
+若从 LM4 附近开始，日志中应看到从 `LM4->LM3` 接入，而不是重复 `LM1->LM4`。在 LM4、LM1 转弯后应沿下一地图段正向前进，不能出现负 `vx`。
 
 ## 6. 基础正向路线
 

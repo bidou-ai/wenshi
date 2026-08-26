@@ -1,7 +1,7 @@
 # Wenshi 温室巡检操作手册
 
-> **先看结论**：机器人设备继续留在温室内部网络；工作站和 Ubuntu 另外使用 Wi-Fi 上网。
-> Ubuntu 需要两条网络路径：一条到 AGV/JAKA/相机电脑，一条到公网。远程 SSH 只有在公网路由器把端口转发到 Ubuntu 后才成立；
+> **先看结论**：AGV、JAKA 和机器人相机电脑继续留在机器人底盘内部路由器；温室路由器只给工作站和 Ubuntu 提供公网 Wi-Fi。
+> Ubuntu 需要两条独立网络路径：一条进入底盘路由器访问机器人设备，一条连接温室路由器访问公网。远程 SSH 只有在公网路由器把端口转发到 Ubuntu 后才成立；
 > ToDesk 则用于远程查看图形界面。不要把 AGV、JAKA 或机器人相机电脑的端口发布到公网。
 
 ## 快速导航
@@ -74,38 +74,42 @@ wenshi/runtime/runs/run_<timestamp>/
 
 ## 4. 网络布局
 
-### 4.1 三个网络角色
+### 4.1 网络角色
 
 | 设备/网络 | 作用 | 是否进入公网 |
 |---|---|---:|
-| AGV、JAKA、机器人上的 Windows 相机电脑 | 机器人控制和 D435 图像服务 | 否 |
-| 温室内部路由器/内部有线网 | 连接机器人设备和工作站的机器人通信网 | 否 |
-| 工作站 Wi-Fi、Ubuntu 的互联网网卡 | GitHub、软件更新、SSH、ToDesk、后续远程后台 | 是 |
+| AGV、JAKA、机器人上的 Windows 相机电脑 | 接入机器人底盘内部路由器，提供控制和 D435 图像服务 | 否 |
+| 机器人底盘内部路由器 | 只连接机器人设备的专用内网 | 否 |
+| 温室路由器 | 为现场工作站/Ubuntu 提供 Wi-Fi 和公网 | 是 |
 
 机器人上的 AGV、JAKA 和 Windows 相机电脑不需要、也不应该连接公网。公网只给运行 Ubuntu 的工作站使用。
 
-### 4.2 推荐拓扑
+### 4.2 两台路由器和 Ubuntu 的连接
 
 ```text
-                 温室内部网络（不进公网）
-       ┌──────────┬──────────┬────────────────┐
-       │          │          │                │
-      AGV       JAKA   机器人 Windows      工作站有线网卡
-                         相机电脑           （机器人网）
-                                               │
-                                       Ubuntu 网卡 A
-                                               │
-                                         Wenshi 程序
+      机器人底盘内部路由器（不进公网）
+       ┌──────────┬──────────┬───────────────┐
+       │          │          │               │
+      AGV       JAKA   机器人 Windows       │
+                         相机电脑           │
+                                             │
+                         Ubuntu 机器人网卡 A│
+                              （现场实际可为
+                               Wi-Fi 或有线）
 
-       工作站 Wi-Fi ──────────────── Ubuntu 网卡 B
-                    （公网 / GitHub / SSH / ToDesk）
+      温室路由器（公网 Wi-Fi）
+                         │
+                  Ubuntu 互联网网卡 B
+                         │
+                  GitHub / SSH / ToDesk
 ```
 
 Ubuntu 的两条路径必须分工明确：
 
-- 网卡 A 只访问 `192.168.192.0/24` 的机器人设备，不设置默认网关。
-- 网卡 B 访问 Wi-Fi 和公网，承担默认路由。
-- 如果工作站或 Ubuntu 只有 Wi-Fi、没有通往内部机器人网的第二条路径，AGV/JAKA 就无法通信。
+- 网卡 A 必须能进入**机器人底盘内部路由器**，只访问 `192.168.192.0/24` 的机器人设备，不设置默认网关。
+- 网卡 B 才连接**温室路由器**并访问公网，承担默认路由。
+- AGV、JAKA 和机器人 Windows 相机电脑不需要、也不应该连接温室公网路由器。
+- 如果 Ubuntu 只有温室 Wi-Fi、没有进入底盘路由器的第二条路径，AGV/JAKA/D435 一定无法通信。
 - 机器人控制流量不经过公网 Wi-Fi；Ubuntu 访问 GitHub 等公网服务不影响机器人内网地址。
 - Wi-Fi 的 SSID 和密码只控制谁能加入这个 Wi-Fi；它不会自动让外部电脑能够 SSH 到 Ubuntu。
 
@@ -115,10 +119,10 @@ Ubuntu 的两条路径必须分工明确：
 
 Ubuntu 虚拟机需要两张网卡：
 
-1. **机器人网卡**：桥接到工作站连接内部路由器的有线网卡，获得机器人网段地址。
-2. **互联网网卡**：连接工作站 Wi-Fi，可使用 VMware NAT 或桥接 Wi-Fi；它提供 Ubuntu 的默认路由。
+1. **机器人网卡**：桥接到能够连接机器人底盘内部路由器的物理适配器；现场如果没有网线，必须使用连接该路由器的另一张 Wi-Fi/USB 无线适配器。
+2. **互联网网卡**：连接温室路由器 Wi-Fi，可使用 VMware NAT 或桥接 Wi-Fi；它提供 Ubuntu 的默认路由。
 
-不要把两张网卡放在同一个网段，也不要让机器人网卡获得默认网关。VMware 的桥接模式把虚拟机接入物理 LAN，NAT 模式让虚拟机借用主机网络访问外部网络；两种模式可以分别用于两张网卡。[VMware 网络类型说明](https://knowledge.broadcom.com/external/article/309842/understanding-networking-types-in-hosted.html)
+不要把两张网卡放在同一个网段，也不要让机器人网卡获得默认网关。若工作站没有第二个网络适配器，不能同时保持“温室公网 Wi-Fi”和“底盘内部 Wi-Fi”；此时只能分时测试，不能在同一时间运行需要 AGV/JAKA 的完整流程。VMware 的桥接模式把虚拟机接入指定物理适配器，NAT 模式让虚拟机借用主机网络访问外部网络；两种模式可以分别用于两张网卡。[VMware 网络类型说明](https://knowledge.broadcom.com/external/article/309842/understanding-networking-types-in-hosted.html)
 
 ### 4.4 只做连通性检查
 
@@ -174,6 +178,20 @@ rice/flower、歧义跳过和 YOLO TXT 导出。初期可先标 rice，同时对
 训练不会自动覆盖正式模型；发布会计算 SHA256 并备份旧模型。当前 Ubuntu 在 VMware 中，显卡方案见 `liuyi666.md`。
 
 ## 7. 示教准备
+
+现场只进行相机、示教和硬件动作测试时，不启动正式巡检控制台，使用统一入口：
+
+```bash
+./scripts/start_field_test.sh
+```
+
+在 `field>` 中执行 `camera`、`teach`、`test route`、`test arm`、`status`、`stop` 或 `q`。底盘可以放在
+Wens1 路线附近，`test route` 会先沿地图闭环方向到 LM1，再跑 `LM1 -> LM4 -> LM3 -> LM2 -> LM1`；
+普通路线不倒车。默认入口还会启动 D435 ROS2 桥和 RViz，在同一窗口显示地图、LM 站点、AGV 位姿和 RGB 画面；
+无图形环境时使用 `./scripts/start_field_test.sh --no-rviz`。现场测试路线速度为 `0.10m/s`；普通避障触发后底盘
+停止，障碍物连续解除 2 秒后从当前线段继续，急停不会自动恢复。若从 LM4 附近启动，程序按站点接入下一段，
+不会重复 `LM1 -> LM4`。`test arm` 在底盘停止时按八个示教点逐点等待人工确认；单点通信超时会停在该点等待重试。
+现场测试结果位于 `runtime/field_tests/`，显示辅助日志位于 `runtime/field_tests/field_test_ros_<时间>/`，不会覆盖正式示教文件。
 
 完整示教点为：
 
@@ -299,5 +317,7 @@ python3 dashboard/cleanup.py --root runtime/runs --execute run_<timestamp> --con
 
 清理工具拒绝正在运行的目录、路径穿越和不完整确认。不要对 `runtime/` 根目录使用递归删除。
 
-Windows 相机电脑日常只需双击 `windows/start_camera_server.bat`。第一次缺依赖时按窗口提示执行一次
-`py -m pip install -r requirements-windows.txt`，之后不要再用多条命令启动服务。
+Windows 相机电脑日常启动 D435 服务有两种方式：仓库完整复制到该电脑时双击
+`windows/start_camera_server.bat`；如果该电脑只有 `windows_realsense_server.py`，就在该文件所在目录运行
+`py windows_realsense_server.py --host 0.0.0.0 --port 18080`。第一次缺依赖时安装
+`flask`、`numpy`、`opencv-python` 和 `pyrealsense2`；`.bat` 只是便捷包装，不是必须文件。

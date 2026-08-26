@@ -16,6 +16,27 @@
 
 设备检查和示教读取不会自动上电、使能或运动；需要运动的机械臂动作由操作者在现场明确控制，采集工具只在到位后保存 RGB 图像。示教入口在一次只读连接中依次保存八点，遇到 TCP 拆包也会增量读取完整 JSON。
 
+## 现场统一示教与硬件测试
+
+现场只启动一个入口：
+
+```bash
+./scripts/start_field_test.sh
+```
+
+进入 `field>` 后可使用 `camera`/`camera stop`、`teach`、`test route`、`test arm`、`status`、`stop`、`q`。
+`teach` 每次按回车重新短连接 JAKA，保存正式协议的 `joint_pos/tcp_pos` 和同名相机预览图；
+它不会上电、使能或运动。`test route` 从当前位置附近接入 `wens1` 地图，先到 `LM1`，再运行
+`LM1 -> LM4 -> LM3 -> LM2 -> LM1` 一圈；普通路线不发送负速度。`test arm` 要求八点示教已经
+保存在本次现场测试目录，逐点等待人工确认后才运动。现场测试日志位于 `runtime/field_tests/`，
+不会覆盖 `config/viewpoints.json` 或正式 `runtime/runs/`。
+
+默认入口还会启动 RViz 和 D435 ROS2 桥：RViz 中显示 Wens1 地图、LM 标记、AGV 位姿和相机 RGB 画面。
+ROS2 桥只读状态/图像，不拥有 AGV/JAKA 运动权限。没有图形环境时使用
+`./scripts/start_field_test.sh --no-rviz`。现场测试路线速度默认 `0.10m/s`；普通避障会停住，障碍物连续解除
+`2.0s` 后从当前线段继续，急停仍需人工复位。启动时若已靠近 LM4 等拐角，会按站点接入而不重复跑前一段。
+示教单点通信失败会提示保持当前位置重新按回车，继续保存该点，不会因一次超时退出八点流程。
+
 数据集采集与正式巡检采集完全分开。数据集会话使用 `yubei/data/dataset_<timestamp>/`；正式巡检使用 `runtime/runs/run_<timestamp>/`。
 
 只拍照片时使用 `camera-check`，它只访问 Windows D435 服务，不检查、不连接、不控制 AGV/JAKA。
