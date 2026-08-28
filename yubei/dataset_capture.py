@@ -77,14 +77,18 @@ class AsyncCommandReader:
 
 
 class CaptureSession:
-    def __init__(self, camera, paths: SessionPaths, jpeg_quality: int = 95, capture_tag: str = "neutral"):
+    def __init__(self, camera, paths: SessionPaths, jpeg_quality: int = 95, capture_tag: str = "neutral", dataset_type: str = "legacy"):
         self.camera = camera
         self.paths = paths
         self.jpeg_quality = max(80, min(int(jpeg_quality), 100))
         if capture_tag not in {"neutral", "rice", "flower"}:
             raise ValueError("capture_tag must be neutral, rice or flower")
         self.capture_tag = capture_tag
-        self.manifest = DatasetManifest()
+        if dataset_type not in {"legacy", "plant", "panicle"}:
+            raise ValueError("dataset_type must be legacy, plant or panicle")
+        self.dataset_type = dataset_type
+        classes = {"rice_plant": 0} if dataset_type == "plant" else {"panicle": 0} if dataset_type == "panicle" else {"rice": 0, "flower": 1}
+        self.manifest = DatasetManifest(classes=classes, dataset_type=dataset_type)
         self.manifest.write(self.paths.manifest_path)
         self._number = 0
         self._signatures: list[tuple[int, str]] = []
@@ -116,6 +120,7 @@ class CaptureSession:
         self._signatures.append((signature, filename))
         metadata = {
             "capture_tag": self.capture_tag,
+            "dataset_type": self.dataset_type,
             "captured_at": datetime.now(timezone.utc).isoformat(timespec="milliseconds"),
             "quality": quality,
             "duplicate_of": duplicate_of,
@@ -217,6 +222,7 @@ def main(argv=None) -> int:
     parser.add_argument("--config", type=Path, default=Path("config/wenshi.yaml"))
     parser.add_argument("--url", default="", help="临时覆盖配置中的相机地址")
     parser.add_argument("--output", type=Path, default=Path("yubei/data"))
+    parser.add_argument("--dataset-type", choices=("legacy", "plant", "panicle"), default="legacy")
     parser.add_argument("--timeout", type=float, default=2.0)
     parser.add_argument("--jpeg-quality", type=int, default=95)
     parser.add_argument("--preview", action="store_true")
@@ -225,7 +231,7 @@ def main(argv=None) -> int:
     paths = SessionPaths.create(args.output)
     camera_url = args.url.strip().rstrip("/") or camera_url_from_config(args.config)
     camera = HttpCameraClient(camera_url, timeout_s=args.timeout)
-    saved = CaptureSession(camera, paths, args.jpeg_quality, args.focus).run(preview=args.preview)
+    saved = CaptureSession(camera, paths, args.jpeg_quality, args.focus, args.dataset_type).run(preview=args.preview)
     print(json.dumps({"session": str(paths.root), "images_saved": saved}, ensure_ascii=False))
     return 0
 

@@ -36,7 +36,24 @@ IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png"}
 TRAINING_STATUS = "labelled"
 
 
-def _parse_line(line: str, path: Path, number: int) -> tuple[int, list[float]] | None:
+def _dataset_classes(root: Path) -> dict[str, int]:
+    manifest_path = root / "manifest.json"
+    if manifest_path.exists():
+        value = json.loads(manifest_path.read_text(encoding="utf-8"))
+        classes = value.get("classes")
+        if isinstance(classes, dict) and classes:
+            return {str(name): int(class_id) for name, class_id in classes.items()}
+    return {"rice": 0, "flower": 1}
+
+
+def _dataset_type(root: Path) -> str:
+    manifest_path = root / "manifest.json"
+    if not manifest_path.exists():
+        return "legacy"
+    return str(json.loads(manifest_path.read_text(encoding="utf-8")).get("dataset_type", "legacy"))
+
+
+def _parse_line(line: str, path: Path, number: int, allowed_class_ids: set[int]) -> tuple[int, list[float]] | None:
     parts = line.split()
     if len(parts) != 5:
         raise ValueError(f"{path}:{number}: YOLO line needs 5 fields")
@@ -45,8 +62,8 @@ def _parse_line(line: str, path: Path, number: int) -> tuple[int, list[float]] |
         values = [float(item) for item in parts[1:]]
     except ValueError as exc:
         raise ValueError(f"{path}:{number}: values are not numeric") from exc
-    if class_id not in {0, 1}:
-        raise ValueError(f"{path}:{number}: class id is not 0 or 1")
+    if class_id not in allowed_class_ids:
+        raise ValueError(f"{path}:{number}: class id is not in dataset classes")
     if any(value < 0.0 or value > 1.0 for value in values):
         raise ValueError(f"{path}:{number}: box values outside [0,1] range")
     if values[2] <= 0 or values[3] <= 0:
@@ -101,6 +118,8 @@ def validate_dataset(session: Path) -> ValidationReport:
     images_dir = root / "images"
     labels_dir = root / "labels"
     issues: list[str] = []
+    classes = _dataset_classes(root)
+    class_names = {class_id: name for name, class_id in classes.items()}
     images = _images(root)
     if not images_dir.is_dir():
         issues.append("missing images directory")
@@ -109,7 +128,7 @@ def validate_dataset(session: Path) -> ValidationReport:
     if not images:
         issues.append("no dataset images found")
     label_count = 0
-    class_counts = {"rice": 0, "flower": 0}
+    class_counts = {name: 0 for name in classes}
     metadata_mode = labels_dir.is_dir() and any(labels_dir.rglob("*.json"))
     for image in images:
         loaded = cv2.imread(str(image), cv2.IMREAD_UNCHANGED)
@@ -139,9 +158,9 @@ def validate_dataset(session: Path) -> ValidationReport:
             if not line.strip():
                 continue
             try:
-                parsed = _parse_line(line, label_path, number)
+                parsed = _parse_line(line, label_path, number, set(class_names))
                 if parsed is not None:
-                    class_counts["rice" if parsed[0] == 0 else "flower"] += 1
+                    class_counts[class_names[parsed[0]]] += 1
             except ValueError as exc:
                 issues.append(str(exc))
     if metadata_mode and images and label_count == 0:
@@ -241,12 +260,14 @@ def write_yolo_dataset_yaml(
     train: Path,
     val: Path,
     dataset_root: Path | None = None,
+    classes: dict[str, int] | None = None,
 ) -> None:
+    classes = classes or _dataset_classes(Path(dataset_root or path).resolve())
     value = {
         "path": str(Path(dataset_root).resolve()) if dataset_root is not None else ".",
         "train": Path(train).as_posix(),
         "val": Path(val).as_posix(),
-        "names": {0: "rice", 1: "flower"},
+        "names": {class_id: name for name, class_id in classes.items()},
     }
     Path(path).write_text(
         yaml.safe_dump(value, sort_keys=False, allow_unicode=True),
@@ -287,6 +308,7 @@ def prepare_yolo_dataset(
         Path("train/images"),
         Path("val/images"),
         dataset_root=destination,
+        classes=_dataset_classes(root),
     )
     result = {
         "source": str(root),
@@ -296,6 +318,7 @@ def prepare_yolo_dataset(
         "train_images": len(split["train"]),
         "val_images": len(split["val"]),
         "class_counts": report.class_counts,
+        "dataset_type": _dataset_type(root),
         "seed": int(seed),
     }
     (destination / "prepare_report.json").write_text(

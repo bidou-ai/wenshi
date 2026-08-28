@@ -24,7 +24,7 @@ except ImportError:  # direct module execution
     from paths import load_json, save_json_atomic
 
 
-CLASSES = {"rice": 0, "flower": 1}
+LEGACY_CLASSES = {"rice": 0, "flower": 1}
 STATUSES = {"unlabelled", "labelled", "ambiguous", "skipped"}
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png"}
 
@@ -101,12 +101,18 @@ class LabelStore:
         self.labels_dir = (self.root / "labels").resolve()
         self.ambiguous_dir = (self.root / "ambiguous").resolve()
         self._capture_metadata: dict[str, dict] = {}
+        self.classes = dict(LEGACY_CLASSES)
+        self.dataset_type = "legacy"
         if not self.images_dir.is_dir() or not self.labels_dir.is_dir():
             raise ValueError("session must contain images/ and labels/")
         manifest_path = self.root / "manifest.json"
         if manifest_path.exists():
             try:
                 manifest = load_json(manifest_path)
+                raw_classes = manifest.get("classes")
+                if isinstance(raw_classes, dict) and raw_classes:
+                    self.classes = {str(name): int(class_id) for name, class_id in raw_classes.items()}
+                self.dataset_type = str(manifest.get("dataset_type", "legacy"))
                 for item in manifest.get("images", []):
                     filename = str(item.get("filename", ""))
                     if filename.startswith("images/"):
@@ -175,10 +181,9 @@ class LabelStore:
         self._validate(name, value["boxes"], value["status"])
         return value
 
-    @staticmethod
-    def _validate_box(box: dict) -> None:
-        if not isinstance(box, dict) or box.get("class_name") not in CLASSES:
-            raise ValueError("class must be rice or flower")
+    def _validate_box(self, box: dict) -> None:
+        if not isinstance(box, dict) or box.get("class_name") not in self.classes:
+            raise ValueError("class must match the dataset manifest")
         for key in ("x", "y", "width", "height"):
             if key not in box:
                 raise ValueError(f"box missing {key}")
@@ -237,7 +242,7 @@ class LabelStore:
             y = float(box["y"])
             w = float(box["width"])
             h = float(box["height"])
-            lines.append(f"{CLASSES[box['class_name']]} {(x + w / 2) / width:g} {(y + h / 2) / height:g} {w / width:g} {h / height:g}")
+            lines.append(f"{self.classes[box['class_name']]} {(x + w / 2) / width:g} {(y + h / 2) / height:g} {w / width:g} {h / height:g}")
         output.write_text("\n".join(lines) + ("\n" if lines else ""), encoding="utf-8")
         return output
 
@@ -281,6 +286,8 @@ class LabelRequestHandler(BaseHTTPRequestHandler):
         try:
             if path == "/api/images":
                 return self._json(200, {"images": self.store.list_images()})
+            if path == "/api/dataset":
+                return self._json(200, {"dataset_type": self.store.dataset_type, "classes": self.store.classes})
             if path.startswith("/api/labels/"):
                 return self._json(200, self.store.load(path.removeprefix("/api/labels/")))
             if path.startswith("/media/"):

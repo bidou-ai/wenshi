@@ -7,6 +7,8 @@ from datetime import datetime
 from pathlib import Path
 import sys
 
+import yaml
+
 
 def run_training(args: argparse.Namespace) -> int:
     try:
@@ -19,7 +21,7 @@ def run_training(args: argparse.Namespace) -> int:
 
 
 def main(argv=None) -> int:
-    parser = argparse.ArgumentParser(description="训练 Wenshi rice/flower YOLO 模型，不自动发布")
+    parser = argparse.ArgumentParser(description="训练 Wenshi 单类别 YOLO 模型，不自动发布")
     parser.add_argument("--data", type=Path, required=True)
     parser.add_argument("--base-model", default="yolo11n.pt")
     parser.add_argument("--project", type=Path, default=Path("yubei/training"))
@@ -27,10 +29,18 @@ def main(argv=None) -> int:
     parser.add_argument("--epochs", type=int, default=100)
     parser.add_argument("--imgsz", type=int, default=640)
     parser.add_argument("--device", default="cpu")
+    parser.add_argument("--model-type", choices=("plant", "panicle"))
     args = parser.parse_args(argv)
     try:
+        if args.model_type:
+            value = yaml.safe_load(args.data.read_text(encoding="utf-8")) or {}
+            names = value.get("names", {})
+            actual_names = set(names.values()) if isinstance(names, dict) else set(names)
+            expected_name = "rice_plant" if args.model_type == "plant" else "panicle"
+            if actual_names != {expected_name}:
+                raise RuntimeError(f"模型类别不匹配：{args.model_type} 需要 {expected_name}")
         return run_training(args)
-    except RuntimeError as exc:
+    except (OSError, yaml.YAMLError, RuntimeError) as exc:
         print(f"训练未启动: {exc}", file=sys.stderr)
         return 2
 

@@ -1,10 +1,10 @@
 const state = {
   images: [], filtered: [], index: -1, current: null, boxes: [], selected: -1,
-  activeClass: 'rice', undo: [], redo: [], previous: null, drag: null,
+  activeClass: '', classes: {}, undo: [], redo: [], previous: null, drag: null,
   preview: null, status: null, image: null, zoom: 'fit',
 };
 const $ = (id) => document.getElementById(id);
-const tagNames = { flower: '开花', rice: '水稻', neutral: '普通' };
+const tagNames = { flower: '旧开花批次', rice: '旧水稻批次', neutral: '普通' };
 const qualityNames = { blur: '模糊', low_contrast: '对比度低', underexposed: '欠曝', overexposed: '过曝' };
 
 async function api(path, options) {
@@ -16,12 +16,10 @@ async function api(path, options) {
 
 function updateProgress() {
   const labelled = state.filtered.filter((item) => item.status === 'labelled').length;
-  const flowers = state.filtered.filter((item) => item.capture_tag === 'flower').length;
-  $('progress').textContent = `${labelled} / ${state.filtered.length} 已标注 · ${flowers} 张开花批次`;
+  $('progress').textContent = `${labelled} / ${state.filtered.length} 已标注`;
 }
 
 function matchesFilter(item, filter) {
-  if (filter === 'flower' || filter === 'rice') return item.capture_tag === filter;
   return filter === 'all' || item.status === filter;
 }
 
@@ -72,7 +70,7 @@ function renderCanvas() {
   canvas.width = image.naturalWidth * scale; canvas.height = image.naturalHeight * scale; canvas.dataset.scale = scale;
   const context = canvas.getContext('2d'); context.drawImage(image, 0, 0, canvas.width, canvas.height);
   state.boxes.forEach((box, index) => {
-    const color = index === state.selected ? '#ffcf54' : (box.class_name === 'rice' ? '#49d3a6' : '#ff9278');
+    const color = index === state.selected ? '#ffcf54' : '#49d3a6';
     context.strokeStyle = color; context.lineWidth = index === state.selected ? 3 : 2;
     context.strokeRect(box.x * scale, box.y * scale, box.width * scale, box.height * scale);
     context.fillStyle = color; context.font = 'bold 13px system-ui';
@@ -139,9 +137,12 @@ $('canvas').addEventListener('mousemove', (event) => {
 $('canvas').addEventListener('mouseup', (event) => finishDrag(imagePoint(event)));
 $('canvas').addEventListener('mouseleave', () => { if (state.drag && state.drag.mode === 'draw') { state.preview = null; renderCanvas(); } });
 
-document.querySelectorAll('.class').forEach((button) => button.onclick = () => {
-  state.activeClass = button.id; document.querySelectorAll('.class').forEach((item) => item.classList.toggle('active', item === button));
-});
+function renderClassButtons() {
+  const entries = Object.keys(state.classes);
+  state.activeClass = state.activeClass || entries[0] || '';
+  $('class-buttons').innerHTML = entries.map((name) => `<button id="class-${name}" class="class ${name === state.activeClass ? 'active' : ''}">新增 ${name}</button>`).join('');
+  entries.forEach((name) => { $(`class-${name}`).onclick = () => { state.activeClass = name; renderClassButtons(); }; });
+}
 $('set-selected-class').onclick = () => { if (state.selected < 0) return; pushUndo(); state.boxes[state.selected].class_name = state.activeClass; renderCanvas(); };
 $('delete').onclick = () => { if (state.selected < 0) return; pushUndo(); state.boxes.splice(state.selected, 1); state.selected = -1; renderCanvas(); };
 $('undo').onclick = () => { if (!state.undo.length) return; state.redo.push(JSON.stringify(state.boxes)); state.boxes = JSON.parse(state.undo.pop()); state.selected = -1; renderCanvas(); };
@@ -182,4 +183,4 @@ window.addEventListener('keydown', (event) => {
   if (event.key.toLowerCase() === 's') $('save').click();
 });
 
-api('/api/images').then((value) => { state.images = value.images; applyFilter(); }).catch((error) => { $('empty').textContent = error.message; });
+api('/api/images').then((value) => { state.images = value.images; return api('/api/dataset'); }).then((value) => { state.classes = value.classes || {}; renderClassButtons(); applyFilter(); }).catch((error) => { $('empty').textContent = error.message; });

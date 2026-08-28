@@ -150,6 +150,13 @@ def test_yubei_launcher_opens_label_browser_and_finds_prepared_dataset():
     assert "publish-model" in text
 
 
+def test_yubei_launcher_exposes_two_independent_model_dataflows():
+    text = (ROOT / "yubei" / "start_yubei.sh").read_text(encoding="utf-8")
+
+    for command in ("capture-plant", "capture-panicle", "prepare-plant", "prepare-panicle", "train-plant", "train-panicle"):
+        assert command in text
+
+
 def test_github_sync_guide_and_offline_ci_exist():
     guide = ROOT / "docs" / "归档" / "旧资料" / "GitHub同步说明.md"
     workflow = ROOT / ".github" / "workflows" / "tests.yml"

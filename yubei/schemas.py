@@ -15,6 +15,7 @@ except ImportError:  # direct module execution
 
 VALID_STATUSES = {"captured", "skipped", "ambiguous"}
 CAPTURE_TAGS = {"neutral", "rice", "flower"}
+DATASET_TYPES = {"plant", "panicle"}
 
 
 @dataclass
@@ -24,6 +25,11 @@ class DatasetManifest:
     created_at: str = field(
         default_factory=lambda: datetime.now(timezone.utc).isoformat(timespec="seconds")
     )
+    dataset_type: str = "legacy"
+
+    def __post_init__(self) -> None:
+        if self.dataset_type not in DATASET_TYPES | {"legacy"}:
+            raise ValueError(f"invalid dataset type: {self.dataset_type}")
 
     def add_image(
         self,
@@ -58,7 +64,7 @@ class DatasetManifest:
         self.images.append(item)
 
     def write(self, path: Path) -> None:
-        save_json_atomic(
-            Path(path),
-            {"classes": self.classes, "created_at": self.created_at, "images": self.images},
-        )
+        value = {"classes": self.classes, "created_at": self.created_at, "images": self.images}
+        if self.dataset_type != "legacy":
+            value["dataset_type"] = self.dataset_type
+        save_json_atomic(Path(path), value)

@@ -99,3 +99,15 @@ def test_capture_uses_camera_url_from_formal_config(tmp_path: Path):
     config.write_text("camera:\n  server_url: http://10.8.0.203:18080\n", encoding="utf-8")
 
     assert camera_url_from_config(config) == "http://10.8.0.203:18080"
+
+
+def test_capture_session_records_single_model_dataset_type(tmp_path: Path):
+    paths = SessionPaths.create(tmp_path)
+    session = CaptureSession(FakeCamera(), paths, dataset_type="panicle")
+
+    assert session.run(io.StringIO("\nq\n"), io.StringIO(), preview=False) == 1
+
+    manifest = json.loads(paths.manifest_path.read_text(encoding="utf-8"))
+    assert manifest["dataset_type"] == "panicle"
+    assert manifest["classes"] == {"panicle": 0}
+    assert manifest["images"][0]["dataset_type"] == "panicle"

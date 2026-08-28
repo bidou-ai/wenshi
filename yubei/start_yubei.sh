@@ -16,12 +16,18 @@ Wenshi yubei 预备工具
   camera-check          只检查 D435，不连接或控制 AGV/JAKA
   capture [--focus flower]
                         回车采集 RGB；可默认标记为开花批次
+  capture-plant          无 Tag 采集整株水稻训练图片
+  capture-panicle        无 Tag 采集稻穗训练图片
   audit [会话目录]      检查照片清晰度、曝光、重复图和采集批次
   label [会话目录]      启动本地标注网页，默认使用最新会话
   package-labeler [会话目录] [输出目录]
                         打包可复制到 Windows 的离线标注文件夹
   prepare [会话目录]    验证并生成可训练的 train/val 数据集
+  prepare-plant [会话目录]   准备整株水稻单类别数据集
+  prepare-panicle [会话目录] 准备稻穗单类别数据集
   train [data.yaml]     启动 YOLO 训练
+  train-plant [data.yaml]    训练 rice_plant 模型
+  train-panicle [data.yaml] 训练 panicle 模型
   teach                 只读依次保存八个 JAKA 示教点（现场动作测试使用 start_field_test.sh）
   verify                校验暂存的八点示教文件
   publish-viewpoints --confirm
@@ -36,6 +42,13 @@ EOF
 latest_session() {
   [[ -d "$DATA_ROOT" ]] || return 0
   find "$DATA_ROOT" -mindepth 1 -maxdepth 1 -type d -name 'dataset_*' -printf '%T@ %p\n' 2>/dev/null \
+    | sort -nr | sed -n '1p' | cut -d' ' -f2-
+}
+
+latest_typed_session() {
+  local dataset_type="$1"
+  [[ -d "$ROOT/yubei/data/$dataset_type" ]] || return 0
+  find "$ROOT/yubei/data/$dataset_type" -mindepth 1 -maxdepth 1 -type d -name 'dataset_*' -printf '%T@ %p\n' 2>/dev/null \
     | sort -nr | sed -n '1p' | cut -d' ' -f2-
 }
 
@@ -69,6 +82,13 @@ run_command() {
         --config "${WENSHI_CONFIG:-$ROOT/config/wenshi.yaml}" \
         --output "$DATA_ROOT" --preview "$@"
       ;;
+    capture-plant|capture-panicle)
+      local dataset_type="plant"
+      [[ "$command" == "capture-panicle" ]] && dataset_type="panicle"
+      python3 yubei/dataset_capture.py \
+        --config "${WENSHI_CONFIG:-$ROOT/config/wenshi.yaml}" \
+        --output "$ROOT/yubei/data/$dataset_type" --dataset-type "$dataset_type" --preview "$@"
+      ;;
     audit)
       local session="${1:-$(latest_session)}"
       [[ -n "$session" ]] || { echo "没有找到数据集会话" >&2; return 1; }
@@ -91,10 +111,25 @@ run_command() {
       local output="$ROOT/yubei/datasets/$(basename "$session")_$(date +%Y%m%d_%H%M%S_%N)"
       python3 yubei/dataset_validate.py "$session" --prepare "$output"
       ;;
+    prepare-plant|prepare-panicle)
+      local dataset_type="plant"
+      [[ "$command" == "prepare-panicle" ]] && dataset_type="panicle"
+      local session="${1:-$(latest_typed_session "$dataset_type")}"
+      [[ -n "$session" ]] || { echo "没有找到数据集会话" >&2; return 1; }
+      local output="$ROOT/yubei/datasets/$dataset_type/$(basename "$session")_$(date +%Y%m%d_%H%M%S_%N)"
+      python3 yubei/dataset_validate.py "$session" --prepare "$output"
+      ;;
     train)
       local data="${1:-$(latest_prepared)}"
       [[ -n "$data" ]] || { echo "没有找到已准备的 data.yaml，请先运行 prepare" >&2; return 1; }
       python3 yubei/train_yolo.py --data "$data" --project "$ROOT/yubei/training" --device cpu
+      ;;
+    train-plant|train-panicle)
+      local model_type="plant"
+      [[ "$command" == "train-panicle" ]] && model_type="panicle"
+      local data="${1:-$(find "$ROOT/yubei/datasets/$model_type" -type f -name data.yaml -print -quit 2>/dev/null)}"
+      [[ -n "$data" ]] || { echo "没有找到 $model_type 数据集，请先运行 prepare-$model_type" >&2; return 1; }
+      python3 yubei/train_yolo.py --data "$data" --model-type "$model_type" --project "$ROOT/yubei/training/$model_type" --name "${model_type}_$(date +%Y%m%d_%H%M%S)" --device cpu
       ;;
     teach)
       python3 yubei/teach_viewpoints.py --output "$STAGED_VIEWPOINTS" --all
