@@ -13,8 +13,8 @@ import cv2
 def normalize_session(source: Path, output: Path, rotation: str = "clockwise_90") -> Path:
     source = Path(source).expanduser().resolve()
     output = Path(output).expanduser().resolve()
-    if rotation != "clockwise_90":
-        raise ValueError("only clockwise_90 normalization is supported")
+    if rotation not in {"clockwise_90", "none"}:
+        raise ValueError("rotation must be clockwise_90 or none")
     if not (source / "images").is_dir():
         raise ValueError("source session must contain images/")
     if output.exists() and any(output.iterdir()):
@@ -31,7 +31,7 @@ def normalize_session(source: Path, output: Path, rotation: str = "clockwise_90"
         relative = image_path.relative_to(source / "images")
         destination = output / "images" / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
-        rotated = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+        rotated = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE) if rotation == "clockwise_90" else image
         if not cv2.imwrite(str(destination), rotated):
             raise OSError(f"failed to write image: {destination}")
     manifest_path = source / "manifest.json"
@@ -49,12 +49,13 @@ def normalize_session(source: Path, output: Path, rotation: str = "clockwise_90"
 
 
 def main(argv=None) -> int:
-    parser = argparse.ArgumentParser(description="将训练图片统一旋转为竖直方向")
+    parser = argparse.ArgumentParser(description="按数据集类型规范化训练图片方向")
     parser.add_argument("source", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--rotation", choices=("clockwise_90", "none"), default="clockwise_90")
     args = parser.parse_args(argv)
     try:
-        print(normalize_session(args.source, args.output))
+        print(normalize_session(args.source, args.output, args.rotation))
         return 0
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"规范化失败: {exc}")
