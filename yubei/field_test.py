@@ -44,6 +44,17 @@ from wenshi_patrol.map_utils import load_station_poses
 from wenshi_patrol.jaka import JakaClient
 
 
+def resolve_console_input(input_stream: TextIO, tty_opener=open) -> tuple[TextIO, TextIO | None]:
+    """Use the controlling terminal when a launcher redirected stdin."""
+    if input_stream.isatty():
+        return input_stream, None
+    try:
+        tty_stream = tty_opener("/dev/tty", "r", encoding="utf-8")
+    except (OSError, TypeError):
+        return input_stream, None
+    return tty_stream, tty_stream
+
+
 def build_closed_route(
     stations: dict[str, tuple[float, float, float]], order: list[str]
 ) -> list[Segment]:
@@ -544,9 +555,9 @@ class FieldTestSession:
         with self.log_path.open("a", encoding="utf-8") as stream:
             stream.write(f"{datetime.now(timezone.utc).isoformat()} {message}\n")
 
-    def event(self, name: str, **values: Any):
+    def event(self, event_type: str, **values: Any):
         with self.events.open("a", encoding="utf-8") as stream:
-            stream.write(json.dumps({"time": datetime.now(timezone.utc).isoformat(), "event": name, **values}, ensure_ascii=False) + "\n")
+            stream.write(json.dumps({"time": datetime.now(timezone.utc).isoformat(), "event": event_type, **values}, ensure_ascii=False) + "\n")
 
     def teach(self, input_stream: TextIO, output_stream: TextIO) -> int:
         self.preview.start()
@@ -558,7 +569,13 @@ class FieldTestSession:
                 output_stream.write(f"请人工移动到 {name}，确认安全后按回车保存；输入 q 结束：")
                 output_stream.flush()
                 command = input_stream.readline()
-                if command == "" or command.strip().lower() == "q":
+                if command == "":
+                    output_stream.write("输入流已结束（不是普通回车），示教提前结束；请从可交互终端启动后重试。\n")
+                    output_stream.flush()
+                    return saved
+                if command.strip().lower() == "q":
+                    output_stream.write(f"已停止示教，已保存 {saved}/{len(VIEWPOINT_NAMES)} 个点。\n")
+                    output_stream.flush()
                     return saved
                 if command.strip():
                     output_stream.write("只接受回车或 q。\n")
@@ -700,12 +717,17 @@ def main(argv=None) -> int:
     parser.add_argument("--no-preview", action="store_true", help="不打开 OpenCV 预览窗口")
     parser.add_argument("--ros", action="store_true", help="发布地图、位姿和状态供 RViz 显示")
     args = parser.parse_args(argv)
-    FieldTestSession(
-        args.config,
-        args.output,
-        preview=not args.no_preview,
-        ros_enabled=args.ros,
-    ).run_console(__import__("sys").stdin, __import__("sys").stdout)
+    input_stream, owned_input = resolve_console_input(__import__("sys").stdin)
+    try:
+        FieldTestSession(
+            args.config,
+            args.output,
+            preview=not args.no_preview,
+            ros_enabled=args.ros,
+        ).run_console(input_stream, __import__("sys").stdout)
+    finally:
+        if owned_input is not None:
+            owned_input.close()
     return 0
 
 

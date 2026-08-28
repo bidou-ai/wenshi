@@ -37,7 +37,7 @@ ROS2 桥只读状态/图像，不拥有 AGV/JAKA 运动权限。没有图形环�
 `2.0s` 后从当前线段继续，急停仍需人工复位。启动时若已靠近 LM4 等拐角，会按站点接入而不重复跑前一段。
 示教单点通信失败会提示保持当前位置重新按回车，继续保存该点，不会因一次超时退出八点流程。
 
-数据集采集与正式巡检采集完全分开。数据集会话使用 `yubei/data/dataset_<timestamp>/`；正式巡检使用 `runtime/runs/run_<timestamp>/`。
+数据集采集与正式巡检采集完全分开。数据集会话使用 `yubei/data/dataset_<timestamp>/`；正式巡检使用 `runtime/runs/run_<timestamp>/`。训练集划分优先按 `plant_id` 分组，其次按 `capture_batch`；缺少两者的旧数据会按整个会话分组，绝不把同一未知会话的相关帧拆到 train 和 val。
 
 只拍照片时使用 `camera-check`，它只访问 Windows D435 服务，不检查、不连接、不控制 AGV/JAKA。
 
@@ -50,3 +50,28 @@ ROS2 桥只读状态/图像，不拥有 AGV/JAKA 运动权限。没有图形环�
 预览窗口中回车保存当前帧；输入 `f`、`r`、`n` 只切换后续照片的批次标记，不会自动改变 YOLO 类别。
 每张照片会记录相机帧号、清晰度/曝光指标和相似图提示。采集结束后运行
 `./yubei/start_yubei.sh audit` 生成 `capture_audit.json`，先处理模糊、曝光异常和重复图，再进入标注。
+
+## 在另一台 Windows 电脑标注
+
+Ubuntu 上先把最新采集会话打包：
+
+```bash
+cd /home/ubuntu/jaka/wenshi
+./yubei/start_yubei.sh package-labeler
+```
+
+也可以指定某个会话和输出目录：
+
+```bash
+./yubei/start_yubei.sh package-labeler yubei/data/dataset_时间 yubei/windows_labeler_dataset_时间
+```
+
+把生成的整个 `yubei/windows_labeler_dataset_时间/` 文件夹复制到 Windows。Windows 电脑只需要安装 Python 3.10
+或更新版本，双击里面的 `start_label_windows.bat`，浏览器会打开和 Ubuntu 相同的标注网页。
+
+标注完成后，把 Windows 包里的 `dataset/labels/` 整个文件夹复制回 Ubuntu 原始会话的 `labels/`，覆盖同名
+`json/txt` 文件。随后在 Ubuntu 执行：
+
+```bash
+./yubei/start_yubei.sh prepare yubei/data/dataset_时间
+```

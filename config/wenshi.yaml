@@ -136,3 +136,89 @@ topics:
 logging:
   root_dir: "../runtime"
   sample_period_s: 0.20
+
+# Phenotyping is intentionally disabled until field mapping and calibration are recorded.
+phenotyping:
+  enabled: false
+  traits: [plant_height, effective_panicle_count]
+  processing_mode: offline
+  capture_burst_count: 3
+  capture_burst_max: 5
+  max_retries_per_view: 3
+  arm_postures:
+    left: null
+    center: null
+    right: null
+  camera_calibration:
+    calibrated: false
+    evidence: null
+  water_compensation:
+    calibrated: false
+    evidence: null
+  formal_execution_requires:
+    tag_mapping: true
+    tag_physical_size: true
+    tag_mounting_orientation: true
+    position_calibration: true
+    arm_postures: true
+    water_compensation: true
+    camera_calibration: true
+
+april_tag:
+  family: tag25h7
+  physical_size_m: null
+  detector_backend: null
+  mounting_orientation: null
+
+# IDs and positions are placeholders until the field mapping is confirmed.
+plants:
+  - {plant_id: A-01, tag_id: null, region: A, row: row-1, index: 1, observation_group: left-01, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: A-02, tag_id: null, region: A, row: row-1, index: 2, observation_group: left-02, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: A-03, tag_id: null, region: A, row: row-1, index: 3, observation_group: left-03, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: A-04, tag_id: null, region: A, row: row-1, index: 4, observation_group: left-04, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: A-05, tag_id: null, region: A, row: row-1, index: 5, observation_group: left-05, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: A-06, tag_id: null, region: A, row: row-1, index: 6, observation_group: left-06, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: A-07, tag_id: null, region: A, row: row-1, index: 7, observation_group: left-07, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: A-08, tag_id: null, region: A, row: row-1, index: 8, observation_group: left-08, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: B-L-01, tag_id: null, region: B, row: left, index: 1, observation_group: left-01, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: B-L-02, tag_id: null, region: B, row: left, index: 2, observation_group: left-02, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: B-L-03, tag_id: null, region: B, row: left, index: 3, observation_group: left-03, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: B-L-04, tag_id: null, region: B, row: left, index: 4, observation_group: left-04, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: B-L-05, tag_id: null, region: B, row: left, index: 5, observation_group: left-05, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: B-L-06, tag_id: null, region: B, row: left, index: 6, observation_group: left-06, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: B-L-07, tag_id: null, region: B, row: left, index: 7, observation_group: left-07, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: B-L-08, tag_id: null, region: B, row: left, index: 8, observation_group: left-08, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: B-R-01, tag_id: null, region: B, row: right, index: 1, observation_group: right-01, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: B-R-02, tag_id: null, region: B, row: right, index: 2, observation_group: right-02, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: B-R-03, tag_id: null, region: B, row: right, index: 3, observation_group: right-03, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: B-R-04, tag_id: null, region: B, row: right, index: 4, observation_group: right-04, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: B-R-05, tag_id: null, region: B, row: right, index: 5, observation_group: right-05, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: B-R-06, tag_id: null, region: B, row: right, index: 6, observation_group: right-06, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: B-R-07, tag_id: null, region: B, row: right, index: 7, observation_group: right-07, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: B-R-08, tag_id: null, region: B, row: right, index: 8, observation_group: right-08, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: C-01, tag_id: null, region: C, row: row-1, index: 1, observation_group: right-01, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: C-02, tag_id: null, region: C, row: row-1, index: 2, observation_group: right-02, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: C-03, tag_id: null, region: C, row: row-1, index: 3, observation_group: right-03, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: C-04, tag_id: null, region: C, row: row-1, index: 4, observation_group: right-04, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: C-05, tag_id: null, region: C, row: row-1, index: 5, observation_group: right-05, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: C-06, tag_id: null, region: C, row: row-1, index: 6, observation_group: right-06, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: C-07, tag_id: null, region: C, row: row-1, index: 7, observation_group: right-07, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: C-08, tag_id: null, region: C, row: row-1, index: 8, observation_group: right-08, camera_side: right, slot_top_to_water_m: null}
+
+observation_groups:
+  - {id: left-01, route_segment: null, approximate_along_track_m: null, slowdown_before_m: null, trigger_distance_m: null, left_plant_id: A-01, right_plant_id: B-L-01}
+  - {id: left-02, route_segment: null, approximate_along_track_m: null, slowdown_before_m: null, trigger_distance_m: null, left_plant_id: A-02, right_plant_id: B-L-02}
+  - {id: left-03, route_segment: null, approximate_along_track_m: null, slowdown_before_m: null, trigger_distance_m: null, left_plant_id: A-03, right_plant_id: B-L-03}
+  - {id: left-04, route_segment: null, approximate_along_track_m: null, slowdown_before_m: null, trigger_distance_m: null, left_plant_id: A-04, right_plant_id: B-L-04}
+  - {id: left-05, route_segment: null, approximate_along_track_m: null, slowdown_before_m: null, trigger_distance_m: null, left_plant_id: A-05, right_plant_id: B-L-05}
+  - {id: left-06, route_segment: null, approximate_along_track_m: null, slowdown_before_m: null, trigger_distance_m: null, left_plant_id: A-06, right_plant_id: B-L-06}
+  - {id: left-07, route_segment: null, approximate_along_track_m: null, slowdown_before_m: null, trigger_distance_m: null, left_plant_id: A-07, right_plant_id: B-L-07}
+  - {id: left-08, route_segment: null, approximate_along_track_m: null, slowdown_before_m: null, trigger_distance_m: null, left_plant_id: A-08, right_plant_id: B-L-08}
+  - {id: right-01, route_segment: null, approximate_along_track_m: null, slowdown_before_m: null, trigger_distance_m: null, left_plant_id: B-R-01, right_plant_id: C-01}
+  - {id: right-02, route_segment: null, approximate_along_track_m: null, slowdown_before_m: null, trigger_distance_m: null, left_plant_id: B-R-02, right_plant_id: C-02}
+  - {id: right-03, route_segment: null, approximate_along_track_m: null, slowdown_before_m: null, trigger_distance_m: null, left_plant_id: B-R-03, right_plant_id: C-03}
+  - {id: right-04, route_segment: null, approximate_along_track_m: null, slowdown_before_m: null, trigger_distance_m: null, left_plant_id: B-R-04, right_plant_id: C-04}
+  - {id: right-05, route_segment: null, approximate_along_track_m: null, slowdown_before_m: null, trigger_distance_m: null, left_plant_id: B-R-05, right_plant_id: C-05}
+  - {id: right-06, route_segment: null, approximate_along_track_m: null, slowdown_before_m: null, trigger_distance_m: null, left_plant_id: B-R-06, right_plant_id: C-06}
+  - {id: right-07, route_segment: null, approximate_along_track_m: null, slowdown_before_m: null, trigger_distance_m: null, left_plant_id: B-R-07, right_plant_id: C-07}
+  - {id: right-08, route_segment: null, approximate_along_track_m: null, slowdown_before_m: null, trigger_distance_m: null, left_plant_id: B-R-08, right_plant_id: C-08}

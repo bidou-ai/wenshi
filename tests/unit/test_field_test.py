@@ -10,6 +10,7 @@ from yubei.field_test import (
     route_attachment,
     RouteRunner,
     validate_viewpoints,
+    resolve_console_input,
 )
 
 
@@ -217,3 +218,74 @@ def test_field_teach_retries_the_same_point_after_snapshot_failure(monkeypatch, 
 
     assert saved == len(field_test_module.VIEWPOINT_NAMES)
     assert "保存失败" in output.getvalue()
+
+
+def test_field_teach_records_point_name_and_continues_after_first_save(monkeypatch, tmp_path):
+    from yubei import field_test as field_test_module
+
+    class SnapshotClient:
+        def __init__(self, *_args, **_kwargs):
+            pass
+
+        def read_snapshot(self):
+            return [1.0] * 6, [0.0] * 6
+
+    class FakePreview:
+        def start(self):
+            return None
+
+        def snapshot(self, _path):
+            return True
+
+    class FakeTeachingSession:
+        def save(self, _name, _joint, _tcp):
+            return None
+
+    session = field_test_module.FieldTestSession.__new__(field_test_module.FieldTestSession)
+    session.config = {"jaka": {"ip": "127.0.0.1", "port": 10001}}
+    session.preview = FakePreview()
+    session.run_dir = tmp_path
+    session.teach_session = FakeTeachingSession()
+    session.events = tmp_path / "events.jsonl"
+    monkeypatch.setattr(field_test_module, "TeachingClient", SnapshotClient)
+
+    output = __import__("io").StringIO()
+    saved = session.teach(__import__("io").StringIO("\nq\n"), output)
+
+    assert saved == 1
+    event = json.loads(session.events.read_text(encoding="utf-8"))
+    assert event["event"] == "teach_saved"
+    assert event["name"] == "home_safe"
+    assert event["time"]
+    assert "请人工移动到 camera" in output.getvalue()
+
+
+def test_console_input_uses_controlling_tty_when_stdin_is_not_a_tty():
+    class RedirectedInput:
+        def isatty(self):
+            return False
+
+    tty = object()
+    opened = []
+
+    def open_tty(path, mode, encoding=None):
+        opened.append((path, mode, encoding))
+        return tty
+
+    stream, owned = resolve_console_input(RedirectedInput(), open_tty)
+
+    assert stream is tty
+    assert owned is tty
+    assert opened == [("/dev/tty", "r", "utf-8")]
+
+
+def test_console_input_keeps_terminal_stdin():
+    class TerminalInput:
+        def isatty(self):
+            return True
+
+    stream = TerminalInput()
+    selected, owned = resolve_console_input(stream, lambda *_args, **_kwargs: AssertionError())
+
+    assert selected is stream
+    assert owned is None

@@ -3,23 +3,53 @@
 from __future__ import annotations
 
 import argparse
+import ipaddress
 import json
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import unquote, urlparse
+import re
 
 try:
     from .admin import AdminActions
+    from .export import export_csv
+    from .phenotype_index import PhenotypeIndex
     from .run_index import MediaResolver, RunIndex
 except ImportError:  # direct: python3 dashboard/server.py
     from admin import AdminActions
+    from export import export_csv
+    from phenotype_index import PhenotypeIndex
     from run_index import MediaResolver, RunIndex
+
+
+_PHENOTYPE_RUN = re.compile(r"^/api/phenotype/runs/([^/]+)$")
+_PHENOTYPE_PLANT = re.compile(r"^/api/phenotype/runs/([^/]+)/plants/([^/]+)$")
+_PHENOTYPE_MEDIA = re.compile(r"^/api/phenotype/runs/([^/]+)/plants/([^/]+)/media/(left|center|right)/(color\.jpg|depth\.png|frame\.json)$")
+_PHENOTYPE_EXPORT = re.compile(r"^/api/phenotype/export/([^/]+)$")
+
+
+def parse_phenotype_path(path: str) -> tuple[str, ...] | None:
+    """Parse only complete, known phenotype API paths."""
+    if path == "/api/phenotype/runs":
+        return ("runs",)
+    for kind, pattern in (
+        ("export", _PHENOTYPE_EXPORT),
+        ("media", _PHENOTYPE_MEDIA),
+        ("plant", _PHENOTYPE_PLANT),
+        ("run", _PHENOTYPE_RUN),
+    ):
+        match = pattern.fullmatch(path)
+        if match:
+            return (kind, *match.groups())
+    return None
 
 
 class DashboardHandler(BaseHTTPRequestHandler):
     index: RunIndex
+    phenotype_index: PhenotypeIndex
     admin: AdminActions
     static_dir: Path
+    phenotype_requires_auth = False
 
     def log_message(self, format, *args):  # noqa: A002
         return
@@ -50,11 +80,47 @@ class DashboardHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(data)
 
+    def _require_phenotype_auth(self) -> None:
+        if self.phenotype_requires_auth:
+            self.admin._check(self.headers.get("X-Wenshi-Token", ""))
+
     def do_GET(self):  # noqa: N802
         path = unquote(urlparse(self.path).path)
         try:
             if path == "/api/runs":
                 return self._write_json(200, {"runs": self.index.list_runs()})
+            phenotype_route = parse_phenotype_path(path)
+            if phenotype_route:
+                self._require_phenotype_auth()
+                kind, *parts = phenotype_route
+                if kind == "runs":
+                    return self._write_json(200, {"runs": self.phenotype_index.list_runs()})
+                if kind == "export":
+                    from io import StringIO
+                    output = StringIO()
+                    export_csv(self.phenotype_index._run_path(parts[0]), output)
+                    data = output.getvalue().encode("utf-8")
+                    self.send_response(200)
+                    self.send_header("Content-Type", "text/csv; charset=utf-8")
+                    self.send_header("Content-Disposition", f'attachment; filename="{parts[0]}.csv"')
+                    self.send_header("Content-Length", str(len(data)))
+                    self.end_headers()
+                    self.wfile.write(data)
+                    return
+                if kind == "media":
+                    media = self.phenotype_index.resolve_media(*parts)
+                    data = media.read_bytes()
+                    filename = parts[-1]
+                    content_type = "image/png" if filename.endswith(".png") else "image/jpeg" if filename.endswith(".jpg") else "application/json; charset=utf-8"
+                    self.send_response(200)
+                    self.send_header("Content-Type", content_type)
+                    self.send_header("Content-Length", str(len(data)))
+                    self.end_headers()
+                    self.wfile.write(data)
+                    return
+                if kind == "plant":
+                    return self._write_json(200, self.phenotype_index.load_plant(*parts))
+                return self._write_json(200, self.phenotype_index.load_run(parts[0]))
             if path.startswith("/api/runs/") and "/targets/" not in path:
                 return self._write_json(200, self.index.load_run(path.removeprefix("/api/runs/")))
             if path.startswith("/api/runs/") and "/targets/" in path:
@@ -73,6 +139,8 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 self.wfile.write(data)
                 return
             return self._static("index.html" if path == "/" else path)
+        except PermissionError as exc:
+            self._write_json(403, {"error": str(exc)})
         except (ValueError, FileNotFoundError) as exc:
             self._write_json(400, {"error": str(exc)})
 
@@ -94,6 +162,18 @@ class DashboardHandler(BaseHTTPRequestHandler):
             self._write_json(400, {"error": str(exc)})
 
 
+def dashboard_host_policy(host: str, pin: str) -> bool:
+    """Return whether phenotype reads need a token for this listening address."""
+    normalized = str(host).strip().strip("[]").lower()
+    try:
+        loopback = ipaddress.ip_address(normalized).is_loopback
+    except ValueError:
+        loopback = normalized == "localhost"
+    if not loopback and not pin:
+        raise ValueError("非本机监听必须通过 --pin 配置管理员 PIN")
+    return not loopback
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="启动 Wenshi 巡检结果后台")
     parser.add_argument("--root", type=Path, default=Path("runtime/runs"))
@@ -101,12 +181,18 @@ def main(argv=None) -> int:
     parser.add_argument("--port", type=int, default=8088)
     parser.add_argument("--pin", default="")
     args = parser.parse_args(argv)
+    try:
+        phenotype_requires_auth = dashboard_host_policy(args.host, args.pin)
+    except ValueError as exc:
+        parser.error(str(exc))
     index = RunIndex(args.root)
     admin = AdminActions(args.root, args.pin)
     handler = type("WenshiDashboardHandler", (DashboardHandler,), {})
     handler.index = index
+    handler.phenotype_index = PhenotypeIndex(args.root)
     handler.admin = admin
     handler.static_dir = Path(__file__).resolve().parent / "static"
+    handler.phenotype_requires_auth = phenotype_requires_auth
     server = ThreadingHTTPServer((args.host, args.port), handler)
     print(f"Wenshi 后台: http://{args.host}:{args.port}/")
     try:

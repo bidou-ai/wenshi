@@ -13,7 +13,10 @@ import threading
 from urllib.parse import parse_qs, unquote, urlparse
 import webbrowser
 
-import cv2
+try:
+    import cv2
+except ImportError:  # Windows annotation-only package should run with stdlib Python.
+    cv2 = None
 
 try:
     from .paths import load_json, save_json_atomic
@@ -24,6 +27,60 @@ except ImportError:  # direct module execution
 CLASSES = {"rice": 0, "flower": 1}
 STATUSES = {"unlabelled", "labelled", "ambiguous", "skipped"}
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png"}
+
+
+def _png_dimensions(data: bytes) -> tuple[int, int] | None:
+    if len(data) < 24 or data[:8] != b"\x89PNG\r\n\x1a\n" or data[12:16] != b"IHDR":
+        return None
+    return int.from_bytes(data[16:20], "big"), int.from_bytes(data[20:24], "big")
+
+
+def _jpeg_dimensions(data: bytes) -> tuple[int, int] | None:
+    if len(data) < 4 or data[:2] != b"\xff\xd8":
+        return None
+    index = 2
+    while index + 9 < len(data):
+        if data[index] != 0xFF:
+            index += 1
+            continue
+        while index < len(data) and data[index] == 0xFF:
+            index += 1
+        if index >= len(data):
+            return None
+        marker = data[index]
+        index += 1
+        if marker in {0xD8, 0xD9}:
+            continue
+        if index + 2 > len(data):
+            return None
+        segment_length = int.from_bytes(data[index:index + 2], "big")
+        if segment_length < 2 or index + segment_length > len(data):
+            return None
+        if marker in {
+            0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7,
+            0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF,
+        }:
+            if segment_length < 7:
+                return None
+            height = int.from_bytes(data[index + 3:index + 5], "big")
+            width = int.from_bytes(data[index + 5:index + 7], "big")
+            return width, height
+        index += segment_length
+    return None
+
+
+def image_dimensions(path: Path) -> tuple[int, int] | None:
+    if cv2 is not None:
+        image = cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
+        if image is not None:
+            return int(image.shape[1]), int(image.shape[0])
+    data = path.read_bytes()
+    suffix = path.suffix.lower()
+    if suffix == ".png":
+        return _png_dimensions(data)
+    if suffix in {".jpg", ".jpeg"}:
+        return _jpeg_dimensions(data)
+    return None
 
 
 def _safe_name(root: Path, name: str) -> Path:
@@ -76,10 +133,7 @@ class LabelStore:
         return self.labels_dir / relative.with_suffix(".txt")
 
     def _dimensions(self, name: str) -> tuple[int, int] | None:
-        image = cv2.imread(str(self._image_path(name)), cv2.IMREAD_UNCHANGED)
-        if image is None:
-            return None
-        return int(image.shape[1]), int(image.shape[0])
+        return image_dimensions(self._image_path(name))
 
     def list_images(self) -> list[dict]:
         values = []

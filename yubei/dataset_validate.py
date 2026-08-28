@@ -149,16 +149,6 @@ def validate_dataset(session: Path) -> ValidationReport:
     return ValidationReport(not issues, len(images), label_count, issues, class_counts)
 
 
-def _split_names(images: list[str], val_ratio: float, seed: int) -> dict[str, list[str]]:
-    if not images:
-        raise ValueError("no dataset images found")
-    ratio = min(max(float(val_ratio), 0.0), 0.9)
-    shuffled = list(images)
-    random.Random(int(seed)).shuffle(shuffled)
-    val_count = max(1, round(len(shuffled) * ratio)) if len(shuffled) > 1 and ratio > 0 else 0
-    return {"train": sorted(shuffled[val_count:]), "val": sorted(shuffled[:val_count])}
-
-
 def _contains_class(root: Path, relative_name: str, class_id: int) -> bool:
     label_path = root / "labels" / Path(relative_name).with_suffix(".txt")
     try:
@@ -168,21 +158,74 @@ def _contains_class(root: Path, relative_name: str, class_id: int) -> bool:
     return any(line.split() and line.split()[0] == str(class_id) for line in lines)
 
 
+def _capture_value(metadata: dict[str, Any] | None, key: str) -> str:
+    if not metadata:
+        return ""
+    value = metadata.get(key)
+    if value is None and isinstance(metadata.get("capture"), dict):
+        value = metadata["capture"].get(key)
+    return str(value).strip() if value is not None else ""
+
+
+def _split_group_key(root: Path, relative_name: str) -> str:
+    metadata = _metadata(root, root / "images" / relative_name)
+    plant_id = _capture_value(metadata, "plant_id")
+    if plant_id:
+        return f"plant:{plant_id}"
+    capture_batch = _capture_value(metadata, "capture_batch")
+    if capture_batch:
+        return f"capture_batch:{capture_batch}"
+    return f"session:{root}"
+
+
+def _choose_validation_groups(
+    groups: list[tuple[str, list[str]]],
+    val_ratio: float,
+    seed: int,
+) -> set[str]:
+    if len(groups) < 2 or val_ratio <= 0:
+        return set()
+    shuffled = list(groups)
+    random.Random(int(seed)).shuffle(shuffled)
+    target = sum(len(names) for _, names in shuffled) * val_ratio
+    selected: list[tuple[str, list[str]]] = []
+    selected_count = 0
+    for group in shuffled:
+        if len(selected) == len(shuffled) - 1:
+            continue
+        candidate_count = selected_count + len(group[1])
+        if abs(candidate_count - target) < abs(selected_count - target):
+            selected.append(group)
+            selected_count = candidate_count
+    if not selected:
+        selected = [min(shuffled, key=lambda group: (abs(len(group[1]) - target), group[0]))]
+    if len(selected) == len(shuffled):
+        selected = selected[:-1]
+    return {name for name, _ in selected}
+
+
 def _stratified_split(
     root: Path,
     names: list[str],
     val_ratio: float,
     seed: int,
 ) -> dict[str, list[str]]:
-    flower = [name for name in names if _contains_class(root, name, 1)]
-    flower_names = set(flower)
-    other = [name for name in names if name not in flower_names]
-    groups = [group for group in (flower, other) if group]
+    if not names:
+        raise ValueError("no dataset images found")
+    ratio = min(max(float(val_ratio), 0.0), 0.9)
+    grouped: dict[str, list[str]] = {}
+    for name in names:
+        grouped.setdefault(_split_group_key(root, name), []).append(name)
+    flower_groups: list[tuple[str, list[str]]] = []
+    other_groups: list[tuple[str, list[str]]] = []
+    for name, group_names in sorted(grouped.items()):
+        target = flower_groups if any(_contains_class(root, item, 1) for item in group_names) else other_groups
+        target.append((name, group_names))
     combined = {"train": [], "val": []}
-    for offset, group in enumerate(groups):
-        result = _split_names(group, val_ratio, seed + offset)
-        combined["train"].extend(result["train"])
-        combined["val"].extend(result["val"])
+    for offset, groups in enumerate((flower_groups, other_groups)):
+        selected = _choose_validation_groups(groups, ratio, seed + offset)
+        for name, group_names in groups:
+            combined["val" if name in selected else "train"].extend(group_names)
     return {key: sorted(values) for key, values in combined.items()}
 
 

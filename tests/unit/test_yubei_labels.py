@@ -74,3 +74,29 @@ def test_ambiguous_image_cannot_keep_a_trainable_yolo_label(tmp_path):
     store.save("a.jpg", [box], "ambiguous")
 
     assert not (store.labels_dir / "a.txt").exists()
+
+
+def test_label_store_exports_yolo_without_opencv_for_windows_labeling(tmp_path, monkeypatch):
+    root = tmp_path / "session"
+    (root / "images").mkdir(parents=True)
+    (root / "labels").mkdir()
+    (root / "ambiguous").mkdir()
+    (root / "images" / "sample.png").write_bytes(
+        b"\x89PNG\r\n\x1a\n"
+        b"\x00\x00\x00\rIHDR"
+        b"\x00\x00\x01\x90"
+        b"\x00\x00\x00\xc8"
+        b"\x08\x02\x00\x00\x00"
+        b"\x00\x00\x00\x00"
+        b"\x00\x00\x00\x00IEND\xaeB`\x82"
+    )
+    monkeypatch.setattr("yubei.label_server.cv2", None)
+    store = LabelStore(root)
+
+    store.save(
+        "sample.png",
+        [{"class_name": "flower", "x": 40, "y": 20, "width": 80, "height": 40}],
+        "labelled",
+    )
+
+    assert (root / "labels" / "sample.txt").read_text(encoding="utf-8").strip() == "1 0.2 0.2 0.2 0.2"

@@ -5,28 +5,18 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_manual_mentions_required_runtime_operations():
-    text = (ROOT / "docs" / "USER_MANUAL.md").read_text(encoding="utf-8")
-    for item in ("yubei", "runtime/runs", "events.jsonl", "camera.log", "console.log", "agv.csv", "jaka.csv", "LM1 -> LM4 -> LM3 -> LM2", "J5跟随", "管理员 PIN", "WENSHI_ADMIN_PIN", "start_yubei.sh", "start_dashboard.sh", "start_camera_server.bat", "127.0.0.1"):
+    text = (ROOT / "docs" / "操作" / "操作手册.md").read_text(encoding="utf-8")
+    for item in ("runtime/runs", "三视角", "Tag", "start_wenshi.sh", "start_field_test.sh", "start_dashboard.sh", "RGB-D", "人工复核", "急停"):
         assert item in text
 
 
 def test_field_checklist_names_real_demo_blockers_and_single_launchers():
-    text = (ROOT / "docs" / "FIELD_TEST_CHECKLIST.md").read_text(encoding="utf-8")
-    for item in (
-        "./scripts/start_wenshi.sh",
-        "./scripts/start_dashboard.sh",
-        "./yubei/start_yubei.sh",
-        "start_camera_server.bat",
-        "vision.enabled",
-        "home_safe",
-        "target_reverse_limit_m",
-        "rear_radar_verified",
-        "不得启用完整视觉抵近",
-    ):
+    text = (ROOT / "docs" / "操作" / "现场验收清单.md").read_text(encoding="utf-8")
+    for item in ("PYTHONPATH=app:. python3 -m pytest -q", "phenotyping.enabled", "32 个 Tag", "left-01", "right-08", "三视角", "补采", "不覆盖 32 株表型验收"):
         assert item in text
 
 
 def test_pending_file_contains_deferred_topics():
-    text = (ROOT / "liuyi666.md").read_text(encoding="utf-8")
+    text = (ROOT / "docs" / "归档" / "待决问题与旧研究笔记.md").read_text(encoding="utf-8")
     for item in ("三块", "手眼标定", "交叠", "flower", "GPU", "跨运行"):
         assert item in text

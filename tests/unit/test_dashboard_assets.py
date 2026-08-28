@@ -41,18 +41,18 @@ def _css_rule(selector):
 def test_dashboard_exposes_an_accessible_plant_inspection_workbench():
     markup = _markup()
 
-    navigator = markup.element("targetNavigator")
+    navigator = markup.element("plantNavigator")
     workspace = markup.element("inspectionWorkspace")
-    comparison = markup.element("photoComparison")
+    comparison = markup.element("viewComparison")
 
     assert navigator and navigator[0] == "aside"
     assert workspace and workspace[0] == "section"
-    assert comparison and comparison[1]["aria-label"] == "远景与近景对比"
+    assert comparison and comparison[1]["aria-label"] == "左中右三视角 RGB-D 证据"
     assert markup.element("runSelector")[0] == "select"
-    assert markup.element("targetFilters")[1]["aria-label"] == "目标筛选"
-    assert markup.element("targets")[1]["aria-live"] == "polite"
-    assert markup.element("previousTarget")[0] == "button"
-    assert markup.element("nextTarget")[0] == "button"
+    assert markup.element("plantFilters")[1]["aria-label"] == "植株筛选"
+    assert markup.element("plants")[1]["aria-live"] == "polite"
+    assert markup.element("previousPlant")[0] == "button"
+    assert markup.element("nextPlant")[0] == "button"
 
 
 def test_dashboard_has_operator_status_and_refresh_feedback():
@@ -92,11 +92,13 @@ def test_dashboard_avoids_rebuilding_every_region_with_hard_grid_lines():
     assert len(hard_dividers) <= 20
 
 
-def test_dashboard_assets_keep_patrol_images_and_bbox_support():
+def test_dashboard_assets_are_bound_to_phenotyping_evidence_not_legacy_patrol_media():
     html = (ROOT / "dashboard" / "static" / "index.html").read_text(encoding="utf-8")
     script = (ROOT / "dashboard" / "static" / "app.js").read_text(encoding="utf-8")
 
-    assert "远景" in html and "近景" in html and "质量" in html and "路线段" in html
-    assert "data-cx" in script and "bbox" in script and "管理员" in html
+    assert "三视角" in html and "RGB-D" in html and "株高" in script and "有效穗" in script
+    assert "/api/phenotype/runs" in script
+    assert '"/api/runs"' not in script
+    assert '"/media/' not in script
     assert (ROOT / "dashboard" / "static" / "app.js").is_file()
     assert (ROOT / "dashboard" / "static" / "style.css").is_file()

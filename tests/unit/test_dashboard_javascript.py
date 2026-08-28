@@ -8,7 +8,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def test_dashboard_javascript_formats_operator_values_without_fake_zeroes():
+def test_dashboard_javascript_formats_phenotype_values_and_filters_review_work():
     if not shutil.which("gjs"):
         pytest.skip("gjs is not installed")
 
@@ -31,20 +31,16 @@ globalThis.fetch = async () => ({{ ok: true, json: async () => ({{ runs: [] }}) 
 imports.searchPath.unshift("dashboard/static");
 const app = imports.app;
 
-if (app.formatDistance(null) !== "未记录") throw new Error("null distance must stay unknown");
-if (app.datasetNumber(null) !== "") throw new Error("null bbox coordinate must stay empty");
-if (app.sideLabel("left") !== "左侧") throw new Error("left side label is incorrect");
+if (app.formatMeters(null) !== "未复核") throw new Error("null height must stay unreviewed");
+if (app.formatMeters(0.82) !== "82.0 cm") throw new Error("height unit is incorrect");
 if (app.statusInfo("finished").label !== "已完成") throw new Error("run status label is incorrect");
-if (app.formatQuality({{ score: 0.92, ok: true }}) !== "92 分 · 合格") throw new Error("quality label is incorrect");
-const targets = [
-  {{ target_id: "T0001", status: "near_captured" }},
-  {{ target_id: "T0002", status: "near_failed", failure_reason: "模糊" }},
-  {{ target_id: "T0003", status: "far_captured" }},
+const plants = [
+  {{ plant_id: "A-01", status: "complete", missing_views: [], review: {{ state: "reviewed" }} }},
+  {{ plant_id: "A-02", status: "complete", missing_views: [], review: {{ state: "pending" }} }},
+  {{ plant_id: "A-03", status: "partial", missing_views: ["right"], review: {{ state: "pending" }} }},
 ];
-if (app.filterTargets(targets, "complete").map((item) => item.target_id).join(",") !== "T0001") throw new Error("completed filter is incorrect");
-if (app.filterTargets(targets, "issues").map((item) => item.target_id).join(",") !== "T0002") throw new Error("issues filter is incorrect");
-if (app.adjacentTargetId(targets, "T0002", 1) !== "T0003") throw new Error("next target navigation is incorrect");
-if (app.adjacentTargetId(targets, "T0001", -1) !== null) throw new Error("previous target boundary is incorrect");
+if (app.filterPlants(plants, "complete").map((item) => item.plant_id).join(",") !== "A-01,A-02") throw new Error("complete filter is incorrect");
+if (app.filterPlants(plants, "review").map((item) => item.plant_id).join(",") !== "A-02,A-03") throw new Error("review filter is incorrect");
 print("dashboard presentation checks passed");
 """
     result = subprocess.run(

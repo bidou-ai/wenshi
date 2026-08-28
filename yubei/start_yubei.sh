@@ -18,6 +18,8 @@ Wenshi yubei 预备工具
                         回车采集 RGB；可默认标记为开花批次
   audit [会话目录]      检查照片清晰度、曝光、重复图和采集批次
   label [会话目录]      启动本地标注网页，默认使用最新会话
+  package-labeler [会话目录] [输出目录]
+                        打包可复制到 Windows 的离线标注文件夹
   prepare [会话目录]    验证并生成可训练的 train/val 数据集
   train [data.yaml]     启动 YOLO 训练
   teach                 只读依次保存八个 JAKA 示教点（现场动作测试使用 start_field_test.sh）
@@ -76,6 +78,12 @@ run_command() {
       local session="${1:-$(latest_session)}"
       [[ -n "$session" ]] || { echo "没有找到数据集会话" >&2; return 1; }
       python3 yubei/label_server.py --session "$session" --open-browser
+      ;;
+    package-labeler)
+      local session="${1:-$(latest_session)}"
+      [[ -n "$session" ]] || { echo "没有找到数据集会话" >&2; return 1; }
+      local output="${2:-$ROOT/yubei/windows_labeler_$(basename "$session")}"
+      python3 yubei/package_labeler.py "$session" --output "$output"
       ;;
     prepare)
       local session="${1:-$(latest_session)}"
@@ -146,12 +154,13 @@ Wenshi yubei 预备工具
   3. 回车采集 RGB 数据集
   4. 检查最新照片质量与重复图
   5. 标注最新数据集
-  6. 验证并生成训练数据集
-  7. 训练 YOLO 模型
-  8. 依次保存八个示教点
-  9. 校验示教点
-  10. 发布已验证的示教点
-  11. 发布已确认的模型
+  6. 打包 Windows 离线标注文件夹
+  7. 验证并生成训练数据集
+  8. 训练 YOLO 模型
+  9. 依次保存八个示教点
+  10. 校验示教点
+  11. 发布已验证的示教点
+  12. 发布已确认的模型
   q. 退出
 EOF
   read -r -p "请选择: " choice
@@ -161,19 +170,20 @@ EOF
     3) run_command capture ;;
     4) run_command audit || true ;;
     5) run_command label ;;
-    6) run_command prepare ;;
-    7) run_command train ;;
-    8) run_command teach ;;
-    9) run_command verify ;;
-    10)
+    6) run_command package-labeler ;;
+    7) run_command prepare ;;
+    8) run_command train ;;
+    9) run_command teach ;;
+    10) run_command verify ;;
+    11)
       read -r -p "输入 PUBLISH 确认覆盖正式示教文件（会先备份）: " confirmation
       [[ "$confirmation" == "PUBLISH" ]] && run_command publish-viewpoints --confirm || echo "已取消"
       ;;
-    11)
+    12)
       read -r -p "输入 PUBLISH 确认发布最新 best.pt（会先备份）: " confirmation
       [[ "$confirmation" == "PUBLISH" ]] && run_command publish-model --confirm || echo "已取消"
       ;;
     q|Q) exit 0 ;;
-    *) echo "请输入 1-11 或 q" ;;
+    *) echo "请输入 1-12 或 q" ;;
   esac
 done

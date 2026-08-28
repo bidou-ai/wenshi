@@ -22,6 +22,15 @@ def _dataset(tmp_path: Path, count: int = 3) -> Path:
     return root
 
 
+def _label_metadata(root: Path, index: int, **capture: str) -> None:
+    """Write the same capture metadata shape emitted by the label server."""
+    name = f"{index:02d}.jpg"
+    (root / "labels" / f"{index:02d}.json").write_text(
+        json.dumps({"image": name, "status": "labelled", "capture": capture}),
+        encoding="utf-8",
+    )
+
+
 def test_validate_dataset_accepts_valid_yolo_files(tmp_path):
     report = validate_dataset(_dataset(tmp_path))
     assert report.ok is True
@@ -66,11 +75,52 @@ def test_validate_dataset_rejects_empty_or_all_excluded_session(tmp_path):
 
 def test_split_is_deterministic_and_disjoint(tmp_path):
     root = _dataset(tmp_path, 10)
+    for index in range(10):
+        _label_metadata(root, index, capture_batch=f"batch-{index}")
     first = split_images(root, val_ratio=0.2, seed=17)
     second = split_images(root, val_ratio=0.2, seed=17)
     assert first == second
     assert set(first["train"]).isdisjoint(first["val"])
     assert len(first["val"]) == 2
+
+
+def test_split_keeps_all_images_of_a_plant_in_one_partition(tmp_path):
+    root = _dataset(tmp_path, 6)
+    for index, plant_id in enumerate(("A-01", "A-01", "A-02", "A-02", "A-03", "A-03")):
+        _label_metadata(root, index, plant_id=plant_id)
+
+    split = split_images(root, val_ratio=0.34, seed=17)
+    train = set(split["train"])
+    val = set(split["val"])
+
+    assert train.isdisjoint(val)
+    for first, second in (("00.jpg", "01.jpg"), ("02.jpg", "03.jpg"), ("04.jpg", "05.jpg")):
+        assert (first in train) == (second in train)
+        assert (first in val) == (second in val)
+
+
+def test_split_uses_capture_batch_when_plant_id_is_absent(tmp_path):
+    root = _dataset(tmp_path, 6)
+    for index, capture_batch in enumerate(("batch-a", "batch-a", "batch-b", "batch-b", "batch-c", "batch-c")):
+        _label_metadata(root, index, capture_batch=capture_batch)
+
+    split = split_images(root, val_ratio=0.34, seed=17)
+    train = set(split["train"])
+    val = set(split["val"])
+
+    for first, second in (("00.jpg", "01.jpg"), ("02.jpg", "03.jpg"), ("04.jpg", "05.jpg")):
+        assert (first in train) == (second in train)
+        assert (first in val) == (second in val)
+
+
+def test_split_keeps_unidentified_session_in_one_partition(tmp_path):
+    root = _dataset(tmp_path, 4)
+    for index in range(4):
+        _label_metadata(root, index)
+
+    split = split_images(root, val_ratio=0.25, seed=17)
+
+    assert split == {"train": ["00.jpg", "01.jpg", "02.jpg", "03.jpg"], "val": []}
 
 
 def test_write_yaml_contains_classes(tmp_path):
@@ -105,6 +155,8 @@ def test_prepare_creates_train_val_tree_and_excludes_ambiguous_images(tmp_path):
 
 def test_prepare_stratifies_flower_images_between_train_and_val(tmp_path):
     root = _dataset(tmp_path, 6)
+    for index in range(6):
+        _label_metadata(root, index, plant_id=f"A-{index:02d}")
     for index in (0, 1):
         (root / "labels" / f"{index:02d}.txt").write_text(
             "0 0.5 0.5 0.5 0.5\n1 0.4 0.4 0.1 0.1\n",

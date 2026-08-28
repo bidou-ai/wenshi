@@ -1,36 +1,49 @@
-# Wenshi 温室巡检
+# Wenshi 温室表型巡检
 
-这是 Wens1 温室的独立巡检项目。正式路线固定为 `LM1 -> LM4 -> LM3 -> LM2`，由
-`config/wenshi.yaml` 和 `map/wenshi.smap` 共同定义。
+Wenshi 当前只面向水稻**株高**和**有效穗数**。正式设计为 `A`、`B-L`、`B-R`、`C` 四排各八株，共 32 株；左右通道各八个停车观测组，共 16 点。每点处理两株，每株保留 `left`、`center`、`right` 三视角 RGB-D 证据，自动候选必须经人工复核。
 
-项目按硬件客户端、路线控制、机械臂固定示教路径、D435 相机桥和纯视觉模块分层。视觉默认
-关闭，且没有运动控制权限；未完成现场验证前，固定抵近和倒车同样默认关闭。
+## 当前状态与边界
 
-## 启动
+- `phenotyping.enabled` 为 `false`。32 个 Tag 映射、Tag 实际尺寸与朝向、卡槽到水面高度、16 点路线参数、表型姿态、相机与手眼标定均未完成，预检应拒绝正式表型任务。
+- 已有离线配置/调度、单株存储、Tag 适配、株高弧长计算、有效穗复核数据模型和只读后台；正式表型运动适配器尚未完成现场验收。
+- 旧 `rice` 识别、倒车、J5 跟随和固定抵近是历史原型，不属于当前表型功能。
+- 自动测试不连接或驱动 AGV、JAKA、D435；本次文档更新也没有执行硬件操作。
 
-正式巡检只需要一个入口。脚本会自动加载 ROS2、执行离线配置检查和 AGV/JAKA/D435
-真实连通检查，全部通过后才创建本次运行目录并启动组件：
+## 现行文档
+
+| 类型 | 文档 |
+| --- | --- |
+| 操作 | [操作手册](docs/操作/操作手册.md) |
+| 操作 | [现场验收清单](docs/操作/现场验收清单.md) |
+| 操作 | [安全约束](docs/操作/安全约束.md) |
+| 操作 | [标签映射与现场确认](docs/操作/标签映射与现场确认.md) |
+| 操作 | [株高复核规范](docs/操作/株高复核规范.md) |
+| 操作 | [有效穗复核规范](docs/操作/有效穗复核规范.md) |
+| 技术 | [系统架构](docs/技术/系统架构.md) |
+| 技术 | [表型数据结构](docs/技术/表型数据结构.md) |
+| 技术 | [项目状态](docs/技术/项目状态.md) |
+| 技术 | [初步硬件设计](docs/技术/初步硬件设计.md) |
+| 技术 | [现场测试记录](docs/技术/现场测试记录.md) |
+| 技术 | [标定说明](docs/技术/标定说明.md) |
+
+## 安全入口
 
 ```bash
-./scripts/start_wenshi.sh
+./scripts/start_wenshi.sh phenotype --help
+PYTHONPATH=app:. python3 -m wenshi_patrol.phenotype_controller --check --config config/wenshi.yaml
+./scripts/start_field_test.sh --help
+./scripts/start_dashboard.sh --help
 ```
 
-只检查而不启动组件使用 `./scripts/start_wenshi.sh --check`。进入控制台后，`start` 执行一圈，
-`start loop` 连续巡检。当前配置仍安全关闭视觉目标任务、固定抵近和倒车；没有模型、八点示教与
-现场安全验收时，不得把基础路线测试当成完整视觉 Demo。
+`phenotype` 仅可进行预检或模拟，当前配置应安全退出。现场教学、路线和机械臂测试是独立流程，不能代替 32 株表型验收；后台只用于查看和导出结果。
 
-控制台命令、硬件前置条件和故障处理见 [操作手册](docs/OPERATIONS.md)；完整的软件、控制和数据流程见
-[用户手册](docs/USER_MANUAL.md)。巡检结果后台在 Ubuntu 本机用 `./scripts/start_dashboard.sh` 一键启动并自动打开浏览器。
+## 已有现场证据
 
-联网布局、Ubuntu 双网卡、外部 SSH 和 ToDesk 的边界见用户手册第 4、9 节：机器人设备保持内部网，只有 Ubuntu 通过 Wi-Fi/NAT 上公网。
+`field_test_20260828_034122` 的日志记录了 8/8 教学点保存、6 次教学查询超时后成功、机械臂 8/8 点完成且控制响应为 `errorCode: 0`、首次路线未执行、第二次路线完成 8 段并一次阻挡恢复。完整边界见[现场测试记录](docs/技术/现场测试记录.md)：这些事实不构成 32 株、16 点表型现场验收。
 
-准备工具全部位于独立的 `yubei/`，统一从 `./yubei/start_yubei.sh` 进入，可单独用于相机/网络/设备检查、YOLO 数据集采集、框选标注、数据集验证和训练，
-不会被正式巡检运行时导入。
+## 验证
 
-明日现场逐项验收顺序和当前阻断条件见 [现场测试清单](docs/FIELD_TEST_CHECKLIST.md)。
-
-Ubuntu 的 Python 依赖见 `requirements-ubuntu.txt`；Windows D435 服务的依赖见
-`windows/requirements-windows.txt`。模型、数据集和标定文件不纳入源码仓库。
-
-GitHub 私有仓库的首次配置、日常同步、换电脑恢复和错误处理见
-[GitHub 同步操作手册](docs/GITHUB_SYNC.md)。
+```bash
+PYTHONPATH=app:. python3 -m pytest -q tests/unit/test_delivery_files.py
+PYTHONPATH=app:. python3 -m pytest -q
+```
