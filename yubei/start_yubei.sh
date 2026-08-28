@@ -25,6 +25,8 @@ Wenshi yubei 预备工具
   prepare [会话目录]    验证并生成可训练的 train/val 数据集
   prepare-plant [会话目录]   准备整株水稻单类别数据集
   prepare-panicle [会话目录] 准备稻穗单类别数据集
+  normalize-plant [会话目录] 旋转整株图片为竖直方向
+  normalize-panicle [会话目录] 旋转稻穗图片为竖直方向
   train [data.yaml]     启动 YOLO 训练
   train-plant [data.yaml]    训练 rice_plant 模型
   train-panicle [data.yaml] 训练 panicle 模型
@@ -117,7 +119,16 @@ run_command() {
       local session="${1:-$(latest_typed_session "$dataset_type")}"
       [[ -n "$session" ]] || { echo "没有找到数据集会话" >&2; return 1; }
       local output="$ROOT/yubei/datasets/$dataset_type/$(basename "$session")_$(date +%Y%m%d_%H%M%S_%N)"
-      python3 yubei/dataset_validate.py "$session" --prepare "$output"
+      local group_size=2
+      [[ "$dataset_type" == "panicle" ]] && group_size=9
+      python3 yubei/dataset_validate.py "$session" --prepare "$output" --group-size "$group_size"
+      ;;
+    normalize-plant|normalize-panicle)
+      local dataset_type="plant"
+      [[ "$command" == "normalize-panicle" ]] && dataset_type="panicle"
+      local session="${1:-$(latest_typed_session "$dataset_type")}"
+      [[ -n "$session" ]] || { echo "没有找到数据集会话" >&2; return 1; }
+      python3 yubei/dataset_normalize.py "$session" "$ROOT/yubei/data/$dataset_type/dataset_normalized_$(basename "$session")"
       ;;
     train)
       local data="${1:-$(latest_prepared)}"

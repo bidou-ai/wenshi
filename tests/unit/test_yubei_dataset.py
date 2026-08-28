@@ -113,6 +113,20 @@ def test_split_uses_capture_batch_when_plant_id_is_absent(tmp_path):
         assert (first in val) == (second in val)
 
 
+def test_split_can_group_ordered_images_by_fixed_plant_batch(tmp_path):
+    root = _dataset(tmp_path, 6)
+    for index in range(6):
+        _label_metadata(root, index)
+
+    split = split_images(root, val_ratio=0.34, seed=17, group_size=2)
+
+    train, val = set(split["train"]), set(split["val"])
+    assert train.isdisjoint(val)
+    for first, second in (("00.jpg", "01.jpg"), ("02.jpg", "03.jpg"), ("04.jpg", "05.jpg")):
+        assert (first in train) == (second in train)
+        assert (first in val) == (second in val)
+
+
 def test_split_keeps_unidentified_session_in_one_partition(tmp_path):
     root = _dataset(tmp_path, 4)
     for index in range(4):

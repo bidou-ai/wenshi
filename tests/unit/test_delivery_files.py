@@ -153,7 +153,7 @@ def test_yubei_launcher_opens_label_browser_and_finds_prepared_dataset():
 def test_yubei_launcher_exposes_two_independent_model_dataflows():
     text = (ROOT / "yubei" / "start_yubei.sh").read_text(encoding="utf-8")
 
-    for command in ("capture-plant", "capture-panicle", "prepare-plant", "prepare-panicle", "train-plant", "train-panicle"):
+    for command in ("capture-plant", "capture-panicle", "normalize-plant", "normalize-panicle", "prepare-plant", "prepare-panicle", "train-plant", "train-panicle"):
         assert command in text
 
 

@@ -186,7 +186,7 @@ def _capture_value(metadata: dict[str, Any] | None, key: str) -> str:
     return str(value).strip() if value is not None else ""
 
 
-def _split_group_key(root: Path, relative_name: str) -> str:
+def _split_group_key(root: Path, relative_name: str, group_size: int | None = None) -> str:
     metadata = _metadata(root, root / "images" / relative_name)
     plant_id = _capture_value(metadata, "plant_id")
     if plant_id:
@@ -194,6 +194,15 @@ def _split_group_key(root: Path, relative_name: str) -> str:
     capture_batch = _capture_value(metadata, "capture_batch")
     if capture_batch:
         return f"capture_batch:{capture_batch}"
+    if group_size is not None:
+        if group_size < 1:
+            raise ValueError("group_size must be positive")
+        try:
+            sequence = int(Path(relative_name).stem)
+        except ValueError:
+            sequence = None
+        if sequence is not None:
+            return f"ordered_group:{sequence // group_size}"
     return f"session:{root}"
 
 
@@ -228,13 +237,14 @@ def _stratified_split(
     names: list[str],
     val_ratio: float,
     seed: int,
+    group_size: int | None = None,
 ) -> dict[str, list[str]]:
     if not names:
         raise ValueError("no dataset images found")
     ratio = min(max(float(val_ratio), 0.0), 0.9)
     grouped: dict[str, list[str]] = {}
     for name in names:
-        grouped.setdefault(_split_group_key(root, name), []).append(name)
+        grouped.setdefault(_split_group_key(root, name, group_size), []).append(name)
     flower_groups: list[tuple[str, list[str]]] = []
     other_groups: list[tuple[str, list[str]]] = []
     for name, group_names in sorted(grouped.items()):
@@ -248,11 +258,11 @@ def _stratified_split(
     return {key: sorted(values) for key, values in combined.items()}
 
 
-def split_images(session: Path, val_ratio: float = 0.2, seed: int = 17) -> dict[str, list[str]]:
+def split_images(session: Path, val_ratio: float = 0.2, seed: int = 17, group_size: int | None = None) -> dict[str, list[str]]:
     root = Path(session).expanduser().resolve()
     eligible, _ = _eligible_images(root)
     names = [path.relative_to(root / "images").as_posix() for path in eligible]
-    return _stratified_split(root, names, val_ratio, seed)
+    return _stratified_split(root, names, val_ratio, seed, group_size)
 
 
 def write_yolo_dataset_yaml(
@@ -280,6 +290,7 @@ def prepare_yolo_dataset(
     output: Path,
     val_ratio: float = 0.2,
     seed: int = 17,
+    group_size: int | None = None,
 ) -> dict[str, Any]:
     root = Path(session).expanduser().resolve()
     destination = Path(output).expanduser().resolve()
@@ -288,7 +299,7 @@ def prepare_yolo_dataset(
         raise ValueError("dataset validation failed: " + "; ".join(report.issues))
     eligible, excluded = _eligible_images(root)
     names = [path.relative_to(root / "images").as_posix() for path in eligible]
-    split = _stratified_split(root, names, val_ratio, seed)
+    split = _stratified_split(root, names, val_ratio, seed, group_size)
     if destination.exists() and any(destination.iterdir()):
         raise ValueError(f"prepared dataset directory is not empty: {destination}")
     destination.mkdir(parents=True, exist_ok=True)
@@ -319,6 +330,7 @@ def prepare_yolo_dataset(
         "val_images": len(split["val"]),
         "class_counts": report.class_counts,
         "dataset_type": _dataset_type(root),
+        "group_size": group_size,
         "seed": int(seed),
     }
     (destination / "prepare_report.json").write_text(
@@ -334,6 +346,7 @@ def main(argv=None) -> int:
     parser.add_argument("--prepare", type=Path, help="验证通过后生成 train/val 数据集")
     parser.add_argument("--val-ratio", type=float, default=0.2)
     parser.add_argument("--seed", type=int, default=17)
+    parser.add_argument("--group-size", type=int)
     args = parser.parse_args(argv)
     report = validate_dataset(args.session)
     print(json.dumps(report.to_dict(), ensure_ascii=False, indent=2))
@@ -341,7 +354,7 @@ def main(argv=None) -> int:
         return 1
     if args.prepare:
         try:
-            result = prepare_yolo_dataset(args.session, args.prepare, args.val_ratio, args.seed)
+            result = prepare_yolo_dataset(args.session, args.prepare, args.val_ratio, args.seed, args.group_size)
         except ValueError as exc:
             print(json.dumps({"ok": False, "error": str(exc)}, ensure_ascii=False, indent=2))
             return 1
