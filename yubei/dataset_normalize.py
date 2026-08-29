@@ -34,6 +34,14 @@ def normalize_session(source: Path, output: Path, rotation: str = "clockwise_90"
         rotated = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE) if rotation == "clockwise_90" else image
         if not cv2.imwrite(str(destination), rotated):
             raise OSError(f"failed to write image: {destination}")
+    for name in ("labels", "ambiguous"):
+        source_dir = source / name
+        if source_dir.is_dir():
+            for item in source_dir.rglob("*"):
+                if item.is_file():
+                    destination = output / name / item.relative_to(source_dir)
+                    destination.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(item, destination)
     manifest_path = source / "manifest.json"
     if manifest_path.exists():
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))

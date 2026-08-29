@@ -127,6 +127,23 @@ def test_split_can_group_ordered_images_by_fixed_plant_batch(tmp_path):
         assert (first in val) == (second in val)
 
 
+def test_split_groups_real_one_based_capture_names_without_leakage(tmp_path):
+    root = _dataset(tmp_path, 4)
+    for index in range(4):
+        old = root / "images" / f"{index:02d}.jpg"
+        old.rename(root / "images" / f"{index + 1:06d}.jpg")
+        old_label = root / "labels" / f"{index:02d}.txt"
+        old_label.rename(root / "labels" / f"{index + 1:06d}.txt")
+        _label_metadata(root, index, capture_batch="unused")
+        metadata = root / "labels" / f"{index:02d}.json"
+        metadata.rename(root / "labels" / f"{index + 1:06d}.json")
+
+    split = split_images(root, val_ratio=0.5, seed=17, group_size=2)
+
+    assert {"000001.jpg", "000002.jpg"} <= set(split["train"]) or {"000001.jpg", "000002.jpg"} <= set(split["val"])
+    assert {"000003.jpg", "000004.jpg"} <= set(split["train"]) or {"000003.jpg", "000004.jpg"} <= set(split["val"])
+
+
 def test_split_keeps_unidentified_session_in_one_partition(tmp_path):
     root = _dataset(tmp_path, 4)
     for index in range(4):

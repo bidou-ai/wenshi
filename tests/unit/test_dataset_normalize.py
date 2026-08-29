@@ -38,3 +38,20 @@ def test_normalize_session_can_preserve_panicle_orientation(tmp_path: Path):
     preserved = cv2.imread(str(output / "images" / "000001.jpg"))
     assert preserved.shape[:2] == (4, 8)
     assert json.loads((output / "manifest.json").read_text(encoding="utf-8"))["normalization"]["rotation"] == "none"
+
+
+def test_normalize_session_copies_existing_labels_and_ambiguous_files(tmp_path: Path):
+    source = tmp_path / "source"
+    (source / "images").mkdir(parents=True)
+    (source / "labels").mkdir()
+    (source / "ambiguous").mkdir()
+    cv2.imwrite(str(source / "images" / "000001.jpg"), np.zeros((4, 8, 3), dtype=np.uint8))
+    (source / "labels" / "000001.json").write_text("{\"status\": \"labelled\"}", encoding="utf-8")
+    (source / "labels" / "000001.txt").write_text("0 0.5 0.5 0.5 0.5\n", encoding="utf-8")
+    (source / "ambiguous" / "000001.txt").write_text("review", encoding="utf-8")
+
+    output = normalize_session(source, tmp_path / "normalized", rotation="none")
+
+    assert (output / "labels" / "000001.json").read_text(encoding="utf-8") == "{\"status\": \"labelled\"}"
+    assert (output / "labels" / "000001.txt").exists()
+    assert (output / "ambiguous" / "000001.txt").exists()

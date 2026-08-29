@@ -186,7 +186,7 @@ def _capture_value(metadata: dict[str, Any] | None, key: str) -> str:
     return str(value).strip() if value is not None else ""
 
 
-def _split_group_key(root: Path, relative_name: str, group_size: int | None = None) -> str:
+def _split_group_key(root: Path, relative_name: str, group_size: int | None = None, group_offset: int = 1) -> str:
     metadata = _metadata(root, root / "images" / relative_name)
     plant_id = _capture_value(metadata, "plant_id")
     if plant_id:
@@ -202,7 +202,7 @@ def _split_group_key(root: Path, relative_name: str, group_size: int | None = No
         except ValueError:
             sequence = None
         if sequence is not None:
-            return f"ordered_group:{sequence // group_size}"
+            return f"ordered_group:{(sequence - group_offset) // group_size}"
     return f"session:{root}"
 
 
@@ -243,8 +243,15 @@ def _stratified_split(
         raise ValueError("no dataset images found")
     ratio = min(max(float(val_ratio), 0.0), 0.9)
     grouped: dict[str, list[str]] = {}
+    numeric_sequences = []
     for name in names:
-        grouped.setdefault(_split_group_key(root, name, group_size), []).append(name)
+        try:
+            numeric_sequences.append(int(Path(name).stem))
+        except ValueError:
+            pass
+    group_offset = 1 if numeric_sequences and min(numeric_sequences) >= 1 else 0
+    for name in names:
+        grouped.setdefault(_split_group_key(root, name, group_size, group_offset), []).append(name)
     flower_groups: list[tuple[str, list[str]]] = []
     other_groups: list[tuple[str, list[str]]] = []
     for name, group_names in sorted(grouped.items()):
