@@ -101,7 +101,10 @@ def solve_tag_pose(
     half = float(tag_size_m) / 2.0
     object_points = np.array([[-half, half, 0], [half, half, 0], [half, -half, 0], [-half, -half, 0]], dtype=np.float64)
     k = _intrinsics(intrinsics)
-    dist = np.zeros((5, 1), dtype=np.float64) if distortion is None else np.asarray(distortion, dtype=np.float64)
+    if distortion is None or len(distortion) == 0:
+        dist = np.zeros((5, 1), dtype=np.float64)
+    else:
+        dist = np.asarray(distortion, dtype=np.float64)
     ok, rvec, tvec = cv2.solvePnP(object_points, image, k, dist, flags=cv2.SOLVEPNP_IPPE_SQUARE)
     if not ok:
         ok, rvec, tvec = cv2.solvePnP(object_points, image, k, dist, flags=cv2.SOLVEPNP_ITERATIVE)
