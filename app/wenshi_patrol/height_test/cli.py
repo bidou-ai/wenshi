@@ -10,8 +10,6 @@ import threading
 import time
 from typing import Any
 
-import yaml
-
 from ..config import load_config, load_viewpoints, require_joint_pose, resolve_config_path
 from ..jaka import JakaClient
 from ..agv import AGVMotionClient, AGVStatusClient
