@@ -20,6 +20,8 @@ class CameraFrame:
     seq: int
     intrinsics: dict[str, Any]
     received_at: float
+    stamp: float | None = None
+    profile: dict[str, Any] | None = None
 
 
 class HttpCameraClient:
@@ -64,5 +66,10 @@ class HttpCameraClient:
         intrinsics = packet.get("intrinsics")
         if not isinstance(intrinsics, dict):
             raise RuntimeError("camera packet has no intrinsics object")
-        return CameraFrame(color, depth, seq, intrinsics, time.monotonic())
-
+        profile = packet.get("profile") if isinstance(packet.get("profile"), dict) else None
+        stamp = packet.get("stamp")
+        try:
+            stamp = float(stamp) if stamp is not None else None
+        except (TypeError, ValueError):
+            stamp = None
+        return CameraFrame(color, depth, seq, intrinsics, time.monotonic(), stamp, profile)

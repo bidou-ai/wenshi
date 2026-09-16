@@ -17,6 +17,9 @@ class PlantSpec:
     observation_group: str
     camera_side: str
     slot_top_to_water_m: float | None
+    # C-row plants remain registered for Tag/setup evidence but are excluded
+    # from automatic detection by the independent height-test workflow.
+    excluded_from_detection: bool = False
 
     @classmethod
     def from_dict(cls, value: dict[str, Any]) -> "PlantSpec":
@@ -29,6 +32,7 @@ class PlantSpec:
             observation_group=str(value.get("observation_group", "")),
             camera_side=str(value.get("camera_side", "")),
             slot_top_to_water_m=_optional_float(value.get("slot_top_to_water_m")),
+            excluded_from_detection=bool(value.get("excluded_from_detection", False)),
         )
 
 
@@ -145,6 +149,7 @@ def new_plant_record(plant: PlantSpec, run_id: str) -> dict[str, Any]:
         "observation_group": plant.observation_group,
         "camera_side": plant.camera_side,
         "slot_top_to_water_m": plant.slot_top_to_water_m,
+        "excluded_from_detection": plant.excluded_from_detection,
         "captures": {view: None for view in ("left", "center", "right")},
         "traits": {
             "plant_height": {

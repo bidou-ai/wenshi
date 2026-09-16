@@ -166,9 +166,29 @@ phenotyping:
 
 april_tag:
   family: tag25h7
-  physical_size_m: null
+  physical_size_m: 0.090
   detector_backend: null
   mounting_orientation: null
+
+# 独立的现场株高测试通道。这里的模型只供 height_test 使用，不改变
+# vision.model_path 的旧单模型语义，也不会启用正式 phenotyping 运动流程。
+height_test:
+  tag_family: tag25h7
+  tag_size_m: 0.090
+  models:
+    rice_plant: "../yubei/training/plant/plant_20260906_101646/weights/best.pt"
+    panicle: "../yubei/training/panicle/panicle_20260904_134044/weights/best.pt"
+  quality:
+    burst_count: 3
+    min_depth_valid_ratio: 0.70
+    depth_scale: 0.001
+    view_disagreement_m: 0.08
+    manual_tolerance_m: 0.020
+  motion:
+    mode: arm-only
+    require_stopped_agv: true
+    station_order: [left-01, left-02, left-03, left-04, left-05, left-06, left-07, left-08,
+                    right-01, right-02, right-03, right-04, right-05, right-06, right-07, right-08]
 
 # IDs and positions are placeholders until the field mapping is confirmed.
 plants:
@@ -196,14 +216,14 @@ plants:
   - {plant_id: B-R-06, tag_id: null, region: B, row: right, index: 6, observation_group: right-06, camera_side: left, slot_top_to_water_m: null}
   - {plant_id: B-R-07, tag_id: null, region: B, row: right, index: 7, observation_group: right-07, camera_side: left, slot_top_to_water_m: null}
   - {plant_id: B-R-08, tag_id: null, region: B, row: right, index: 8, observation_group: right-08, camera_side: left, slot_top_to_water_m: null}
-  - {plant_id: C-01, tag_id: null, region: C, row: row-1, index: 1, observation_group: right-01, camera_side: right, slot_top_to_water_m: null}
-  - {plant_id: C-02, tag_id: null, region: C, row: row-1, index: 2, observation_group: right-02, camera_side: right, slot_top_to_water_m: null}
-  - {plant_id: C-03, tag_id: null, region: C, row: row-1, index: 3, observation_group: right-03, camera_side: right, slot_top_to_water_m: null}
-  - {plant_id: C-04, tag_id: null, region: C, row: row-1, index: 4, observation_group: right-04, camera_side: right, slot_top_to_water_m: null}
-  - {plant_id: C-05, tag_id: null, region: C, row: row-1, index: 5, observation_group: right-05, camera_side: right, slot_top_to_water_m: null}
-  - {plant_id: C-06, tag_id: null, region: C, row: row-1, index: 6, observation_group: right-06, camera_side: right, slot_top_to_water_m: null}
-  - {plant_id: C-07, tag_id: null, region: C, row: row-1, index: 7, observation_group: right-07, camera_side: right, slot_top_to_water_m: null}
-  - {plant_id: C-08, tag_id: null, region: C, row: row-1, index: 8, observation_group: right-08, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: C-01, tag_id: null, region: C, row: row-1, index: 1, observation_group: right-01, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
+  - {plant_id: C-02, tag_id: null, region: C, row: row-1, index: 2, observation_group: right-02, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
+  - {plant_id: C-03, tag_id: null, region: C, row: row-1, index: 3, observation_group: right-03, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
+  - {plant_id: C-04, tag_id: null, region: C, row: row-1, index: 4, observation_group: right-04, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
+  - {plant_id: C-05, tag_id: null, region: C, row: row-1, index: 5, observation_group: right-05, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
+  - {plant_id: C-06, tag_id: null, region: C, row: row-1, index: 6, observation_group: right-06, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
+  - {plant_id: C-07, tag_id: null, region: C, row: row-1, index: 7, observation_group: right-07, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
+  - {plant_id: C-08, tag_id: null, region: C, row: row-1, index: 8, observation_group: right-08, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
 
 observation_groups:
   - {id: left-01, route_segment: null, approximate_along_track_m: null, slowdown_before_m: null, trigger_distance_m: null, left_plant_id: A-01, right_plant_id: B-L-01}

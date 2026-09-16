@@ -138,6 +138,18 @@ def validate_phenotyping_config(value: dict[str, Any]) -> list[str]:
         else:
             _validate_number(raw_plant.get("slot_top_to_water_m"), f"株号 {plant.plant_id} 的卡槽到水面高度", 0.0, 2.0, errors)
 
+    # C-row records are intentionally retained for Tag/setup evidence, while
+    # the height-test execution view filters them from detection.  Do not make
+    # this a formal-preflight error for legacy/placeholder configurations; the
+    # independent HeightTestConfig performs the strict 24/8 gate.
+    if any("excluded_from_detection" in raw for raw in raw_plants.values()):
+        for plant in plant_specs:
+            raw_plant = raw_plants.get(plant.plant_id, {})
+            if plant.plant_id.startswith("C-") and raw_plant.get("excluded_from_detection") is not True:
+                errors.append(f"株号 {plant.plant_id} 必须标记 excluded_from_detection=true")
+            if not plant.plant_id.startswith("C-") and raw_plant.get("excluded_from_detection") is True:
+                errors.append(f"非 C 排株号 {plant.plant_id} 不能排除检测")
+
     traits = phenotype.get("traits", [])
     if tuple(traits) != EXPECTED_TRAITS:
         errors.append("表型 traits 必须为株高和有效穗数")
