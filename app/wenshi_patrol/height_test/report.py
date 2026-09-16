@@ -37,6 +37,7 @@ def build_report(run_dir: Path) -> ReportSummary:
     panicle_model_ok = True
     heights: list[float] = []
     manual_errors: list[float] = []
+    previous_seq: int | None = None
     for plant_dir in sorted((root / "plants").glob("*")) if (root / "plants").is_dir() else []:
         result = _json(plant_dir / "results.json")
         if not result:
@@ -53,6 +54,14 @@ def build_report(run_dir: Path) -> ReportSummary:
             detections = _json(view_dir / "detections.json")
             if not frame or not (view_dir / "color.jpg").is_file() or not (view_dir / "depth.png").is_file():
                 camera_ok = False
+            ratio = frame.get("depth_valid_ratio")
+            if not isinstance(ratio, (int, float)) or float(ratio) < 0.70:
+                camera_ok = False
+            seq = frame.get("seq")
+            if isinstance(seq, int):
+                if previous_seq is not None and seq <= previous_seq:
+                    camera_ok = False
+                previous_seq = seq
             if not detections.get("plant"):
                 plant_model_ok = False
             if not detections.get("panicle"):

@@ -101,7 +101,9 @@ class HeightTestStore:
         overlay = detections.overlay if detections.overlay is not None else packet.color
         if not cv2.imwrite(str(target / "overlay.jpg"), overlay, [cv2.IMWRITE_JPEG_QUALITY, 95]):
             raise OSError(f"failed to write {target / 'overlay.jpg'}")
-        _atomic_json(target / "frame.json", packet.to_dict() | {"group_id": group_id, "plant_id": plant_id, "view": view})
+        depth_values = np.asarray(packet.depth).reshape(-1)
+        valid_ratio = float(np.count_nonzero(np.isfinite(depth_values) & (depth_values > 0)) / max(depth_values.size, 1))
+        _atomic_json(target / "frame.json", packet.to_dict() | {"group_id": group_id, "plant_id": plant_id, "view": view, "depth_valid_ratio": valid_ratio})
         _atomic_json(target / "detections.json", detections.to_dict() | {"analysis": analysis.to_dict()})
         self.append_event("view_saved", group_id=group_id, plant_id=plant_id, view=view, seq=packet.seq)
         return target
