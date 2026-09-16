@@ -181,6 +181,8 @@ def main(argv: list[str] | None = None) -> int:
             session.record_station(group_id, {"x": float(value[0]), "y": float(value[1]), "angle": float(value[2])})
         print("登记机械臂四个视角。left/center/right 使用当前 viewpoints.json，home_safe 读取 JAKA 当前关节并由操作员确认。")
         viewpoints = load_viewpoints(config)
+        if input("确认 camera_left/camera/camera_right 已现场低速验证且无碰撞风险？输入 yes: ").strip().lower() != "yes":
+            raise RuntimeError("操作员未确认三视角")
         for name, source_name in (("left", "camera_left"), ("center", "camera"), ("right", "camera_right")):
             session.record_viewpoint(name, require_joint_pose(viewpoints, source_name))
         arm_cfg = config["jaka"]
