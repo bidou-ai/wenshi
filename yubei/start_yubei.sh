@@ -14,8 +14,10 @@ Wenshi yubei 预备工具
 不带命令时显示中文菜单。可用命令：
   check                 只读检查 AGV、JAKA 和 D435
   camera-check          只检查 D435，不连接或控制 AGV/JAKA
+  daily-check           每日离线只读检查数据、依赖和模型，不连接硬件
   capture [--focus flower]
-                        回车采集 RGB；可默认标记为开花批次
+                        历史兼容入口，不用于当前模型
+                        回车采集旧版 RGB；当前请使用 capture-plant/panicle
   capture-plant          无 Tag 采集整株水稻训练图片
   capture-panicle        无 Tag 采集稻穗训练图片
   audit [会话目录]      检查照片清晰度、曝光、重复图和采集批次
@@ -34,8 +36,8 @@ Wenshi yubei 预备工具
   verify                校验暂存的八点示教文件
   publish-viewpoints --confirm
                         备份并发布已验证的八点示教文件
-  publish-model [best.pt] --confirm
-                        备份并发布模型，默认选择最新 best.pt
+  publish-model [best.pt] --model-type plant|panicle --confirm
+                        按明确类型备份并发布模型
 
 所有相对路径都按项目根目录解析，脚本可从任意当前目录启动。
 EOF
@@ -43,14 +45,14 @@ EOF
 
 latest_session() {
   [[ -d "$DATA_ROOT" ]] || return 0
-  find "$DATA_ROOT" -mindepth 1 -maxdepth 1 -type d -name 'dataset_*' -printf '%T@ %p\n' 2>/dev/null \
+  find "$DATA_ROOT" -mindepth 1 -maxdepth 1 -type d -name 'dataset_*' ! -name 'dataset_normalized_*' -printf '%T@ %p\n' 2>/dev/null \
     | sort -nr | sed -n '1p' | cut -d' ' -f2-
 }
 
 latest_typed_session() {
   local dataset_type="$1"
   [[ -d "$ROOT/yubei/data/$dataset_type" ]] || return 0
-  find "$ROOT/yubei/data/$dataset_type" -mindepth 1 -maxdepth 1 -type d -name 'dataset_*' -printf '%T@ %p\n' 2>/dev/null \
+  find "$ROOT/yubei/data/$dataset_type" -mindepth 1 -maxdepth 1 -type d -name 'dataset_*' ! -name 'dataset_normalized_*' -printf '%T@ %p\n' 2>/dev/null \
     | sort -nr | sed -n '1p' | cut -d' ' -f2-
 }
 
@@ -60,9 +62,23 @@ latest_prepared() {
     | sort -nr | sed -n '1p' | cut -d' ' -f2-
 }
 
+latest_typed_prepared() {
+  local model_type="$1"
+  [[ -d "$ROOT/yubei/datasets/$model_type" ]] || return 0
+  find "$ROOT/yubei/datasets/$model_type" -mindepth 2 -maxdepth 2 -type f -name data.yaml -printf '%T@ %p\n' 2>/dev/null \
+    | sort -nr | sed -n '1p' | cut -d' ' -f2-
+}
+
 latest_model() {
   [[ -d "$ROOT/yubei/training" ]] || return 0
   find "$ROOT/yubei/training" -type f -path '*/weights/best.pt' -printf '%T@ %p\n' 2>/dev/null \
+    | sort -nr | sed -n '1p' | cut -d' ' -f2-
+}
+
+latest_typed_model() {
+  local model_type="$1"
+  [[ -d "$ROOT/yubei/training/$model_type" ]] || return 0
+  find "$ROOT/yubei/training/$model_type" -type f -path '*/weights/best.pt' -printf '%T@ %p\n' 2>/dev/null \
     | sort -nr | sed -n '1p' | cut -d' ' -f2-
 }
 
@@ -71,6 +87,9 @@ run_command() {
   shift || true
   cd "$ROOT"
   case "$command" in
+    daily-check)
+      python3 yubei/daily_check.py --root "$ROOT"
+      ;;
   check)
       python3 yubei/check_all.py --config "${WENSHI_CONFIG:-$ROOT/config/wenshi.yaml}" --samples 10
       return $?
@@ -140,7 +159,7 @@ run_command() {
     train-plant|train-panicle)
       local model_type="plant"
       [[ "$command" == "train-panicle" ]] && model_type="panicle"
-      local data="${1:-$(find "$ROOT/yubei/datasets/$model_type" -type f -name data.yaml -print -quit 2>/dev/null)}"
+      local data="${1:-$(latest_typed_prepared "$model_type")}"
       [[ -n "$data" ]] || { echo "没有找到 $model_type 数据集，请先运行 prepare-$model_type" >&2; return 1; }
       python3 yubei/train_yolo.py --data "$data" --model-type "$model_type" --project "$ROOT/yubei/training/$model_type" --name "${model_type}_$(date +%Y%m%d_%H%M%S)" --device cpu
       ;;
@@ -163,19 +182,25 @@ run_command() {
     publish-model)
       local source=""
       local confirmation=""
+      local model_type="${2:-}"
       if [[ "${1:-}" == "--confirm" ]]; then
-        source="$(latest_model)"
-        confirmation="--confirm"
-      else
-        source="${1:-$(latest_model)}"
-        confirmation="${2:-}"
+        echo "发布模型必须显式指定 --model-type plant|panicle" >&2
+        return 2
       fi
+      source="${1:-}"
+      [[ -n "$source" ]] || { echo "请指定 best.pt；同时指定模型类型" >&2; return 2; }
+      [[ "${2:-}" == "--model-type" ]] && model_type="${3:-}"
+      if [[ "${4:-}" == "--confirm" ]]; then confirmation="--confirm"; fi
       [[ "$confirmation" == "--confirm" ]] || {
-        echo "发布模型需要显式添加 --confirm" >&2
+        echo "发布模型需要显式添加 --model-type plant|panicle 和 --confirm" >&2
+        return 2
+      }
+      [[ "$model_type" == "plant" || "$model_type" == "panicle" ]] || {
+        echo "模型类型必须是 plant 或 panicle" >&2
         return 2
       }
       [[ -n "$source" ]] || { echo "没有找到 best.pt" >&2; return 1; }
-      python3 yubei/publish_model.py "$source" --models "$ROOT/models"
+      python3 yubei/publish_model.py "$source" --model-type "$model_type" --models "$ROOT/models"
       ;;
     -h|--help|help)
       usage
@@ -199,39 +224,42 @@ while true; do
 Wenshi yubei 预备工具
   1. 设备与相机只读检查
   2. 只检查 D435 相机
-  3. 回车采集 RGB 数据集
-  4. 检查最新照片质量与重复图
-  5. 标注最新数据集
-  6. 打包 Windows 离线标注文件夹
-  7. 验证并生成训练数据集
-  8. 训练 YOLO 模型
-  9. 依次保存八个示教点
-  10. 校验示教点
-  11. 发布已验证的示教点
-  12. 发布已确认的模型
+  3. 每日离线只读检查
+  4. 回车采集 RGB 数据集
+  5. 检查最新照片质量与重复图
+  6. 标注最新数据集
+  7. 打包 Windows 离线标注文件夹
+  8. 验证并生成训练数据集
+  9. 训练 YOLO 模型
+  10. 依次保存八个示教点
+  11. 校验示教点
+  12. 发布已验证的示教点
+  13. 发布已确认的模型
   q. 退出
 EOF
   read -r -p "请选择: " choice
   case "$choice" in
     1) run_command check || true ;;
     2) run_command camera-check || true ;;
-    3) run_command capture ;;
-    4) run_command audit || true ;;
-    5) run_command label ;;
-    6) run_command package-labeler ;;
-    7) run_command prepare ;;
-    8) run_command train ;;
-    9) run_command teach ;;
-    10) run_command verify ;;
-    11)
+    3) run_command daily-check || true ;;
+    4) run_command capture ;;
+    5) run_command audit || true ;;
+    6) run_command label ;;
+    7) run_command package-labeler ;;
+    8) run_command prepare ;;
+    9) run_command train ;;
+    10) run_command teach ;;
+    11) run_command verify ;;
+    12)
       read -r -p "输入 PUBLISH 确认覆盖正式示教文件（会先备份）: " confirmation
       [[ "$confirmation" == "PUBLISH" ]] && run_command publish-viewpoints --confirm || echo "已取消"
       ;;
-    12)
-      read -r -p "输入 PUBLISH 确认发布最新 best.pt（会先备份）: " confirmation
-      [[ "$confirmation" == "PUBLISH" ]] && run_command publish-model --confirm || echo "已取消"
+    13)
+      read -r -p "输入模型类型 plant 或 panicle: " model_type
+      read -r -p "输入 PUBLISH 确认发布 best.pt（会先备份）: " confirmation
+      [[ "$confirmation" == "PUBLISH" ]] && run_command publish-model "$(latest_typed_model "$model_type")" --model-type "$model_type" --confirm || echo "已取消"
       ;;
     q|Q) exit 0 ;;
-    *) echo "请输入 1-12 或 q" ;;
+    *) echo "请输入 1-13 或 q" ;;
   esac
 done

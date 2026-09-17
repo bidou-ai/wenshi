@@ -258,7 +258,7 @@ def main(argv: list[str] | None = None) -> int:
             if not station_status.connect() or not station_status.wait_for_status(timeout=3.0, max_age=1.0):
                 station_status.disconnect()
                 station_status = None
-                print("警告：AGV 状态不可用；每个停车点改为手工输入 x y angle。")
+                raise RuntimeError("AGV 状态不可用；拒绝发布现场 setup。诊断草稿请显式使用 --no-agv")
         try:
             print("逐个登记 16 个真实水稻停车组。LM1~LM4 只是地图转弯点，不在这里登记。")
             for group_id in height.groups:
@@ -284,7 +284,7 @@ def main(argv: list[str] | None = None) -> int:
                     try:
                         photo = _interactive_photo(setup_camera, setup_root / "stations" / f"{group_id}.jpg", f"{group_id} 停车点")
                         note = input(f"{group_id} 备注(回车跳过): ").strip()
-                        session.record_station(group_id, pose, photo=photo, note=note)
+                        session.record_station(group_id, pose, photo=photo, note=note, source="agv_status" if station_status is not None and command not in {"m", "manual"} else "manual")
                         print(f"已登记 {group_id}: x={pose['x']:.3f} y={pose['y']:.3f} angle={pose['angle']:.3f}")
                         break
                     except (ValueError, OSError, RuntimeError) as exc:

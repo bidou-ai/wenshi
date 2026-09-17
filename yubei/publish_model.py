@@ -31,7 +31,17 @@ def publish_model(source: Path, formal_models_dir: Path, metadata: dict) -> Path
         raise ValueError("model source does not exist or is empty")
     output_dir = Path(formal_models_dir).expanduser().resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
-    output = output_dir / "rice_demo.pt"
+    model_type = metadata.get("model_type")
+    if model_type is None:
+        # Keep the legacy API usable for old callers; new publishing must pass a type.
+        output_name = "rice_demo"
+        classes = {"rice": 0, "flower": 1}
+    else:
+        if model_type not in {"plant", "panicle"}:
+            raise ValueError("model_type must be plant or panicle")
+        output_name = "rice_plant" if model_type == "plant" else "panicle"
+        classes = {"rice_plant": 0} if model_type == "plant" else {"panicle": 0}
+    output = output_dir / f"{output_name}.pt"
     if output.exists():
         archive = output_dir / "archive"
         archive.mkdir(exist_ok=True)
@@ -44,7 +54,7 @@ def publish_model(source: Path, formal_models_dir: Path, metadata: dict) -> Path
     value.update(
         {
             "model": output.name,
-            "classes": {"rice": 0, "flower": 1},
+            "classes": classes,
             "sha256": _sha256(output),
             "published_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         }
@@ -58,8 +68,13 @@ def main(argv=None) -> int:
     parser.add_argument("source", type=Path)
     parser.add_argument("--models", type=Path, default=Path("models"))
     parser.add_argument("--source-run", default="")
+    parser.add_argument("--model-type", choices=("plant", "panicle"), required=True)
     args = parser.parse_args(argv)
-    output = publish_model(args.source, args.models, {"source_run": args.source_run})
+    output = publish_model(
+        args.source,
+        args.models,
+        {"source_run": args.source_run, "model_type": args.model_type},
+    )
     print(output)
     return 0
 

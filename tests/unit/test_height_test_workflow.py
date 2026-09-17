@@ -97,6 +97,25 @@ def test_setup_publish_requires_tags_for_excluded_c_row_too(tmp_path):
         session.publish(tmp_path / "field_height_setup.json")
 
 
+def test_setup_manual_station_source_cannot_be_published_as_field_setup(tmp_path):
+    from wenshi_patrol.height_test.models import HeightTestConfig, TagObservation
+    from wenshi_patrol.height_test.setup import SetupSession
+
+    config = HeightTestConfig.from_project(_config())
+    session = SetupSession.begin(tmp_path, config)
+    session.require_photo_evidence = True
+    image = np.zeros((8, 8, 3), dtype=np.uint8)
+    session.record_calibration_board(image)
+    for plant in config.plants:
+        session.record_tag(plant.plant_id, TagObservation(plant.tag_id), photo=image)
+        if plant.plant_id in config.active_plant_ids:
+            session.record_water_offset(plant.plant_id, 0.12)
+    for group_id in config.groups:
+        session.record_station(group_id, {"x": 1.0, "y": 2.0, "angle": 0.0}, photo=image, source="manual")
+    with pytest.raises(ValueError, match="AGV"):
+        session.publish(tmp_path / "field_height_setup.json")
+
+
 def test_setup_station_can_save_operator_photo(tmp_path):
     from wenshi_patrol.height_test.models import HeightTestConfig
     from wenshi_patrol.height_test.setup import SetupSession

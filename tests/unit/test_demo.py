@@ -123,6 +123,24 @@ def test_demo_camera_disabled_skips_health_check(tmp_path):
     assert camera.health_calls == 0
 
 
+def test_demo_start_rejects_agv_that_is_not_stopped(tmp_path):
+    from wenshi_patrol.demo import DemoController
+
+    controller = _controller(tmp_path)
+    controller._stop_event = threading.Event()
+    controller.arm.move_to_safe = lambda: (_ for _ in ()).throw(AssertionError("arm moved before AGV stop"))
+    controller.status.value["is_stop"] = False
+    with pytest.raises(RuntimeError, match="停稳"):
+        controller.start()
+
+
+def test_demo_fresh_status_rejects_agv_alarm(tmp_path):
+    controller = _controller(tmp_path)
+    controller.status.value["errors"] = ["drive fault"]
+    with pytest.raises(RuntimeError, match="报警"):
+        controller._fresh_status()
+
+
 def test_demo_requires_verified_home_safe(tmp_path, monkeypatch):
     from wenshi_patrol.demo import DemoArm
 

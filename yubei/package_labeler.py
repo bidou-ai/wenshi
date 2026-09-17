@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 import shutil
 
 
-README_TEXT = """# Wenshi Windows 标注包
+README_TEMPLATE = """# Wenshi Windows 标注包
 
 这个文件夹可以复制到另一台 Windows 电脑上标注，不需要连接机器人、不需要 D435、不需要 ROS。
 
@@ -20,8 +21,8 @@ README_TEXT = """# Wenshi Windows 标注包
 
 ## 标注规则
 
-- `rice`：框完整植株可见地上部分。
-- `flower`：只框可见花部，不要把整株标成 flower。
+- 当前数据集类别：`{class_name}`。
+- 整株数据只框完整植株可见地上部分；稻穗数据对每个独立可辨认的稻穗分别框选。
 - 无目标、质量差、重复图：点“无目标/质量差/重复图”。
 - 严重交叠、无法判断归属：点“标记歧义”。
 
@@ -59,6 +60,16 @@ def package_windows_labeler(session: Path, output: Path) -> Path:
     source_session = Path(session).expanduser().resolve()
     if not (source_session / "images").is_dir() or not (source_session / "labels").is_dir():
         raise ValueError("session must contain images/ and labels/")
+    class_name = "rice_plant"
+    manifest_path = source_session / "manifest.json"
+    if manifest_path.is_file():
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            classes = manifest.get("classes", {})
+            if isinstance(classes, dict) and classes:
+                class_name = ", ".join(str(name) for name in classes)
+        except (OSError, json.JSONDecodeError):
+            pass
 
     destination = Path(output).expanduser().resolve()
     if destination.exists() and any(destination.iterdir()):
@@ -70,7 +81,9 @@ def package_windows_labeler(session: Path, output: Path) -> Path:
     _copy_file(root / "yubei" / "paths.py", destination / "yubei" / "paths.py")
     shutil.copytree(root / "yubei" / "label_ui", destination / "yubei" / "label_ui")
     (destination / "start_label_windows.bat").write_text(BAT_TEXT, encoding="utf-8", newline="\r\n")
-    (destination / "README_WINDOWS_LABELING.md").write_text(README_TEXT, encoding="utf-8")
+    (destination / "README_WINDOWS_LABELING.md").write_text(
+        README_TEMPLATE.format(class_name=class_name), encoding="utf-8"
+    )
     return destination
 
 

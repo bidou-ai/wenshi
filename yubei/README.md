@@ -14,6 +14,18 @@
 `publish-model` 子命令；发布命令必须显式确认并会先备份旧文件。
 `./yubei/start_yubei.sh --help` 显示完整说明。
 
+`capture` 和 `--focus flower` 是旧版 `rice/flower` 双类别数据的历史兼容入口，
+只为读取旧会话保留，不用于当前模型。当前新增数据必须分别使用
+`capture-plant`（类别 `rice_plant`）和 `capture-panicle`（类别 `panicle`）。
+
+每天开始先运行离线检查：
+
+```bash
+./yubei/start_yubei.sh daily-check
+```
+
+它不连接硬件，只检查依赖、数据、训练副本和模型产物。
+
 设备检查和示教读取不会自动上电、使能或运动；需要运动的机械臂动作由操作者在现场明确控制，采集工具只在到位后保存 RGB 图像。示教入口在一次只读连接中依次保存八点，遇到 TCP 拆包也会增量读取完整 JSON。
 
 ## 现场统一示教与硬件测试
@@ -37,18 +49,18 @@ ROS2 桥只读状态/图像，不拥有 AGV/JAKA 运动权限。没有图形环�
 `2.0s` 后从当前线段继续，急停仍需人工复位。启动时若已靠近 LM4 等拐角，会按站点接入而不重复跑前一段。
 示教单点通信失败会提示保持当前位置重新按回车，继续保存该点，不会因一次超时退出八点流程。
 
-数据集采集与正式巡检采集完全分开。数据集会话使用 `yubei/data/dataset_<timestamp>/`；正式巡检使用 `runtime/runs/run_<timestamp>/`。训练集划分优先按 `plant_id` 分组，其次按 `capture_batch`；缺少两者的旧数据会按整个会话分组，绝不把同一未知会话的相关帧拆到 train 和 val。
+数据集采集与正式巡检采集完全分开。当前数据集会话使用 `yubei/data/plant/` 或 `yubei/data/panicle/`；正式巡检使用 `runtime/runs/run_<timestamp>/`。训练集划分优先按 `plant_id` 分组，其次按 `capture_batch`，当前整株按 2 张、稻穗按 9 张连续图片分组，绝不把同一株拆到 train 和 val。
 
 只拍照片时使用 `camera-check`，它只访问 Windows D435 服务，不检查、不连接、不控制 AGV/JAKA。
 
-采集开花照片时可直接使用：
+采集整株或稻穗训练照片时使用：
 
 ```bash
-./yubei/start_yubei.sh capture --focus flower
+./yubei/start_yubei.sh capture-plant
+./yubei/start_yubei.sh capture-panicle
 ```
 
-预览窗口中回车保存当前帧；输入 `f`、`r`、`n` 只切换后续照片的批次标记，不会自动改变 YOLO 类别。
-每张照片会记录相机帧号、清晰度/曝光指标和相似图提示。采集结束后运行
+预览窗口中回车保存当前帧，输入 `q` 结束。每张照片会记录相机帧号、清晰度/曝光指标和相似图提示。采集结束后运行
 `./yubei/start_yubei.sh audit` 生成 `capture_audit.json`，先处理模糊、曝光异常和重复图，再进入标注。
 
 ## 在另一台 Windows 电脑标注
@@ -73,5 +85,6 @@ cd /home/ubuntu/jaka/wenshi
 `json/txt` 文件。随后在 Ubuntu 执行：
 
 ```bash
-./yubei/start_yubei.sh prepare yubei/data/dataset_时间
+./yubei/start_yubei.sh prepare-plant yubei/data/plant/dataset_normalized_时间
+./yubei/start_yubei.sh prepare-panicle yubei/data/panicle/dataset_normalized_时间
 ```

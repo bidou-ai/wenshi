@@ -110,6 +110,7 @@ class SetupSession:
         route_segment: str | None = None,
         photo: np.ndarray | None = None,
         note: str | None = None,
+        source: str = "manual",
     ) -> None:
         if group_id not in self.config.groups:
             raise ValueError(f"unknown observation group: {group_id}")
@@ -120,7 +121,10 @@ class SetupSession:
         values = {str(key): float(value) for key, value in pose.items()}
         if not all(math.isfinite(value) for value in values.values()):
             raise ValueError("station pose values must be finite")
-        record: dict[str, Any] = {"group_id": group_id, "pose": values, "route_segment": route_segment, "plant_ids": list(self.config.group_plant_ids(group_id)), "recorded_at": _now()}
+        source = str(source).strip().lower() or "manual"
+        if source not in {"agv_status", "manual"}:
+            raise ValueError("station source must be agv_status or manual")
+        record: dict[str, Any] = {"group_id": group_id, "pose": values, "route_segment": route_segment, "plant_ids": list(self.config.group_plant_ids(group_id)), "recorded_at": _now(), "pose_source": source}
         if note:
             record["note"] = str(note).strip()
         if photo is not None:
@@ -176,6 +180,8 @@ class SetupSession:
                 raise ValueError(f"station coverage mismatch: {group_id}")
             if self.require_photo_evidence and not station.get("photo"):
                 raise ValueError(f"station photo missing: {group_id}")
+            if self.require_photo_evidence and station.get("pose_source") != "agv_status":
+                raise ValueError(f"AGV实时位姿 required for station: {group_id}")
 
     def publish(self, destination: Path) -> None:
         self._validate()

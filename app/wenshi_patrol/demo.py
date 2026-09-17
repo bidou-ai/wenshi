@@ -479,9 +479,11 @@ class DemoController:
         with self._lock:
             if self._stopped or self._stop_event.is_set():
                 raise RuntimeError("演示已停止，不能重新 start")
-            if self._route_thread and self._route_thread.is_alive():
+            route_thread = getattr(self, "_route_thread", None)
+            if route_thread and route_thread.is_alive():
                 self._running = True
                 return
+        self._require_agv_ready_for_arm()
         if not self.arm.move_to_safe():
             raise RuntimeError("路线启动前 JAKA 无法回到 home_safe")
         with self._lock:
@@ -498,7 +500,8 @@ class DemoController:
         self.log("演示路线已暂停，AGV保持停止")
 
     def _fresh_status(self) -> dict[str, Any]:
-        if not self.status.wait_for_status(timeout=0.8, max_age=0.8):
+        wait_for_status = getattr(self.status, "wait_for_status", None)
+        if callable(wait_for_status) and not wait_for_status(timeout=0.8, max_age=0.8):
             raise RuntimeError("AGV定位状态过期")
         value = self.status.get_status()
         if value.get("emergency"):
@@ -506,9 +509,17 @@ class DemoController:
         if value.get("blocked"):
             self.motion.stop()
             raise RuntimeError("AGV阻挡，已停止等待人工处理")
+        if value.get("fatals") or value.get("errors") or value.get("brake"):
+            self.motion.stop()
+            raise RuntimeError("AGV报警或刹车状态，已停止等待人工处理")
         if value.get("x") is None or value.get("y") is None or value.get("angle") is None:
             raise RuntimeError("AGV没有有效位姿")
         return value
+
+    def _require_agv_ready_for_arm(self) -> None:
+        value = self._fresh_status()
+        if value.get("is_stop") is not True:
+            raise RuntimeError("AGV尚未停稳，禁止 JAKA 动作")
 
     def _run_segment(self, segment: Any) -> bool:
         control = self.config["control"]

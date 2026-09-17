@@ -17,6 +17,10 @@ def normalize_session(source: Path, output: Path, rotation: str = "clockwise_90"
         raise ValueError("rotation must be clockwise_90 or none")
     if not (source / "images").is_dir():
         raise ValueError("source session must contain images/")
+    if rotation != "none" and (source / "labels").is_dir():
+        labelled_files = list((source / "labels").rglob("*.txt"))
+        if labelled_files:
+            raise ValueError("labels before rotation; normalize before annotation")
     if output.exists() and any(output.iterdir()):
         raise ValueError(f"output directory is not empty: {output}")
     output.mkdir(parents=True, exist_ok=True)

@@ -100,6 +100,9 @@ field_test:
   route_speed_mps: 0.10
   blocked_clear_s: 2.0
   station_snap_m: 0.25
+  observation_route_max_offset_m: 0.25
+  demo_min_observations: 3
+  demo_max_observations: 5
 
 fixed_approach:
   enabled: false
@@ -190,40 +193,41 @@ height_test:
     station_order: [left-01, left-02, left-03, left-04, left-05, left-06, left-07, left-08,
                     right-01, right-02, right-03, right-04, right-05, right-06, right-07, right-08]
 
-# IDs and positions are placeholders until the field mapping is confirmed.
+# 现场已贴 Tag 编号映射：A 行自上而下 1..8；B-L 自上而下 16..9；
+# B-R 自上而下 17..24；C 行自上而下 32..25。Tag 0 仅作为标定板保留。
 plants:
-  - {plant_id: A-01, tag_id: null, region: A, row: row-1, index: 1, observation_group: left-01, camera_side: left, slot_top_to_water_m: null}
-  - {plant_id: A-02, tag_id: null, region: A, row: row-1, index: 2, observation_group: left-02, camera_side: left, slot_top_to_water_m: null}
-  - {plant_id: A-03, tag_id: null, region: A, row: row-1, index: 3, observation_group: left-03, camera_side: left, slot_top_to_water_m: null}
-  - {plant_id: A-04, tag_id: null, region: A, row: row-1, index: 4, observation_group: left-04, camera_side: left, slot_top_to_water_m: null}
-  - {plant_id: A-05, tag_id: null, region: A, row: row-1, index: 5, observation_group: left-05, camera_side: left, slot_top_to_water_m: null}
-  - {plant_id: A-06, tag_id: null, region: A, row: row-1, index: 6, observation_group: left-06, camera_side: left, slot_top_to_water_m: null}
-  - {plant_id: A-07, tag_id: null, region: A, row: row-1, index: 7, observation_group: left-07, camera_side: left, slot_top_to_water_m: null}
-  - {plant_id: A-08, tag_id: null, region: A, row: row-1, index: 8, observation_group: left-08, camera_side: left, slot_top_to_water_m: null}
-  - {plant_id: B-L-01, tag_id: null, region: B, row: left, index: 1, observation_group: left-01, camera_side: right, slot_top_to_water_m: null}
-  - {plant_id: B-L-02, tag_id: null, region: B, row: left, index: 2, observation_group: left-02, camera_side: right, slot_top_to_water_m: null}
-  - {plant_id: B-L-03, tag_id: null, region: B, row: left, index: 3, observation_group: left-03, camera_side: right, slot_top_to_water_m: null}
-  - {plant_id: B-L-04, tag_id: null, region: B, row: left, index: 4, observation_group: left-04, camera_side: right, slot_top_to_water_m: null}
-  - {plant_id: B-L-05, tag_id: null, region: B, row: left, index: 5, observation_group: left-05, camera_side: right, slot_top_to_water_m: null}
-  - {plant_id: B-L-06, tag_id: null, region: B, row: left, index: 6, observation_group: left-06, camera_side: right, slot_top_to_water_m: null}
-  - {plant_id: B-L-07, tag_id: null, region: B, row: left, index: 7, observation_group: left-07, camera_side: right, slot_top_to_water_m: null}
-  - {plant_id: B-L-08, tag_id: null, region: B, row: left, index: 8, observation_group: left-08, camera_side: right, slot_top_to_water_m: null}
-  - {plant_id: B-R-01, tag_id: null, region: B, row: right, index: 1, observation_group: right-01, camera_side: left, slot_top_to_water_m: null}
-  - {plant_id: B-R-02, tag_id: null, region: B, row: right, index: 2, observation_group: right-02, camera_side: left, slot_top_to_water_m: null}
-  - {plant_id: B-R-03, tag_id: null, region: B, row: right, index: 3, observation_group: right-03, camera_side: left, slot_top_to_water_m: null}
-  - {plant_id: B-R-04, tag_id: null, region: B, row: right, index: 4, observation_group: right-04, camera_side: left, slot_top_to_water_m: null}
-  - {plant_id: B-R-05, tag_id: null, region: B, row: right, index: 5, observation_group: right-05, camera_side: left, slot_top_to_water_m: null}
-  - {plant_id: B-R-06, tag_id: null, region: B, row: right, index: 6, observation_group: right-06, camera_side: left, slot_top_to_water_m: null}
-  - {plant_id: B-R-07, tag_id: null, region: B, row: right, index: 7, observation_group: right-07, camera_side: left, slot_top_to_water_m: null}
-  - {plant_id: B-R-08, tag_id: null, region: B, row: right, index: 8, observation_group: right-08, camera_side: left, slot_top_to_water_m: null}
-  - {plant_id: C-01, tag_id: null, region: C, row: row-1, index: 1, observation_group: right-01, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
-  - {plant_id: C-02, tag_id: null, region: C, row: row-1, index: 2, observation_group: right-02, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
-  - {plant_id: C-03, tag_id: null, region: C, row: row-1, index: 3, observation_group: right-03, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
-  - {plant_id: C-04, tag_id: null, region: C, row: row-1, index: 4, observation_group: right-04, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
-  - {plant_id: C-05, tag_id: null, region: C, row: row-1, index: 5, observation_group: right-05, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
-  - {plant_id: C-06, tag_id: null, region: C, row: row-1, index: 6, observation_group: right-06, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
-  - {plant_id: C-07, tag_id: null, region: C, row: row-1, index: 7, observation_group: right-07, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
-  - {plant_id: C-08, tag_id: null, region: C, row: row-1, index: 8, observation_group: right-08, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
+  - {plant_id: A-01, tag_id: 1, region: A, row: row-1, index: 1, observation_group: left-01, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: A-02, tag_id: 2, region: A, row: row-1, index: 2, observation_group: left-02, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: A-03, tag_id: 3, region: A, row: row-1, index: 3, observation_group: left-03, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: A-04, tag_id: 4, region: A, row: row-1, index: 4, observation_group: left-04, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: A-05, tag_id: 5, region: A, row: row-1, index: 5, observation_group: left-05, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: A-06, tag_id: 6, region: A, row: row-1, index: 6, observation_group: left-06, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: A-07, tag_id: 7, region: A, row: row-1, index: 7, observation_group: left-07, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: A-08, tag_id: 8, region: A, row: row-1, index: 8, observation_group: left-08, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: B-L-01, tag_id: 16, region: B, row: left, index: 1, observation_group: left-01, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: B-L-02, tag_id: 15, region: B, row: left, index: 2, observation_group: left-02, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: B-L-03, tag_id: 14, region: B, row: left, index: 3, observation_group: left-03, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: B-L-04, tag_id: 13, region: B, row: left, index: 4, observation_group: left-04, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: B-L-05, tag_id: 12, region: B, row: left, index: 5, observation_group: left-05, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: B-L-06, tag_id: 11, region: B, row: left, index: 6, observation_group: left-06, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: B-L-07, tag_id: 10, region: B, row: left, index: 7, observation_group: left-07, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: B-L-08, tag_id: 9, region: B, row: left, index: 8, observation_group: left-08, camera_side: right, slot_top_to_water_m: null}
+  - {plant_id: B-R-01, tag_id: 17, region: B, row: right, index: 1, observation_group: right-01, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: B-R-02, tag_id: 18, region: B, row: right, index: 2, observation_group: right-02, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: B-R-03, tag_id: 19, region: B, row: right, index: 3, observation_group: right-03, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: B-R-04, tag_id: 20, region: B, row: right, index: 4, observation_group: right-04, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: B-R-05, tag_id: 21, region: B, row: right, index: 5, observation_group: right-05, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: B-R-06, tag_id: 22, region: B, row: right, index: 6, observation_group: right-06, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: B-R-07, tag_id: 23, region: B, row: right, index: 7, observation_group: right-07, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: B-R-08, tag_id: 24, region: B, row: right, index: 8, observation_group: right-08, camera_side: left, slot_top_to_water_m: null}
+  - {plant_id: C-01, tag_id: 32, region: C, row: row-1, index: 1, observation_group: right-01, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
+  - {plant_id: C-02, tag_id: 31, region: C, row: row-1, index: 2, observation_group: right-02, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
+  - {plant_id: C-03, tag_id: 30, region: C, row: row-1, index: 3, observation_group: right-03, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
+  - {plant_id: C-04, tag_id: 29, region: C, row: row-1, index: 4, observation_group: right-04, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
+  - {plant_id: C-05, tag_id: 28, region: C, row: row-1, index: 5, observation_group: right-05, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
+  - {plant_id: C-06, tag_id: 27, region: C, row: row-1, index: 6, observation_group: right-06, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
+  - {plant_id: C-07, tag_id: 26, region: C, row: row-1, index: 7, observation_group: right-07, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
+  - {plant_id: C-08, tag_id: 25, region: C, row: row-1, index: 8, observation_group: right-08, camera_side: right, slot_top_to_water_m: null, excluded_from_detection: true}
 
 observation_groups:
   - {id: left-01, route_segment: null, approximate_along_track_m: null, slowdown_before_m: null, trigger_distance_m: null, left_plant_id: A-01, right_plant_id: B-L-01}
