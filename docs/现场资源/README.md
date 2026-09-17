@@ -10,6 +10,8 @@
 
 - 不修改 `yubei/data`、`yubei/datasets` 或历史 `runtime/field_tests`。
 - setup 阶段的 Tag 照片放在 `runtime/height_tests/setup_<timestamp>/tags/<plant_id>.jpg`。
+- 标定板 ID 0 的照片放在 `runtime/height_tests/setup_<timestamp>/reference/tag-0-calibration-board.jpg`。
+- 16 个真实停车点照片放在 `runtime/height_tests/setup_<timestamp>/stations/<left-01|right-08>.jpg`，照片与该站的 AGV `x/y/angle` 同一条记录保存。
 - 基准目标照片放在 `runtime/height_tests/run_<timestamp>/reference/`，建议文件名包含距离，例如 `target_0.5m.jpg`。
 - 程序自动保存的逐株图像位于 `runtime/height_tests/run_<timestamp>/plants/<plant_id>/views/<left|center|right>/`。
 

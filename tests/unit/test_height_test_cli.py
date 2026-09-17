@@ -19,3 +19,34 @@ def test_replay_is_hardware_free(tmp_path, monkeypatch):
 def test_motion_commands_require_explicit_confirmation(monkeypatch):
     from wenshi_patrol.height_test import cli
     assert cli.main(["arm-only"]) == 2
+
+
+def test_live_station_pose_requires_fresh_stopped_agv():
+    from wenshi_patrol.height_test.cli import _live_station_pose
+
+    class Status:
+        def wait_for_status(self, **_kwargs):
+            return True
+
+        def get_status(self):
+            return {"x": 1.25, "y": -0.5, "angle": 0.2, "is_stop": False, "emergency": False}
+
+    try:
+        _live_station_pose(Status())
+    except RuntimeError as exc:
+        assert "停稳" in str(exc)
+    else:
+        raise AssertionError("moving AGV pose was accepted")
+
+
+def test_live_station_pose_reads_current_agv_pose():
+    from wenshi_patrol.height_test.cli import _live_station_pose
+
+    class Status:
+        def wait_for_status(self, **_kwargs):
+            return True
+
+        def get_status(self):
+            return {"x": 1.25, "y": -0.5, "angle": 0.2, "is_stop": True, "emergency": False}
+
+    assert _live_station_pose(Status()) == {"x": 1.25, "y": -0.5, "angle": 0.2}

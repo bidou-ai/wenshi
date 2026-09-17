@@ -68,3 +68,15 @@ def test_phenotype_entry_dispatches_to_the_dedicated_controller_not_rice_control
     script = Path(__file__).parents[2].joinpath("scripts", "start_wenshi.sh").read_text(encoding="utf-8")
 
     assert "wenshi_patrol.phenotype_controller" in script
+
+
+def test_phenotype_controller_rejects_incomplete_config_without_constructing_hardware(capsys):
+    from wenshi_patrol import phenotype_controller
+
+    root = Path(__file__).parents[2]
+    result = phenotype_controller.main(
+        ["--config", str(root / "config" / "wenshi.yaml"), "--runtime-root", "/tmp/runtime"]
+    )
+
+    assert result == 1
+    assert "表型预检失败" in capsys.readouterr().out

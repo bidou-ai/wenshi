@@ -3,12 +3,16 @@
 from __future__ import annotations
 
 import argparse
+import math
 import json
 from pathlib import Path
 import sys
 import threading
 import time
 from typing import Any
+
+import cv2
+import numpy as np
 
 from ..config import load_config, load_viewpoints, require_joint_pose, resolve_config_path
 from ..jaka import JakaClient
@@ -18,6 +22,7 @@ from .models import HeightTestConfig
 from .report import build_report, write_report
 from .runner import HeightTestRunner
 from .setup import SetupSession
+from .setup import expected_field_tag_id
 from .storage import HeightTestStore
 
 
@@ -105,6 +110,48 @@ def _load_setup(path: Path) -> dict[str, Any]:
     return value
 
 
+def _live_station_pose(status: Any) -> dict[str, float]:
+    """Read a fresh, explicitly stopped AGV pose for a real plant station."""
+    if not status.wait_for_status(timeout=1.5, max_age=0.8):
+        raise RuntimeError("AGV定位状态过期，不能记录停车点")
+    value = status.get_status()
+    if value.get("emergency"):
+        raise RuntimeError("AGV处于急停，不能记录停车点")
+    if value.get("blocked"):
+        raise RuntimeError("AGV处于阻挡状态，不能记录停车点")
+    if value.get("is_stop") is not True:
+        raise RuntimeError("AGV尚未停稳，不能记录停车点")
+    try:
+        pose = {name: float(value[name]) for name in ("x", "y", "angle")}
+    except (KeyError, TypeError, ValueError) as exc:
+        raise RuntimeError("AGV没有有效 x/y/angle 位姿") from exc
+    if not all(math.isfinite(item) for item in pose.values()):
+        raise RuntimeError("AGV位姿包含非有限值")
+    return pose
+
+
+def _interactive_photo(camera: Any | None, destination: Path, label: str) -> Any | None:
+    """Capture one operator-requested RGB evidence image, or import a path."""
+    answer = input(f"{label}：回车拍照，或输入已有图片路径: ").strip()
+    if answer.lower() in {"skip", "s"}:
+        raise RuntimeError("现场 setup 必须保存照片，不能跳过")
+    if answer:
+        image = cv2.imread(str(Path(answer).expanduser()), cv2.IMREAD_COLOR)
+        if image is None:
+            raise ValueError(f"无法读取图片: {answer}")
+    else:
+        if camera is None:
+            raise RuntimeError("未启用 D435；请提供已有图片路径或使用相机运行 setup")
+        image = camera.color()
+        if not isinstance(image, np.ndarray) or image.size == 0:
+            raise RuntimeError("D435 返回空 RGB 图片")
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    if not cv2.imwrite(str(destination), image, [cv2.IMWRITE_JPEG_QUALITY, 95]):
+        raise OSError(f"图片写入失败: {destination}")
+    print(f"照片已保存: {destination}")
+    return image
+
+
 def _start_stop_listener(runner: HeightTestRunner) -> threading.Event:
     done = threading.Event()
     def listen() -> None:
@@ -137,7 +184,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--group", default="left-01")
     parser.add_argument("--confirm-motion", action="store_true")
     parser.add_argument("--no-preview", action="store_true")
-    parser.add_argument("--interactive", action="store_true", help="setup mode: collect IDs, offsets and station poses from stdin")
+    parser.add_argument("--interactive", action="store_true", help="setup mode: collect fixed Tag IDs, photos and real station poses from stdin")
+    parser.add_argument("--no-camera", action="store_true", help="setup mode: do not connect D435; provide existing photo paths")
+    parser.add_argument("--no-agv", action="store_true", help="setup mode: do not connect AGV; type station coordinates manually")
     args = parser.parse_args(argv)
 
     root = Path(__file__).parents[3]
@@ -152,31 +201,97 @@ def main(argv: list[str] | None = None) -> int:
         stamp = time.strftime("setup_%Y%m%d_%H%M%S")
         setup_root = root / "runtime" / "height_tests" / stamp
         session = SetupSession.begin(setup_root, height)
+        session.require_photo_evidence = bool(args.interactive)
         print(f"setup workspace: {setup_root}")
         if not args.interactive:
             print("请使用 --interactive 进入现场登记；也可在 Python 中调用 SetupSession.record_tag/record_station/record_water_offset。")
             return 0
         session.operator = input("操作员姓名/编号: ").strip()
-        print("逐株输入 Tag ID。C 排仍登记但不要求水面补偿；输入 q 可中止。")
+        setup_camera = None
+        if not args.no_camera:
+            from ..demo import DemoCamera
+            setup_camera = DemoCamera(str(config["camera"]["server_url"]), float(config["camera"].get("timeout_s", 1.5)))
+            health = setup_camera.health()
+            if not health.get("ok"):
+                raise RuntimeError(f"D435 健康检查失败: {health.get('error', 'unknown')}")
+            print("D435 已连接：Tag 和停车点照片按回车直接拍摄。")
+        else:
+            print("已禁用 D435：每个 Tag/停车点必须输入已有 RGB 图片路径。")
+
         from .models import TagObservation
-        for plant_id in (plant.plant_id for plant in height.plants):
-            value = input(f"{plant_id} Tag ID: ").strip()
-            if value.lower() == "q": return 2
-            photo_path = input(f"{plant_id} Tag 照片路径(回车跳过): ").strip()
-            photo = None
-            if photo_path:
-                import cv2
-                photo = cv2.imread(photo_path)
-                if photo is None: raise ValueError(f"无法读取 Tag 照片: {photo_path}")
-            session.record_tag(plant_id, TagObservation(int(value), family=height.tag_family), "side", photo)
+        print("先拍摄 ID 0 标定板（不属于任何植株）。输入 q 可中止。")
+        board_photo = _interactive_photo(setup_camera, setup_root / "reference" / "tag-0-calibration-board.jpg", "标定板 Tag 0")
+        session.record_calibration_board(board_photo)
+
+        print("按现场贴纸登记 32 株：A=1..8，B-L=16..9，B-R=17..24，C=32..25。回车采用预期编号。")
+        for plant in height.plants:
+            plant_id = plant.plant_id
+            expected = plant.tag_id if plant.tag_id is not None else expected_field_tag_id(plant_id)
+            while True:
+                value = input(f"{plant_id} Tag ID [{expected}]: ").strip()
+                if value.lower() == "q": return 2
+                if not value:
+                    value = str(expected) if expected is not None else ""
+                try:
+                    tag_id = int(value)
+                    if not 1 <= tag_id <= 32:
+                        raise ValueError("身份 Tag 必须是 1-32；0 是标定板")
+                    photo = _interactive_photo(setup_camera, setup_root / "tags" / f"{plant_id}.jpg", f"{plant_id} Tag")
+                    session.record_tag(plant_id, TagObservation(tag_id, family=height.tag_family), "side", photo)
+                    break
+                except (ValueError, OSError, RuntimeError) as exc:
+                    print(f"登记失败，请重试 {plant_id}: {exc}")
             if plant_id in height.active_plant_ids:
-                offset = input(f"{plant_id} 卡槽顶到水面高度(m): ").strip()
-                session.record_water_offset(plant_id, float(offset))
-        print("逐站输入 AGV 地图坐标 x y angle(rad)，共 16 站。")
-        for group_id in height.groups:
-            value = input(f"{group_id} x y angle: ").strip().split()
-            if len(value) != 3: raise ValueError("station pose requires x y angle")
-            session.record_station(group_id, {"x": float(value[0]), "y": float(value[1]), "angle": float(value[2])})
+                while True:
+                    offset = input(f"{plant_id} 卡槽顶到水面高度(m): ").strip()
+                    if offset.lower() == "q": return 2
+                    try:
+                        session.record_water_offset(plant_id, float(offset))
+                        break
+                    except (TypeError, ValueError) as exc:
+                        print(f"水面补偿无效，请重新输入: {exc}")
+
+        station_status = None
+        if not args.no_agv:
+            agv_cfg = config["agv"]
+            station_status = AGVStatusClient(str(agv_cfg["ip"]), int(agv_cfg.get("status_port", 19204)), interval_ms=int(agv_cfg.get("status_interval_ms", 200)), response_timeout_s=float(agv_cfg.get("status_response_timeout_s", .8)))
+            if not station_status.connect() or not station_status.wait_for_status(timeout=3.0, max_age=1.0):
+                station_status.disconnect()
+                station_status = None
+                print("警告：AGV 状态不可用；每个停车点改为手工输入 x y angle。")
+        try:
+            print("逐个登记 16 个真实水稻停车组。LM1~LM4 只是地图转弯点，不在这里登记。")
+            for group_id in height.groups:
+                while True:
+                    command = input(f"{group_id}：将 AGV 驶到水稻旁停稳后回车，输入 m 手工坐标，q 中止: ").strip().lower()
+                    if command == "q": return 2
+                    if command in {"m", "manual"} or station_status is None:
+                        raw = input(f"{group_id} x y angle(rad): ").strip().split()
+                        if len(raw) != 3:
+                            print("需要三个数字 x y angle")
+                            continue
+                        try:
+                            pose = {"x": float(raw[0]), "y": float(raw[1]), "angle": float(raw[2])}
+                        except ValueError:
+                            print("坐标必须是数字")
+                            continue
+                    else:
+                        try:
+                            pose = _live_station_pose(station_status)
+                        except RuntimeError as exc:
+                            print(f"不能记录 {group_id}: {exc}")
+                            continue
+                    try:
+                        photo = _interactive_photo(setup_camera, setup_root / "stations" / f"{group_id}.jpg", f"{group_id} 停车点")
+                        note = input(f"{group_id} 备注(回车跳过): ").strip()
+                        session.record_station(group_id, pose, photo=photo, note=note)
+                        print(f"已登记 {group_id}: x={pose['x']:.3f} y={pose['y']:.3f} angle={pose['angle']:.3f}")
+                        break
+                    except (ValueError, OSError, RuntimeError) as exc:
+                        print(f"停车点登记失败，请重试: {exc}")
+        finally:
+            if station_status is not None:
+                station_status.disconnect()
         print("登记机械臂四个视角。left/center/right 使用当前 viewpoints.json，home_safe 读取 JAKA 当前关节并由操作员确认。")
         viewpoints = load_viewpoints(config)
         if input("确认 camera_left/camera/camera_right 已现场低速验证且无碰撞风险？输入 yes: ").strip().lower() != "yes":

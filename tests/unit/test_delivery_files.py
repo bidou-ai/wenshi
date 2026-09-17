@@ -157,6 +157,22 @@ def test_yubei_launcher_exposes_two_independent_model_dataflows():
         assert command in text
 
 
+def test_yubei_launcher_does_not_select_normalized_copy_as_capture_session():
+    text = (ROOT / "yubei" / "start_yubei.sh").read_text(encoding="utf-8")
+    assert "! -name 'dataset_normalized_*'" in text
+
+
+def test_yubei_launcher_exposes_daily_read_only_check():
+    text = (ROOT / "yubei" / "start_yubei.sh").read_text(encoding="utf-8")
+    assert "daily-check" in text
+
+
+def test_yubei_launcher_marks_legacy_capture_as_compatibility_only():
+    text = (ROOT / "yubei" / "start_yubei.sh").read_text(encoding="utf-8")
+    assert "历史兼容" in text
+    assert "不用于当前模型" in text
+
+
 def test_github_sync_guide_and_offline_ci_exist():
     guide = ROOT / "docs" / "归档" / "旧资料" / "GitHub同步说明.md"
     workflow = ROOT / ".github" / "workflows" / "tests.yml"

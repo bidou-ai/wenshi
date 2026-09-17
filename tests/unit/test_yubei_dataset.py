@@ -230,3 +230,15 @@ def test_publish_model_archives_existing_and_writes_sha(tmp_path):
 def test_publish_refuses_non_pt(tmp_path):
     with pytest.raises(ValueError, match=r"\.pt"):
         publish_model(tmp_path / "best.onnx", tmp_path / "models", {})
+
+
+def test_publish_model_uses_explicit_model_type_and_class_metadata(tmp_path):
+    source = tmp_path / "best.pt"
+    source.write_bytes(b"panicle-model")
+
+    output = publish_model(source, tmp_path / "models", {"model_type": "panicle"})
+
+    assert output.name == "panicle.pt"
+    metadata = json.loads((tmp_path / "models" / "panicle.json").read_text(encoding="utf-8"))
+    assert metadata["model_type"] == "panicle"
+    assert metadata["classes"] == {"panicle": 0}
