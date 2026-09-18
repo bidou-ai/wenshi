@@ -3,24 +3,30 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG="${WENSHI_CONFIG:-$ROOT/config/wenshi.yaml}"
-PHOTOS="${WENSHI_DEMO_PHOTOS:-$ROOT/runtime/demo}"
-VIEWPOINTS="${WENSHI_DEMO_VIEWPOINTS:-}"
+PHOTOS="${WENSHI_DEMO_PHOTOS:-$ROOT/runtime/demo/photos}"
+SETUP_FILE="${WENSHI_DEMO_SETUP:-$ROOT/runtime/demo/demo_setup.json}"
 NO_RVIZ=0
 NO_CAMERA=0
 DRY_RUN=0
+SETUP_MODE=0
+RESUME_DIR=""
+SKIP_C_TAGS=0
 
 usage() {
   cat <<'EOF'
 用法: ./wenshi.sh [选项]
 
-专家展示模式：AGV 按现有 wens1 路线循环，JAKA 在站点做三视角观察，
+专家展示模式：AGV 按现有 wens1 路线循环，JAKA 在站点伸向对应侧水稻观察，
 RViz 显示地图/AGV 位姿/路线标记/D435画面。不运行 YOLO、不做株高监测、
 不写 runtime/runs。控制台命令：pause、start、photo、status、stop、q。
 
 选项:
   --config PATH       使用指定配置
-  --photos PATH       photo 命令保存 JPEG 的目录（默认 runtime/demo）
-  --viewpoints PATH   必须是包含 16 个水稻停车点的完整 field_height_setup.json
+  --setup             交互登记本 Demo 自己的 Tag、停车点和机械臂姿态
+  --resume DIR        从已有 setup 证据目录继续（需与 --setup 一起使用）
+  --skip-c-tags       延期登记不参与展示的 C 排 Tag 25-32
+  --setup-file PATH   Demo 独立配置（默认 runtime/demo/demo_setup.json）
+  --photos PATH       photo 命令保存 JPEG 的目录（默认 runtime/demo/photos）
   --no-rviz           不启动 RViz，仍可运行展示控制台
   --no-camera         不启动 D435 ROS2 桥
   --dry-run           只打印启动计划，不连接硬件
@@ -31,8 +37,11 @@ EOF
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --config) CONFIG="$2"; shift 2 ;;
+    --setup) SETUP_MODE=1; shift ;;
+    --resume) RESUME_DIR="$2"; shift 2 ;;
+    --skip-c-tags) SKIP_C_TAGS=1; shift ;;
+    --setup-file) SETUP_FILE="$2"; shift 2 ;;
     --photos) PHOTOS="$2"; shift 2 ;;
-    --viewpoints) VIEWPOINTS="$2"; shift 2 ;;
     --no-rviz) NO_RVIZ=1; shift ;;
     --no-camera) NO_CAMERA=1; shift ;;
     --dry-run) DRY_RUN=1; shift ;;
@@ -41,27 +50,75 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-select_viewpoints() {
-  if [[ -n "$VIEWPOINTS" ]]; then
-    return
+if [[ "$SETUP_MODE" == 1 && "$DRY_RUN" == 1 ]]; then
+  echo "错误：--setup 与 --dry-run 不能同时使用" >&2
+  exit 2
+fi
+if [[ -n "$RESUME_DIR" && "$SETUP_MODE" != 1 ]]; then
+  echo "错误：--resume 只能与 --setup 一起使用" >&2
+  exit 2
+fi
+if [[ "$SKIP_C_TAGS" == 1 && "$SETUP_MODE" != 1 ]]; then
+  echo "错误：--skip-c-tags 只能与 --setup 一起使用" >&2
+  exit 2
+fi
+
+FORMAL_RUNTIME="$(realpath -m "$ROOT/runtime/height_tests")"
+reject_formal_runtime_path() {
+  local label="$1"
+  local candidate
+  candidate="$(realpath -m "$2")"
+  case "$candidate" in
+    "$FORMAL_RUNTIME"|"$FORMAL_RUNTIME"/*)
+      echo "错误：$label 不能位于正式检测目录 runtime/height_tests；Demo 必须使用独立目录" >&2
+      exit 2
+      ;;
+  esac
+}
+reject_formal_runtime_path "Demo setup" "$SETUP_FILE"
+reject_formal_runtime_path "Demo 照片" "$PHOTOS"
+reject_formal_runtime_path "Demo 配置" "$CONFIG"
+if [[ -n "$RESUME_DIR" ]]; then
+  reject_formal_runtime_path "Demo 恢复目录" "$RESUME_DIR"
+fi
+
+acquire_demo_lock() {
+  local lock_file="${WENSHI_DEMO_LOCK:-${TMPDIR:-/tmp}/wenshi-demo-hardware.lock}"
+  if ! command -v flock >/dev/null 2>&1; then
+    echo "错误：缺少 flock，无法保证 Demo 独占 AGV/JAKA" >&2
+    exit 2
   fi
-  if [[ -f "$ROOT/runtime/height_tests/field_height_setup.json" ]]; then
-    VIEWPOINTS="$ROOT/runtime/height_tests/field_height_setup.json"
+  mkdir -p "$(dirname "$lock_file")"
+  exec 9>"$lock_file"
+  if ! flock -n 9; then
+    echo "错误：另一个 Wenshi Demo 正在占用 AGV/JAKA，请先结束已有进程" >&2
+    exit 2
   fi
 }
 
-select_viewpoints
+if [[ "$SETUP_MODE" == 1 ]]; then
+  acquire_demo_lock
+  SETUP_ARGS=(--config "$CONFIG" --setup-file "$SETUP_FILE" --setup)
+  if [[ -n "$RESUME_DIR" ]]; then
+    SETUP_ARGS+=(--resume "$RESUME_DIR")
+  fi
+  if [[ "$SKIP_C_TAGS" == 1 ]]; then
+    SETUP_ARGS+=(--skip-c-tags)
+  fi
+  if [[ "$NO_CAMERA" == 1 ]]; then
+    SETUP_ARGS+=(--no-camera)
+  fi
+  PYTHONPATH="$ROOT/app${PYTHONPATH:+:$PYTHONPATH}" python3 -m wenshi_patrol.demo "${SETUP_ARGS[@]}"
+  exit $?
+fi
 
-if [[ -z "$VIEWPOINTS" ]]; then
-  echo "错误：缺少16个水稻观测停车点的完整 setup。先运行 ./scripts/start_height_test.sh setup --interactive" >&2
+if [[ ! -f "$SETUP_FILE" ]]; then
+  echo "错误：缺少本 Demo 的独立配置 $SETUP_FILE。先运行 ./wenshi.sh --setup" >&2
   exit 2
 fi
 
 if [[ "$DRY_RUN" == 1 ]]; then
-  PLAN_ARGS=(--config "$CONFIG" --photos "$PHOTOS" --dry-run)
-  if [[ -n "$VIEWPOINTS" ]]; then
-    PLAN_ARGS+=(--viewpoints "$VIEWPOINTS")
-  fi
+  PLAN_ARGS=(--config "$CONFIG" --photos "$PHOTOS" --setup-file "$SETUP_FILE" --dry-run)
   if [[ "$NO_CAMERA" == 1 ]]; then
     PLAN_ARGS+=(--no-camera)
   fi
@@ -69,11 +126,13 @@ if [[ "$DRY_RUN" == 1 ]]; then
   echo "dry-run: no hardware connection, no ROS process, no monitoring"
   echo "config=$CONFIG"
   echo "photos=$PHOTOS"
-  echo "viewpoints=${VIEWPOINTS:-missing}"
+  echo "setup=$SETUP_FILE"
   echo "camera_bridge=$([[ "$NO_CAMERA" == 0 ]] && echo enabled || echo disabled)"
   echo "rviz=$([[ "$NO_RVIZ" == 0 ]] && echo enabled || echo disabled)"
   exit 0
 fi
+
+acquire_demo_lock
 
 export PYTHONPATH="$ROOT/app${PYTHONPATH:+:$PYTHONPATH}"
 export PYTHONUNBUFFERED=1
@@ -147,11 +206,9 @@ fi
 
 echo "启动 Wenshi 专家展示。照片只在输入 photo 后写入: $PHOTOS"
 DEMO_ARGS=(--config "$CONFIG" --photos "$PHOTOS")
+DEMO_ARGS+=(--setup-file "$SETUP_FILE")
 if [[ "$NO_RVIZ" == 1 ]]; then
   DEMO_ARGS+=(--no-rviz)
-fi
-if [[ -n "$VIEWPOINTS" ]]; then
-  DEMO_ARGS+=(--viewpoints "$VIEWPOINTS")
 fi
 if [[ "$NO_CAMERA" == 1 ]]; then
   DEMO_ARGS+=(--no-camera)

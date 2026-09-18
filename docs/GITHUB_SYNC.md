@@ -6,7 +6,7 @@
 ## 一、已经完成的首次配置
 
 - GitHub 仓库：`https://github.com/bidou-ai/wenshi`
-- 本地分支：`main`
+- 默认分支：`main`；日常开发使用独立分支，例如 `codex/32-phenotyping-docs`
 - 远程名称：`origin`
 - SSH 公钥已添加到 GitHub。
 - 本仓库提交者：`bidou-ai <255785848+bidou-ai@users.noreply.github.com>`。
@@ -29,13 +29,15 @@ cd /home/ubuntu/jaka/wenshi
 git status
 ```
 
-如果工作区没有未提交修改，再同步 GitHub 上的新内容：
+如果工作区没有未提交修改，先获取远程信息，再把远程 `main` 合并到当前开发分支：
 
 ```bash
-git pull --rebase origin main
+git fetch origin
+git merge origin/main
 ```
 
-不要在有未提交修改时随意执行 `pull --rebase`。看到冲突或错误时先停止，把完整提示保存下来再处理。
+如果你明确就在本地 `main` 工作，也可以使用 `git pull --ff-only origin main`。
+不要在有未提交修改时随意执行合并或变基。看到冲突或错误时先停止，保存完整提示再处理。
 
 ## 三、保存并上传一次修改
 
@@ -52,16 +54,24 @@ git diff
 PYTHONPATH=app:. python3 -m pytest -q
 ```
 
-确认无误后提交：
+确认无误后提交。下面的暂存命令覆盖本项目源码、配置、文档和测试；执行后必须检查暂存内容：
 
 ```bash
-git add README.md docs/ app/ tests/
+git add .gitignore README.md docs/ app/ tests/ config/wenshi.yaml models/README.md yubei/ wenshi.sh
 git status
+git diff --cached
 git commit -m "说明本次修改内容"
-git push origin main
 ```
 
 `git add` 后必须再次运行 `git status`，确认没有把数据集、模型、日志或密钥加入提交。不要为了省事使用未知来源的递归删除、强制推送或历史重写命令。
+
+开发分支先推送到 GitHub，并设置上游：
+
+```bash
+git push -u origin HEAD
+```
+
+然后在 GitHub 创建 Pull Request，将当前分支合并到 `main`。只有合并后，GitHub 默认分支才会更新。若已确认直接更新 `main`，应先同步远程并完成测试，再执行 `git push origin main`；日常工作不要直接向 `main` 推送。
 
 ## 四、哪些内容不会上传
 
@@ -77,7 +87,7 @@ git push origin main
 
 ## 五、GitHub 自动测试
 
-每次推送到 `main` 后，GitHub Actions 会自动运行离线单元测试和 Python 编译检查。查看方法：
+每次推送到 `main` 或创建目标为 `main` 的 Pull Request 后，GitHub Actions 会自动运行离线单元测试和 Python 编译检查。查看方法：
 
 1. 打开 `https://github.com/bidou-ai/wenshi`。
 2. 点击顶部 `Actions`。
@@ -116,10 +126,13 @@ ssh -T git@github.com
 远程分支比本地新。不要强制推送，先执行：
 
 ```bash
-git pull --rebase origin main
+git status
+git fetch origin
+git merge origin/main
+PYTHONPATH=app:. python3 -m pytest -q
 ```
 
-如果出现冲突，停止操作并根据冲突文件逐个处理。
+如果出现冲突，停止操作并根据冲突文件逐个处理；解决后重新运行测试，再推送当前分支。
 
 ### 提交了不该上传的文件
 

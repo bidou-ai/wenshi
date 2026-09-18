@@ -73,7 +73,7 @@ def test_setup_publishes_c_records_and_active_station_coverage(tmp_path):
         if plant.plant_id in config.active_plant_ids:
             session.record_water_offset(plant.plant_id, 0.12)
     for group_id in config.groups:
-        session.record_station(group_id, {"x": 1.0, "y": 2.0, "angle": 0.0})
+        session.record_station(group_id, {"x": 1.0, "y": 2.0, "angle": 0.0}, source="agv_status")
     destination = tmp_path / "field_height_setup.json"
     session.publish(destination)
     value = json.loads(destination.read_text(encoding="utf-8"))
@@ -92,7 +92,7 @@ def test_setup_publish_requires_tags_for_excluded_c_row_too(tmp_path):
         session.record_tag(plant.plant_id, TagObservation(plant.tag_id))
         session.record_water_offset(plant.plant_id, 0.12)
     for group_id in config.groups:
-        session.record_station(group_id, {"x": 1.0, "y": 2.0, "angle": 0.0})
+        session.record_station(group_id, {"x": 1.0, "y": 2.0, "angle": 0.0}, source="agv_status")
     with pytest.raises(ValueError, match="C-01"):
         session.publish(tmp_path / "field_height_setup.json")
 
@@ -103,15 +103,13 @@ def test_setup_manual_station_source_cannot_be_published_as_field_setup(tmp_path
 
     config = HeightTestConfig.from_project(_config())
     session = SetupSession.begin(tmp_path, config)
-    session.require_photo_evidence = True
     image = np.zeros((8, 8, 3), dtype=np.uint8)
-    session.record_calibration_board(image)
     for plant in config.plants:
-        session.record_tag(plant.plant_id, TagObservation(plant.tag_id), photo=image)
+        session.record_tag(plant.plant_id, TagObservation(plant.tag_id))
         if plant.plant_id in config.active_plant_ids:
             session.record_water_offset(plant.plant_id, 0.12)
     for group_id in config.groups:
-        session.record_station(group_id, {"x": 1.0, "y": 2.0, "angle": 0.0}, photo=image, source="manual")
+        session.record_station(group_id, {"x": 1.0, "y": 2.0, "angle": 0.0}, source="manual")
     with pytest.raises(ValueError, match="AGV"):
         session.publish(tmp_path / "field_height_setup.json")
 
@@ -154,7 +152,7 @@ def test_published_setup_rewrites_evidence_paths_from_setup_directory(tmp_path):
         if plant.plant_id in config.active_plant_ids:
             session.record_water_offset(plant.plant_id, 0.12)
     for group_id in config.groups:
-        session.record_station(group_id, {"x": 1.0, "y": 2.0, "angle": 0.0}, photo=image)
+        session.record_station(group_id, {"x": 1.0, "y": 2.0, "angle": 0.0}, photo=image, source="agv_status")
     destination = tmp_path / "field_height_setup.json"
     session.publish(destination)
     value = json.loads(destination.read_text(encoding="utf-8"))

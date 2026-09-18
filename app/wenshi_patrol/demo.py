@@ -23,63 +23,54 @@ import numpy as np
 
 from .agv import AGVMotionClient, AGVStatusClient
 from .config import load_config, load_viewpoints, require_joint_pose, resolve_config_path
-from .control.route_math import compute_segment_velocity, endpoint_reached, make_segments, segment_progress
+from .control.route_math import (
+    compute_segment_velocity,
+    endpoint_approach_speed,
+    endpoint_reached,
+    make_segments,
+    normalize_angle,
+    segment_progress,
+)
 from .control.route_math import Segment
 from .control.route_policy import validate_route
+from .demo_setup import (
+    A_STATIONS,
+    B_LEFT_STATIONS,
+    B_RIGHT_STATIONS,
+    DEMO_PLANTS,
+    OBSERVATION_GROUPS,
+    RECORDED_STATIONS,
+    VIEWPOINT_NAMES,
+    DemoSetupSession,
+    load_demo_setup,
+)
 from .jaka import JakaClient
 from .map_utils import load_station_poses
 
 
-OBSERVATION_GROUPS = tuple(
-    [f"left-{index:02d}" for index in range(1, 9)]
-    + [f"right-{index:02d}" for index in range(1, 9)]
-)
 MAP_ROUTE_ORDER = ("LM1", "LM4", "LM3", "LM2")
 
 
-def _finite_pose(value: Any, label: str) -> tuple[float, float, float]:
-    target = value.get("pose", value) if isinstance(value, dict) else value
-    if not isinstance(target, dict):
-        raise ValueError(f"{label} 缺少 pose")
-    try:
-        pose = tuple(float(target[name]) for name in ("x", "y", "angle"))
-    except (KeyError, TypeError, ValueError) as exc:
-        raise ValueError(f"{label} 必须包含 x/y/angle") from exc
-    if not all(math.isfinite(item) for item in pose):
-        raise ValueError(f"{label} 包含非有限坐标")
-    return pose
-
-
-def load_demo_setup(path: str | Path) -> dict[str, Any]:
-    """Load a published setup containing all 16 real plant parking points."""
-    source = Path(path).expanduser().resolve()
-    try:
-        value = json.loads(source.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise ValueError(f"无法读取现场 setup {source}: {exc}") from exc
-    if not isinstance(value, dict) or not isinstance(value.get("stations"), dict):
-        raise ValueError(f"现场 setup 必须包含 16 个水稻观测停车点: {source}")
-    stations = value["stations"]
-    if set(stations) != set(OBSERVATION_GROUPS):
-        missing = sorted(set(OBSERVATION_GROUPS) - set(stations))
-        extra = sorted(set(stations) - set(OBSERVATION_GROUPS))
-        detail = f"缺少 {', '.join(missing)}" if missing else f"多出 {', '.join(extra)}"
-        raise ValueError(f"现场 setup 必须恰好包含 16 个水稻观测停车点（{detail}）")
-    normalized_stations = {
-        group_id: _finite_pose(stations[group_id], f"停车点 {group_id}")
-        for group_id in OBSERVATION_GROUPS
-    }
-    viewpoints = value.get("viewpoints")
-    if not isinstance(viewpoints, dict):
-        raise ValueError("现场 setup 缺少 viewpoints；不能使用旧 LM 示教文件")
-    aliases = {"left": "camera_left", "center": "camera", "right": "camera_right"}
-    normalized_viewpoints = dict(viewpoints)
-    for alias, name in aliases.items():
-        if name not in normalized_viewpoints and alias in viewpoints:
-            normalized_viewpoints[name] = viewpoints[alias]
-    for name in ("home_safe", "camera_left", "camera", "camera_right"):
-        _require_finite_joint_pose(normalized_viewpoints, name)
-    return {"source": str(source), "stations": normalized_stations, "viewpoints": normalized_viewpoints, "raw": value}
+def _demo_route_rows(config: dict[str, Any]) -> tuple[float, float]:
+    """Return the two horizontal route rows used as the B-R/B-L mirror."""
+    map_config = config.get("map")
+    if not isinstance(map_config, dict) or not str(map_config.get("smap_file", "")).strip():
+        raise ValueError("Demo 停车点镜像缺少 map.smap_file 配置")
+    validate_route(list(config.get("route", {}).get("station_order", MAP_ROUTE_ORDER)))
+    map_path = resolve_config_path(config, str(map_config["smap_file"]))
+    stations = load_station_poses(map_path)
+    missing = [name for name in MAP_ROUTE_ORDER if name not in stations]
+    if missing:
+        raise ValueError("Demo 地图缺少镜像所需路线点: " + ", ".join(missing))
+    top_values = (float(stations["LM1"][1]), float(stations["LM4"][1]))
+    bottom_values = (float(stations["LM2"][1]), float(stations["LM3"][1]))
+    if abs(top_values[0] - top_values[1]) > 0.05 or abs(bottom_values[0] - bottom_values[1]) > 0.05:
+        raise ValueError("Demo 地图的 LM1-LM4 或 LM2-LM3 不是水平路线，不能自动镜像 B-L")
+    top_y = sum(top_values) / 2.0
+    bottom_y = sum(bottom_values) / 2.0
+    if not math.isfinite(top_y) or not math.isfinite(bottom_y) or math.isclose(top_y, bottom_y):
+        raise ValueError("Demo 地图的上下路线坐标无效，不能自动镜像 B-L")
+    return top_y, bottom_y
 
 
 def choose_demo_groups(
@@ -91,13 +82,23 @@ def choose_demo_groups(
     """Choose 3-5 unique real observation groups for one demonstration lap."""
     candidates = [str(group) for group in groups]
     if len(candidates) != len(set(candidates)) or not set(candidates).issubset(set(OBSERVATION_GROUPS)):
-        raise ValueError("演示随机点只能来自 16 个真实水稻观测组，且不能包含 LM 角点")
+        raise ValueError("演示随机点只能来自 24 个水稻观测目标，且不能包含 LM 角点")
     lower, upper = int(min_count), int(max_count)
     if lower < 1 or upper < lower or upper > len(candidates):
         raise ValueError("演示随机点数量范围无效")
     chooser = rng if rng is not None else __import__("random").SystemRandom()
     count = chooser.randint(lower, upper)
     return list(chooser.sample(candidates, count))
+
+
+def demo_view_for_station(station: str) -> str:
+    """Select the single taught camera side for one plant target."""
+    name = str(station)
+    if name in B_LEFT_STATIONS:
+        return "right"
+    if name in A_STATIONS or name in B_RIGHT_STATIONS:
+        return "left"
+    raise ValueError(f"未知 Demo 水稻目标: {name}")
 
 
 def _project_to_segment(point: tuple[float, float, float], segment: Segment) -> tuple[float, float]:
@@ -175,23 +176,8 @@ class DemoCamera:
 
 
 def _load_demo_viewpoints(path: str | Path) -> dict[str, Any]:
-    """Load either a direct viewpoints file or a published height-test setup."""
-    source = Path(path).expanduser().resolve()
-    try:
-        value = json.loads(source.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise ValueError(f"无法读取演示示教文件 {source}: {exc}") from exc
-    if not isinstance(value, dict):
-        raise ValueError(f"演示示教文件不是 JSON 对象: {source}")
-    viewpoints = value.get("viewpoints", value)
-    if not isinstance(viewpoints, dict):
-        raise ValueError(f"演示示教文件缺少 viewpoints: {source}")
-    aliases = {"left": "camera_left", "center": "camera", "right": "camera_right"}
-    normalized = dict(viewpoints)
-    for alias, name in aliases.items():
-        if name not in normalized and alias in viewpoints:
-            normalized[name] = viewpoints[alias]
-    return normalized
+    """Load arm poses from the independent demonstration setup."""
+    return load_demo_setup(path)["viewpoints"]
 
 
 def _require_finite_joint_pose(viewpoints: dict[str, Any], name: str) -> list[float]:
@@ -206,7 +192,7 @@ class DemoArm:
         self,
         config: dict[str, Any],
         log: Callable[[str], None] = print,
-        viewpoints_file: str | Path | None = None,
+        setup_file: str | Path | None = None,
     ):
         arm = config["jaka"]
         self.log = log
@@ -220,13 +206,12 @@ class DemoArm:
             log=log,
         )
         viewpoints = (
-            _load_demo_viewpoints(viewpoints_file)
-            if viewpoints_file is not None
+            _load_demo_viewpoints(setup_file)
+            if setup_file is not None
             else load_viewpoints(config)
         )
         self.poses = {
             "left": _require_finite_joint_pose(viewpoints, str(arm.get("left_pose", "camera_left"))),
-            "center": _require_finite_joint_pose(viewpoints, str(arm.get("center_pose", "camera"))),
             "right": _require_finite_joint_pose(viewpoints, str(arm.get("right_pose", "camera_right"))),
         }
         try:
@@ -234,13 +219,17 @@ class DemoArm:
         except (TypeError, ValueError) as exc:
             raise ValueError(
                 "专家演示拒绝启动：缺少经过现场确认的 home_safe；"
-                "请先完成现场 setup，或通过 --viewpoints 指定已验证示教文件"
+                "请先运行 ./wenshi.sh --setup"
             ) from exc
         self._motion_lock = threading.Lock()
+        self._cancel_event = threading.Event()
         self.cancel_requested: Callable[[], bool] | None = None
-        self.speed = min(float(arm.get("fixed_transition_speed_deg_s", 60.0)), 30.0)
-        self.accel = min(float(arm.get("accel_deg_s2", 80.0)), 50.0)
+        demo = config.get("demo", {})
+        self.observe_speed = min(max(float(demo.get("arm_observe_speed_deg_s", 50.0)), 1.0), 60.0)
+        self.retract_speed = min(max(float(demo.get("arm_retract_speed_deg_s", 60.0)), 1.0), 60.0)
+        self.accel = min(max(float(demo.get("arm_accel_deg_s2", 80.0)), 1.0), 80.0)
         self.timeout = float(arm.get("motion_timeout_s", 120.0))
+        self.observation_hold_s = max(float(config.get("demo", {}).get("observation_hold_s", 2.0)), 0.0)
 
     def connect(self) -> None:
         if not self.client.connect(timeout=3.0) or not self.client.wait_for_joint_state(timeout=3.0):
@@ -250,24 +239,33 @@ class DemoArm:
         if view not in self.poses:
             raise ValueError(f"unknown demo view: {view}")
         with self._motion_lock:
-            return bool(self.client.joint_move(self.poses[view], self.speed, self.accel, self.timeout))
+            if self._view_cancelled():
+                return False
+            return bool(self.client.joint_move(self.poses[view], self.observe_speed, self.accel, self.timeout, cancel_requested=self._view_cancelled))
 
-    def observe(self) -> bool:
-        for view in ("left", "center", "right", "center"):
-            if self.cancel_requested is not None and self.cancel_requested():
+    def _view_cancelled(self) -> bool:
+        return self._cancel_event.is_set() or (self.cancel_requested is not None and self.cancel_requested())
+
+    def observe(self, view: str) -> bool:
+        if self._view_cancelled() or not self.move_to_view(view):
+            return False
+        deadline = time.monotonic() + self.observation_hold_s
+        while time.monotonic() < deadline:
+            if self._view_cancelled():
                 return False
-            if not self.move_to_view(view):
-                return False
-            if self.cancel_requested is not None and self.cancel_requested():
-                return False
+            time.sleep(min(0.1, max(deadline - time.monotonic(), 0.0)))
         return True
 
     def move_to_safe(self) -> bool:
         with self._motion_lock:
-            return bool(self.client.joint_move(self.safe, self.speed, self.accel, self.timeout))
+            return bool(self.client.joint_move(self.safe, self.retract_speed, self.accel, self.timeout))
 
     def stop(self) -> None:
+        self._cancel_event.set()
         self.client.stop()
+
+    def resume(self) -> None:
+        self._cancel_event.clear()
 
     def close(self) -> None:
         self.client.disconnect()
@@ -402,7 +400,7 @@ class DemoController:
         config: dict[str, Any],
         photo_dir: Path,
         *,
-        viewpoints_file: str | Path | None = None,
+        setup_file: str | Path | None = None,
         camera_enabled: bool = True,
         status: Any | None = None,
         motion: Any | None = None,
@@ -414,14 +412,15 @@ class DemoController:
         self.config = config
         self.log = log
         self._stop_event = threading.Event()
+        self._pause_event = threading.Event()
         self.status = status or AGVStatusClient(str(config["agv"]["ip"]), int(config["agv"].get("status_port", 19204)), interval_ms=int(config["agv"].get("status_interval_ms", 200)), response_timeout_s=float(config["agv"].get("status_response_timeout_s", 0.8)), log=log)
         self.motion = motion or AGVMotionClient(str(config["agv"]["ip"]), int(config["agv"].get("motion_port", 19205)), send_rate_hz=float(config["control"].get("rate_hz", 20.0)), watchdog_s=float(config["safety"].get("command_watchdog_s", 0.3)), log=log)
-        if viewpoints_file is None:
-            raise ValueError("专家演示必须指定包含 16 个水稻观测停车点的 field_height_setup.json")
-        self.demo_setup = load_demo_setup(viewpoints_file)
-        self.arm = arm or DemoArm(config, log, viewpoints_file=viewpoints_file)
+        if setup_file is None:
+            raise ValueError("专家演示缺少独立 demo_setup.json；请运行 ./wenshi.sh --setup")
+        self.demo_setup = load_demo_setup(setup_file)
+        self.arm = arm or DemoArm(config, log, setup_file=setup_file)
         if hasattr(self.arm, "cancel_requested"):
-            self.arm.cancel_requested = self._stop_event.is_set
+            self.arm.cancel_requested = lambda: self._stop_event.is_set() or self._pause_event.is_set()
         self.camera = camera or DemoCamera(str(config["camera"]["server_url"]), float(config["camera"].get("timeout_s", 1.5)))
         self.camera_enabled = bool(camera_enabled)
         self.ros = ros
@@ -431,7 +430,7 @@ class DemoController:
         self.stations = self.map_stations  # compatibility for read-only route helpers
         self.observation_stations = self.demo_setup["stations"]
         self.observation_order = list(OBSERVATION_GROUPS)
-        self.observation_route_max_offset_m = float(config.get("field_test", {}).get("observation_route_max_offset_m", config.get("safety", {}).get("hard_cross_track_m", 0.25)))
+        self.observation_route_max_offset_m = float(config.get("demo", {}).get("observation_route_max_offset_m", 0.25))
         # Validate every recorded plant stop at startup.  A bad setup must fail
         # before any AGV/JAKA connection or command is opened.
         build_demo_lap_segments(self.map_stations, self.order, self.observation_stations, self.observation_order, self.observation_route_max_offset_m)
@@ -443,7 +442,7 @@ class DemoController:
         self._route_thread: threading.Thread | None = None
         self._lock = threading.Lock()
         self.current_station = ""
-        self.station_snap_m = float(config.get("field_test", {}).get("station_snap_m", 0.25))
+        self.station_snap_m = float(config.get("demo", {}).get("station_snap_m", 0.25))
 
     def _stop_requested(self) -> bool:
         event = getattr(self, "_stop_event", None)
@@ -480,24 +479,34 @@ class DemoController:
             if self._stopped or self._stop_event.is_set():
                 raise RuntimeError("演示已停止，不能重新 start")
             route_thread = getattr(self, "_route_thread", None)
-            if route_thread and route_thread.is_alive():
-                self._running = True
-                return
+            resume = bool(route_thread and route_thread.is_alive())
         self._require_agv_ready_for_arm()
         if not self.arm.move_to_safe():
             raise RuntimeError("路线启动前 JAKA 无法回到 home_safe")
+        arm_resume = getattr(self.arm, "resume", None)
+        if callable(arm_resume):
+            arm_resume()
         with self._lock:
             if self._stopped or self._stop_event.is_set():
                 raise RuntimeError("演示在启动准备期间已停止")
+            self._pause_event.clear()
             self._running = True
+            if resume:
+                return
             self._route_thread = threading.Thread(target=self._route_loop, name="wenshi-demo-route", daemon=True)
             self._route_thread.start()
 
     def pause(self) -> None:
         with self._lock:
             self._running = False
-        self.motion.stop()
-        self.log("演示路线已暂停，AGV保持停止")
+            self._pause_event.set()
+        try:
+            self._stop_agv_and_wait()
+        finally:
+            self.arm.stop()
+        if self.arm.move_to_safe() is False:
+            raise RuntimeError("暂停后 JAKA 无法回到 home_safe")
+        self.log("演示已暂停，AGV停止且JAKA回到home_safe")
 
     def _fresh_status(self) -> dict[str, Any]:
         wait_for_status = getattr(self.status, "wait_for_status", None)
@@ -514,6 +523,13 @@ class DemoController:
             raise RuntimeError("AGV报警或刹车状态，已停止等待人工处理")
         if value.get("x") is None or value.get("y") is None or value.get("angle") is None:
             raise RuntimeError("AGV没有有效位姿")
+        try:
+            pose_values = [float(value[name]) for name in ("x", "y", "angle")]
+        except (KeyError, TypeError, ValueError) as exc:
+            raise RuntimeError("AGV没有有效位姿") from exc
+        if not all(math.isfinite(item) for item in pose_values):
+            self.motion.stop()
+            raise RuntimeError("AGV位姿包含非有限数值，已停止等待人工处理")
         return value
 
     def _require_agv_ready_for_arm(self) -> None:
@@ -524,7 +540,11 @@ class DemoController:
     def _run_segment(self, segment: Any) -> bool:
         control = self.config["control"]
         safety = self.config["safety"]
-        speed = min(abs(float(self.config.get("field_test", {}).get("route_speed_mps", 0.10))), 0.10)
+        demo = self.config.get("demo", {})
+        cruise_speed = min(abs(float(demo.get("route_speed_mps", 0.18))), 0.18)
+        slowdown_distance = float(demo.get("endpoint_slowdown_distance_m", control.get("endpoint_slowdown_distance_m", 0.60)))
+        minimum_speed = float(demo.get("endpoint_min_speed_mps", control.get("endpoint_min_speed_mps", 0.04)))
+        endpoint_tolerance = float(control.get("endpoint_tolerance_m", 0.10))
         while not self._stop_requested():
             with self._lock:
                 active = self._running
@@ -533,10 +553,23 @@ class DemoController:
                 time.sleep(0.1)
                 continue
             status = self._fresh_status()
-            if endpoint_reached(status, segment, float(control.get("endpoint_tolerance_m", 0.10))):
+            if endpoint_reached(status, segment, endpoint_tolerance):
                 self.motion.stop()
                 self.current_station = segment.end_name
                 return True
+            approach = segment_progress(
+                status,
+                segment,
+                cross_track_gain=float(control.get("cross_track_gain", 0.8)),
+                correction_threshold_m=float(control.get("correction_threshold_m", 0.04)),
+            )
+            speed = endpoint_approach_speed(
+                distance_m=approach.remaining_along,
+                cruise_speed_mps=cruise_speed,
+                slowdown_distance_m=slowdown_distance,
+                stop_distance_m=endpoint_tolerance,
+                minimum_speed_mps=minimum_speed,
+            )
             velocity, angular, progress = compute_segment_velocity(
                 status, segment, speed,
                 float(control.get("cross_track_gain", 0.8)),
@@ -550,7 +583,10 @@ class DemoController:
             if abs(progress.cross_track) > float(safety.get("hard_cross_track_m", 0.25)):
                 self.motion.stop()
                 raise RuntimeError(f"路线横向偏差过大: {progress.cross_track:.3f}m")
-            self.motion.set_velocity(velocity, angular)
+            with self._lock:
+                if not self._running or self._pause_event.is_set() or self._stop_event.is_set():
+                    continue
+                self.motion.set_velocity(velocity, angular)
             time.sleep(0.05)
         self.motion.stop()
         return False
@@ -609,23 +645,118 @@ class DemoController:
 
     def _observe_station(self) -> None:
         first_error: RuntimeError | None = None
+        base_stop_confirmed = False
+        arm_motion_allowed = False
         try:
             try:
                 self._stop_agv_and_wait()
+                base_stop_confirmed = True
+                self._align_station_heading()
+                self._require_recorded_station_pose()
+                arm_motion_allowed = True
                 if not self.arm.move_to_safe():
                     first_error = RuntimeError("JAKA无法回到安全姿态")
-                elif not self.arm.observe():
-                    first_error = RuntimeError("JAKA展示观察动作失败")
+                elif not self.arm.observe(demo_view_for_station(self.current_station)):
+                    pause_event = getattr(self, "_pause_event", None)
+                    if pause_event is None or not pause_event.is_set():
+                        first_error = RuntimeError("JAKA展示观察动作失败")
             except RuntimeError as exc:
                 first_error = exc
         finally:
-            if not self.arm.move_to_safe():
+            if arm_motion_allowed and not self.arm.move_to_safe():
                 if first_error is None:
                     first_error = RuntimeError("JAKA观察后无法回到安全姿态")
                 self.log("警告：JAKA观察后回安全姿态失败，请实体急停并人工处理")
+            elif not arm_motion_allowed:
+                if base_stop_confirmed:
+                    self.log("警告：AGV停车姿态校正或校验未通过，机械臂未伸出")
+                else:
+                    self.log("警告：AGV未确认安全停稳，机械臂未伸出；请实体急停并人工处理")
         if first_error is not None:
             raise first_error
         self.log(f"演示观察完成 station={self.current_station}")
+
+    def _align_station_heading(self) -> None:
+        target = self.observation_stations.get(self.current_station)
+        if target is None:
+            raise RuntimeError(f"当前点不是已登记的水稻停车点: {self.current_station or '<missing>'}")
+        demo = self.config.get("demo", {})
+        position_limit = float(demo.get("station_position_tolerance_m", 0.15))
+        tolerance = math.radians(float(demo.get("heading_alignment_tolerance_deg", 3.0)))
+        timeout = max(float(demo.get("heading_alignment_timeout_s", 8.0)), 0.5)
+        gain = max(float(demo.get("heading_alignment_gain", 2.0)), 0.1)
+        maximum = min(max(float(demo.get("heading_alignment_max_rad_s", 0.45)), 0.05), 0.45)
+        minimum = min(max(float(demo.get("heading_alignment_min_rad_s", 0.08)), 0.0), maximum)
+        deadline = time.monotonic() + timeout
+        try:
+            while not self._stop_requested() and time.monotonic() < deadline:
+                current = self._fresh_status()
+                position_error = math.hypot(float(current["x"]) - target[0], float(current["y"]) - target[1])
+                if position_error > position_limit:
+                    raise RuntimeError(
+                        f"AGV 在停车点 {self.current_station} 原地校正时位置偏差 {position_error:.3f}m，"
+                        f"超过 {position_limit:.3f}m"
+                    )
+                heading_error = normalize_angle(target[2] - float(current["angle"]))
+                if abs(heading_error) <= tolerance:
+                    self.motion.stop()
+                    self._stop_agv_and_wait()
+                    confirmed = self._fresh_status()
+                    confirmed_position = math.hypot(float(confirmed["x"]) - target[0], float(confirmed["y"]) - target[1])
+                    confirmed_heading = abs(normalize_angle(target[2] - float(confirmed["angle"])))
+                    if confirmed_position > position_limit:
+                        raise RuntimeError(
+                            f"AGV 在停车点 {self.current_station} 校正停止后位置偏差 {confirmed_position:.3f}m，"
+                            f"超过 {position_limit:.3f}m"
+                        )
+                    if confirmed_heading <= tolerance:
+                        self.log(
+                            f"AGV停车朝向已校正 station={self.current_station} "
+                            f"error={math.degrees(confirmed_heading):.1f}deg"
+                        )
+                        return
+                    heading_error = normalize_angle(target[2] - float(confirmed["angle"]))
+                angular = max(-maximum, min(maximum, gain * heading_error))
+                if 0.0 < abs(angular) < minimum:
+                    angular = math.copysign(minimum, angular)
+                # Share the state lock with pause()/stop() so no rotation
+                # command can be issued after either state transition.
+                with self._lock:
+                    if not self._running or self._pause_event.is_set() or self._stop_event.is_set():
+                        raise RuntimeError("演示已暂停或停止")
+                    self.motion.set_velocity(0.0, angular)
+                time.sleep(0.05)
+        finally:
+            self.motion.stop()
+        if self._stop_requested():
+            raise RuntimeError("演示已停止")
+        raise RuntimeError(
+            f"AGV 在停车点 {self.current_station} 朝向校正超时，"
+            f"未进入 {math.degrees(tolerance):.1f}deg 容差"
+        )
+
+    def _require_recorded_station_pose(self) -> None:
+        target = self.observation_stations.get(self.current_station)
+        if target is None:
+            raise RuntimeError(f"当前点不是已登记的水稻停车点: {self.current_station or '<missing>'}")
+        current = self._fresh_status()
+        if current.get("is_stop") is not True:
+            raise RuntimeError("AGV尚未停稳，禁止伸臂")
+        position_error = math.hypot(float(current["x"]) - target[0], float(current["y"]) - target[1])
+        heading_error = abs(normalize_angle(float(current["angle"]) - target[2]))
+        demo = self.config.get("demo", {})
+        position_tolerance = float(demo.get("station_position_tolerance_m", 0.15))
+        heading_tolerance = math.radians(float(demo.get("heading_alignment_tolerance_deg", 3.0)))
+        if position_error > position_tolerance:
+            raise RuntimeError(
+                f"AGV 距离停车点 {self.current_station} 偏差 {position_error:.3f}m，"
+                f"超过 {position_tolerance:.3f}m，禁止伸臂"
+            )
+        if heading_error > heading_tolerance:
+            raise RuntimeError(
+                f"AGV 在停车点 {self.current_station} 的朝向偏差 {math.degrees(heading_error):.1f}deg，"
+                f"超过 {math.degrees(heading_tolerance):.1f}deg，禁止伸臂"
+            )
 
     def _stop_agv_and_wait(self) -> None:
         self.motion.stop()
@@ -642,6 +773,8 @@ class DemoController:
                 raise RuntimeError("AGV到站后进入急停")
             if current.get("blocked"):
                 raise RuntimeError("AGV到站后仍处于阻挡状态")
+            if current.get("fatals") or current.get("errors") or current.get("brake"):
+                raise RuntimeError("AGV到站后处于报警或刹车状态")
             if bool(current.get("is_stop")):
                 return
             time.sleep(0.05)
@@ -652,8 +785,8 @@ class DemoController:
     def _route_loop(self) -> None:
         try:
             while not self._stop_requested():
-                minimum = int(self.config.get("field_test", {}).get("demo_min_observations", 3))
-                maximum = int(self.config.get("field_test", {}).get("demo_max_observations", 5))
+                minimum = int(self.config.get("demo", {}).get("min_observations", 3))
+                maximum = int(self.config.get("demo", {}).get("max_observations", 5))
                 selected = choose_demo_groups(self.observation_order, minimum, maximum)
                 self.log(f"本圈随机观察 {len(selected)} 个水稻停车组: {', '.join(selected)}")
                 lap_segments = build_demo_lap_segments(
@@ -697,6 +830,30 @@ class DemoController:
         arm = self.arm.client.snapshot() if hasattr(self.arm, "client") else {}
         return f"station={self.current_station or '-'} agv_stop={value.get('is_stop')} blocked={value.get('blocked')} emergency={value.get('emergency')} status_age={value.get('status_age')} arm_connected={arm.get('connected', '?')} running={self._running}"
 
+    def _agv_safe_for_retract(self) -> bool:
+        timeout = max(float(self.config.get("safety", {}).get("station_stop_timeout_s", 2.0)), 0.2)
+        deadline = time.monotonic() + timeout
+        wait_for_status = getattr(self.status, "wait_for_status", None)
+        while True:
+            if callable(wait_for_status) and not wait_for_status(
+                timeout=min(0.25, max(0.0, deadline - time.monotonic())),
+                max_age=0.8,
+            ):
+                if time.monotonic() < deadline:
+                    continue
+                return False
+            current = self.status.get_status()
+            if current.get("emergency") or current.get("blocked") or current.get("fatals") or current.get("errors") or current.get("brake"):
+                return False
+            age = current.get("status_age")
+            if age is not None and float(age) > 0.8:
+                return False
+            if current.get("is_stop") is True:
+                return True
+            if not callable(wait_for_status) or time.monotonic() >= deadline:
+                return False
+            time.sleep(0.05)
+
     def stop(self, reason: str = "operator") -> None:
         with self._lock:
             if self._stopped:
@@ -712,11 +869,14 @@ class DemoController:
             try:
                 self.arm.stop()
             finally:
-                try:
-                    if not self.arm.move_to_safe():
-                        self.log("警告：停止后 JAKA 未确认回到 home_safe，请实体急停并人工处理")
-                except Exception as exc:
-                    self.log(f"警告：停止后 JAKA 回 home_safe 失败: {exc}；请实体急停并人工处理")
+                if not self._agv_safe_for_retract():
+                    self.log("警告：AGV未确认安全停稳，停止后跳过JAKA回撤；请实体急停并人工处理")
+                else:
+                    try:
+                        if not self.arm.move_to_safe():
+                            self.log("警告：停止后 JAKA 未确认回到 home_safe，请实体急停并人工处理")
+                    except Exception as exc:
+                        self.log(f"警告：停止后 JAKA 回 home_safe 失败: {exc}；请实体急停并人工处理")
         self.log(f"演示已停止 reason={reason}")
 
     def close(self) -> None:
@@ -768,27 +928,396 @@ def console(session: DemoController, input_stream=None, output_stream=None) -> i
     return 0
 
 
+class _SetupCancelled(RuntimeError):
+    pass
+
+
+class DemoSetupPreview:
+    """Continuously display D435 RGB and expose the exact latest visible frame."""
+
+    WINDOW_TITLE = "Wenshi Demo Setup - D435 RGB"
+
+    def __init__(self, camera: DemoCamera, startup_timeout_s: float = 4.0):
+        self.camera = camera
+        self.startup_timeout_s = max(float(startup_timeout_s), 0.5)
+        self._stop_event = threading.Event()
+        self._ready_event = threading.Event()
+        self._lock = threading.Lock()
+        self._latest: np.ndarray | None = None
+        self._latest_at = 0.0
+        self._thread: threading.Thread | None = None
+        self._window_created = False
+        self.last_error = ""
+
+    def start(self) -> None:
+        if self._thread is not None and self._thread.is_alive():
+            return
+        if not (os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY")):
+            raise RuntimeError("当前没有图形桌面，无法显示 D435 预览；请在 Ubuntu 桌面终端运行 setup")
+        self._stop_event.clear()
+        self._ready_event.clear()
+        self._thread = threading.Thread(target=self._run, name="demo-setup-camera-preview", daemon=True)
+        self._thread.start()
+        if not self._ready_event.wait(timeout=self.startup_timeout_s):
+            error = self.last_error or "等待首帧超时"
+            self.stop()
+            raise RuntimeError(f"D435 实时预览启动失败: {error}")
+
+    def _run(self) -> None:
+        while not self._stop_event.is_set():
+            try:
+                frame = self.camera.color()
+                if not isinstance(frame, np.ndarray) or frame.size == 0:
+                    raise RuntimeError("D435 返回空 RGB 画面")
+                with self._lock:
+                    self._latest = frame.copy()
+                    self._latest_at = time.monotonic()
+                display = frame.copy()
+                cv2.putText(
+                    display,
+                    "D435 RGB LIVE",
+                    (12, 30),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.65,
+                    (0, 220, 80),
+                    2,
+                )
+                cv2.imshow(self.WINDOW_TITLE, display)
+                self._window_created = True
+                self.last_error = ""
+                self._ready_event.set()
+                cv2.waitKey(1)
+            except Exception as exc:
+                self.last_error = str(exc)
+                time.sleep(0.2)
+        self._close_window()
+
+    def color(self) -> np.ndarray:
+        with self._lock:
+            image = None if self._latest is None else self._latest.copy()
+            age = time.monotonic() - self._latest_at if self._latest_at else float("inf")
+        if image is None or age > 2.0 or self._stop_event.is_set():
+            detail = self.last_error or f"最新画面已过期 {age:.1f}s"
+            raise RuntimeError(f"D435 实时预览不可用: {detail}")
+        return image
+
+    def _close_window(self) -> None:
+        if not self._window_created:
+            return
+        try:
+            cv2.destroyWindow(self.WINDOW_TITLE)
+        except cv2.error:
+            pass
+        self._window_created = False
+
+    def stop(self) -> None:
+        self._stop_event.set()
+        thread = self._thread
+        if thread is not None and thread.is_alive() and thread is not threading.current_thread():
+            thread.join(timeout=2.0)
+        self._thread = None
+        self._close_window()
+
+
+def _setup_photo(camera: Any | None, label: str) -> np.ndarray:
+    while True:
+        answer = input(f"{label}：回车从 D435 拍照，或输入已有图片路径，q 中止: ").strip()
+        if answer.lower() == "q":
+            raise _SetupCancelled("操作员中止 Demo setup")
+        if answer:
+            image = cv2.imread(str(Path(answer).expanduser()), cv2.IMREAD_COLOR)
+            if image is None:
+                print(f"无法读取图片: {answer}，请重试")
+                continue
+            return image
+        if camera is None:
+            print("当前使用 --no-camera，必须输入已有图片路径")
+            continue
+        image = camera.color()
+        if isinstance(image, np.ndarray) and image.size:
+            return image
+        print("D435 返回空画面，请重试")
+
+
+def _setup_station_pose(status: AGVStatusClient) -> dict[str, float]:
+    if not status.wait_for_status(timeout=1.5, max_age=0.8):
+        raise RuntimeError("AGV 定位状态过期")
+    value = status.get_status()
+    if value.get("emergency") or value.get("blocked") or value.get("fatals") or value.get("errors") or value.get("brake"):
+        raise RuntimeError("AGV 处于急停、阻挡、报警或刹车状态")
+    if value.get("is_stop") is not True:
+        raise RuntimeError("AGV 尚未停稳")
+    try:
+        pose = {name: float(value[name]) for name in ("x", "y", "angle")}
+    except (KeyError, TypeError, ValueError) as exc:
+        raise RuntimeError("AGV 没有有效 x/y/angle 位姿") from exc
+    if not all(math.isfinite(item) for item in pose.values()):
+        raise RuntimeError("AGV 位姿包含非有限数值")
+    return pose
+
+
+def _require_setup_pose_stability(
+    before: dict[str, float],
+    after: dict[str, float],
+    config: dict[str, Any],
+) -> None:
+    demo = config.get("demo", {})
+    position_limit = float(demo.get("setup_position_stability_m", 0.02))
+    heading_limit = math.radians(float(demo.get("setup_heading_stability_deg", 2.0)))
+    position_error = math.hypot(float(after["x"]) - float(before["x"]), float(after["y"]) - float(before["y"]))
+    heading_error = abs(normalize_angle(float(after["angle"]) - float(before["angle"])))
+    if position_error > position_limit or heading_error > heading_limit:
+        raise RuntimeError(
+            "AGV 在停车点拍照期间发生移动："
+            f"位置变化 {position_error:.3f}m，朝向变化 {math.degrees(heading_error):.1f}deg"
+        )
+
+
+def _setup_arm_pose(client: JakaClient, name: str) -> tuple[list[float], list[float] | None]:
+    client.disconnect()
+    try:
+        if not client.connect(timeout=3.0):
+            detail = str(getattr(client, "last_error", "")).strip()
+            raise RuntimeError(f"无法连接 JAKA 读取 {name}" + (f": {detail}" if detail else ""))
+        if not client.wait_for_joint_state(timeout=3.0):
+            detail = str(getattr(client, "last_error", "")).strip()
+            raise RuntimeError(f"无法读取 JAKA 的 {name} 关节角" + (f": {detail}" if detail else ""))
+        snapshot = client.snapshot()
+        joint = snapshot.get("joint")
+        tcp = snapshot.get("tcp")
+        if not isinstance(joint, list) or len(joint) != 6 or not all(math.isfinite(float(item)) for item in joint):
+            raise RuntimeError(f"JAKA 的 {name} 关节角无效")
+        if not isinstance(tcp, list) or len(tcp) != 6 or not all(math.isfinite(float(item)) for item in tcp):
+            tcp = None
+        return [float(item) for item in joint], None if tcp is None else [float(item) for item in tcp]
+    finally:
+        client.disconnect()
+
+
+def run_interactive_setup(
+    config: dict[str, Any],
+    destination: Path,
+    *,
+    camera_enabled: bool = True,
+    resume_root: Path | None = None,
+    skip_archived_tags: bool = False,
+) -> int:
+    """Record a complete Demo-only setup without sending any motion command."""
+    destination = Path(destination).expanduser().resolve()
+    if resume_root is None:
+        evidence_root = destination.parent / time.strftime("setup_%Y%m%d_%H%M%S")
+        setup = DemoSetupSession(evidence_root)
+    else:
+        evidence_root = Path(resume_root).expanduser().resolve()
+        try:
+            setup = DemoSetupSession.resume(evidence_root)
+        except (OSError, ValueError) as exc:
+            print(f"Demo setup 恢复失败: {exc}")
+            return 1
+    camera: DemoCamera | None = None
+    preview: DemoSetupPreview | None = None
+    photo_source: Any | None = None
+    status: AGVStatusClient | None = None
+    arm: JakaClient | None = None
+    route_rows: tuple[float, float] | None = None
+    print(f"Demo setup 证据目录: {evidence_root}")
+    print("此流程只读取相机、AGV 位姿和 JAKA 关节角，不会发送 AGV/JAKA 运动命令。")
+    try:
+        if setup.stations:
+            route_rows = _demo_route_rows(config)
+            setup.migrate_and_mirror_stations(top_route_y=route_rows[0], bottom_route_y=route_rows[1])
+        if resume_root is not None:
+            recorded_count = sum(group_id in setup.stations for group_id in RECORDED_STATIONS)
+            mirrored_count = sum(group_id in setup.stations for group_id in B_LEFT_STATIONS)
+            viewpoint_count = sum(name in setup.viewpoints for name in VIEWPOINT_NAMES)
+            print(
+                "恢复进度: "
+                f"Tag 0={'已完成' if setup.calibration_board.get('photo') else '未完成'}, "
+                f"植株 Tag={len(setup.tags)}/32, 实录停车点={recorded_count}/16, "
+                f"B-L镜像点={mirrored_count}/8, Demo目标={len(setup.stations)}/24, "
+                f"机械臂姿态={viewpoint_count}/3"
+            )
+        if setup.operator:
+            print(f"沿用操作员: {setup.operator}")
+        else:
+            setup.set_operator(input("操作员姓名/编号: "))
+        if camera_enabled:
+            camera = DemoCamera(str(config["camera"]["server_url"]), float(config["camera"].get("timeout_s", 1.5)))
+            health = camera.health()
+            if not health.get("ok"):
+                raise RuntimeError(f"D435 健康检查失败: {health.get('error', 'unknown')}")
+            preview = DemoSetupPreview(camera)
+            preview.start()
+            photo_source = preview
+            print("D435 已连接，实时预览窗口已打开；每次在终端回车只保存当前显示的一张 JPEG。")
+        else:
+            print("D435 已禁用；每次拍照提示都要输入已有 JPEG/PNG 路径。")
+
+        print("先登记 Tag 0 标定板和展示所需的 1-24 号植株 Tag。C 排 25-32 只留档，可延期登记。")
+        if skip_archived_tags:
+            print("本次已选择延期登记 C 排 Tag 25-32；不影响专家展示。")
+        if setup.calibration_board.get("photo"):
+            print("已复用 Tag 0 标定板照片")
+        else:
+            setup.record_calibration_board(_setup_photo(photo_source, "Tag 0 标定板"))
+        for plant_id, expected_tag, observed in DEMO_PLANTS:
+            if plant_id in setup.tags:
+                continue
+            if skip_archived_tags and not observed:
+                continue
+            while True:
+                answer = input(f"{plant_id} Tag ID [{expected_tag}]: ").strip()
+                if answer.lower() == "q":
+                    raise _SetupCancelled("操作员中止 Demo setup")
+                try:
+                    tag_id = expected_tag if not answer else int(answer)
+                    if tag_id != expected_tag:
+                        raise ValueError(f"应为 {expected_tag}")
+                    photo = _setup_photo(photo_source, f"{plant_id} / Tag {tag_id}")
+                    setup.record_tag(plant_id, tag_id, photo=photo, observed=observed)
+                    break
+                except (OSError, RuntimeError, ValueError) as exc:
+                    print(f"{plant_id} 登记失败: {exc}，请重试")
+
+        if route_rows is None:
+            route_rows = _demo_route_rows(config)
+        setup.migrate_and_mirror_stations(top_route_y=route_rows[0], bottom_route_y=route_rows[1])
+        missing_stations = [group_id for group_id in RECORDED_STATIONS if group_id not in setup.stations]
+        if missing_stations:
+            agv = config["agv"]
+            status = AGVStatusClient(
+                str(agv["ip"]),
+                int(agv.get("status_port", 19204)),
+                interval_ms=int(agv.get("status_interval_ms", 200)),
+                response_timeout_s=float(agv.get("status_response_timeout_s", 0.8)),
+            )
+            if not status.connect() or not status.wait_for_status(timeout=3.0, max_age=1.0):
+                raise RuntimeError("AGV 状态不可用，不能记录 Demo 停车点")
+            print("逐个登记缺少的 A 排和 B-R 实录停车点；B-L 将按地图路线自动镜像，不需要重录。")
+            for group_id in missing_stations:
+                while True:
+                    answer = input(f"{group_id}：人工将 AGV 驶到水稻旁并停稳，回车读取实时位姿，q 中止: ").strip().lower()
+                    if answer == "q":
+                        raise _SetupCancelled("操作员中止 Demo setup")
+                    if answer:
+                        print("这里只接受回车读取 AGV 实时位姿，或 q 中止")
+                        continue
+                    try:
+                        pose = _setup_station_pose(status)
+                        photo = _setup_photo(photo_source, f"{group_id} 停车点")
+                        confirmed_pose = _setup_station_pose(status)
+                        _require_setup_pose_stability(pose, confirmed_pose, config)
+                        note = input(f"{group_id} 备注（回车跳过）: ").strip()
+                        setup.record_station(group_id, confirmed_pose, photo=photo, source="agv_status", note=note)
+                        print(
+                            f"已登记 {group_id}: x={confirmed_pose['x']:.3f} "
+                            f"y={confirmed_pose['y']:.3f} angle={confirmed_pose['angle']:.3f}"
+                        )
+                        break
+                    except (OSError, RuntimeError, ValueError) as exc:
+                        print(f"{group_id} 登记失败: {exc}，请重试")
+            status.disconnect()
+            status = None
+        setup.migrate_and_mirror_stations(top_route_y=route_rows[0], bottom_route_y=route_rows[1])
+        print(
+            "停车点已就绪: "
+            f"实录={sum(group_id in setup.stations for group_id in RECORDED_STATIONS)}/16, "
+            f"B-L镜像={sum(group_id in setup.stations for group_id in B_LEFT_STATIONS)}/8, "
+            f"Demo目标={len(setup.stations)}/24"
+        )
+
+        missing_viewpoints = [name for name in VIEWPOINT_NAMES if name not in setup.viewpoints]
+        if missing_viewpoints:
+            jaka = config["jaka"]
+            arm = JakaClient(str(jaka["ip"]), int(jaka.get("port", 10001)))
+            print("使用 JAKA 示教器手动摆好三个姿态；每次保存会重新短连接读取，不会主动移动机械臂。")
+            labels = {
+                "home_safe": "安全收回姿态 home_safe",
+                "left": "向左观察姿态 left",
+                "right": "向右观察姿态 right",
+            }
+            for name in missing_viewpoints:
+                while True:
+                    answer = input(f"摆好并确认 {labels[name]} 无碰撞风险后输入 yes，q 中止: ").strip().lower()
+                    if answer == "q":
+                        raise _SetupCancelled("操作员中止 Demo setup")
+                    if answer != "yes":
+                        print("请输入 yes 确认，或 q 中止")
+                        continue
+                    try:
+                        joint, tcp = _setup_arm_pose(arm, name)
+                        setup.record_viewpoint(name, joint, tcp)
+                        print(f"已登记 {name}")
+                        break
+                    except (OSError, RuntimeError, ValueError) as exc:
+                        print(f"{name} 登记失败: {exc}，请保持当前姿态并再次输入 yes 重试，或输入 q 中止")
+            arm.disconnect()
+            arm = None
+
+        setup.publish(destination)
+        print(f"Demo setup 已发布: {destination}")
+        print("下一步先运行 ./wenshi.sh --dry-run，再运行 ./wenshi.sh")
+        return 0
+    except _SetupCancelled as exc:
+        print(str(exc))
+        print(f"当前进度已保存: {setup.draft_path}")
+        return 2
+    except KeyboardInterrupt:
+        print(f"\nDemo setup 已取消；当前进度已保存: {setup.draft_path}")
+        return 130
+    except EOFError:
+        print(f"\nDemo setup 输入已关闭；当前进度已保存: {setup.draft_path}")
+        return 2
+    except Exception as exc:
+        print(f"\nDemo setup 失败: {exc}；当前进度保存在 {setup.draft_path}。")
+        return 1
+    finally:
+        if preview is not None:
+            preview.stop()
+        if status is not None:
+            status.disconnect()
+        if arm is not None:
+            arm.disconnect()
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Wenshi expert greenhouse demonstration")
     parser.add_argument("--config", default=str(Path(__file__).parents[2] / "config" / "wenshi.yaml"))
-    parser.add_argument("--photos", default=str(Path(__file__).parents[2] / "runtime" / "demo"))
-    parser.add_argument("--viewpoints", default=None, help="已验证示教文件或 field_height_setup.json")
+    parser.add_argument("--photos", default=str(Path(__file__).parents[2] / "runtime" / "demo" / "photos"))
+    parser.add_argument("--setup-file", default=str(Path(__file__).parents[2] / "runtime" / "demo" / "demo_setup.json"))
+    parser.add_argument("--setup", action="store_true", help="交互登记独立 Demo 现场配置")
+    parser.add_argument("--resume", help="从指定 Demo setup 证据目录继续登记")
+    parser.add_argument("--skip-c-tags", action="store_true", help="本次延期登记不参与展示的 C 排 Tag 25-32")
     parser.add_argument("--no-rviz", action="store_true")
     parser.add_argument("--no-camera", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
     config = load_config(args.config)
-    viewpoints_file = args.viewpoints or os.environ.get("WENSHI_DEMO_VIEWPOINTS")
-    if viewpoints_file is None:
-        print("专家演示拒绝启动：缺少16个水稻观测停车点的 field_height_setup.json", file=__import__("sys").stderr)
-        return 2
-    if args.dry_run:
-        DemoController(
+    if args.resume and not args.setup:
+        parser.error("--resume 只能与 --setup 一起使用")
+    if args.skip_c_tags and not args.setup:
+        parser.error("--skip-c-tags 只能与 --setup 一起使用")
+    if args.setup:
+        if args.dry_run:
+            parser.error("--setup 与 --dry-run 不能同时使用")
+        return run_interactive_setup(
             config,
-            Path(args.photos),
-            viewpoints_file=viewpoints_file,
+            Path(args.setup_file),
             camera_enabled=not args.no_camera,
+            resume_root=None if args.resume is None else Path(args.resume),
+            skip_archived_tags=args.skip_c_tags,
         )
+    if args.dry_run:
+        try:
+            DemoController(
+                config,
+                Path(args.photos),
+                setup_file=args.setup_file,
+                camera_enabled=not args.no_camera,
+            )
+        except ValueError as exc:
+            print(f"Demo dry-run 失败: {exc}", file=__import__("sys").stderr)
+            return 2
         print("dry-run: local config/map/route/home_safe validated; no AGV/JAKA/D435 connection, no monitoring, no photos")
         return 0
     session: DemoController | None = None
@@ -796,7 +1325,7 @@ def main(argv: list[str] | None = None) -> int:
         session = DemoController(
             config,
             Path(args.photos),
-            viewpoints_file=viewpoints_file,
+            setup_file=args.setup_file,
             camera_enabled=not args.no_camera,
         )
         session.connect()

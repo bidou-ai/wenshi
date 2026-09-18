@@ -27,6 +27,15 @@ def test_single_formal_startup_and_preflight_scripts_exist():
     assert "wenshi.yaml" in preflight.read_text(encoding="utf-8")
 
 
+def test_918_expert_demo_launcher_is_executable_and_separate():
+    launcher = ROOT / "9.18.sh"
+    assert launcher.is_file()
+    assert launcher.stat().st_mode & 0o111
+    text = launcher.read_text(encoding="utf-8")
+    assert "wenshi_patrol.demo_918" in text
+    assert "runtime/9.18" in text
+
+
 def test_formal_launcher_help_is_safe_in_a_clean_shell():
     start = ROOT / "scripts" / "start_wenshi.sh"
     environment = dict(os.environ)
@@ -174,7 +183,7 @@ def test_yubei_launcher_marks_legacy_capture_as_compatibility_only():
 
 
 def test_github_sync_guide_and_offline_ci_exist():
-    guide = ROOT / "docs" / "归档" / "旧资料" / "GitHub同步说明.md"
+    guide = ROOT / "docs" / "GITHUB_SYNC.md"
     workflow = ROOT / ".github" / "workflows" / "tests.yml"
     assert guide.is_file()
     assert workflow.is_file()

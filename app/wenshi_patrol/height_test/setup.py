@@ -180,7 +180,7 @@ class SetupSession:
                 raise ValueError(f"station coverage mismatch: {group_id}")
             if self.require_photo_evidence and not station.get("photo"):
                 raise ValueError(f"station photo missing: {group_id}")
-            if self.require_photo_evidence and station.get("pose_source") != "agv_status":
+            if station.get("pose_source") != "agv_status":
                 raise ValueError(f"AGV实时位姿 required for station: {group_id}")
 
     def publish(self, destination: Path) -> None:

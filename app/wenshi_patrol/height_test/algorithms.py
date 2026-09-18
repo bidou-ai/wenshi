@@ -139,7 +139,7 @@ def analyze_view(
     params = params or AlgorithmParams()
     methods: dict[str, MethodResult] = {}
     reasons: list[str] = []
-    highest = max(panicle_boxes, key=lambda item: item.cy - item.height / 2.0, default=None)
+    highest = min(panicle_boxes, key=lambda item: item.cy - item.height / 2.0, default=None)
 
     # M0: image-space diagnostic only; it is deliberately never the candidate.
     if plant_box is not None and plant_box.height > 0:
@@ -225,6 +225,8 @@ def fuse_views(views: Sequence[ViewAnalysis], params: AlgorithmParams | None = N
         values = [view.methods[name].value_m for view in views if name in view.methods and view.methods[name].value_m is not None]
         if values:
             methods[name] = _method(name, float(np.median(values)), diagnostic=all(view.methods[name].diagnostic for view in views if name in view.methods), details={"views": len(values), "min": min(values), "max": max(values)})
+            if name in {"tag_panicle_3d", "depth_roi_envelope", "manual_endpoints_3d"} and len(values) > 1 and max(values) - min(values) > params.view_disagreement_m:
+                reasons.append("view_disagreement")
         else:
             methods[name] = _method(name, None, quality="needs_review", diagnostic=name in {"bbox_pixel_height", "mask_envelope", "manual_stem_path_3d"}, reasons=("no_valid_view",))
     candidates = [(name, result.value_m) for name, result in methods.items() if result.value_m is not None and not result.diagnostic and name in {"tag_panicle_3d", "depth_roi_envelope", "manual_endpoints_3d"}]

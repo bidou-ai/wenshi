@@ -101,8 +101,28 @@ field_test:
   blocked_clear_s: 2.0
   station_snap_m: 0.25
   observation_route_max_offset_m: 0.25
-  demo_min_observations: 3
-  demo_max_observations: 5
+
+# 独立专家展示，只由项目根目录的 wenshi.sh 使用。
+demo:
+  route_speed_mps: 0.18
+  endpoint_slowdown_distance_m: 0.60
+  endpoint_min_speed_mps: 0.04
+  station_snap_m: 0.25
+  observation_route_max_offset_m: 0.25
+  min_observations: 3
+  max_observations: 5
+  observation_hold_s: 2.0
+  arm_observe_speed_deg_s: 50.0
+  arm_retract_speed_deg_s: 60.0
+  arm_accel_deg_s2: 80.0
+  station_position_tolerance_m: 0.15
+  heading_alignment_tolerance_deg: 3.0
+  heading_alignment_timeout_s: 8.0
+  heading_alignment_gain: 2.0
+  heading_alignment_max_rad_s: 0.45
+  heading_alignment_min_rad_s: 0.08
+  setup_position_stability_m: 0.02
+  setup_heading_stability_deg: 2.0
 
 fixed_approach:
   enabled: false
@@ -190,6 +210,8 @@ height_test:
   motion:
     mode: arm-only
     require_stopped_agv: true
+    station_position_tolerance_m: 0.15
+    station_heading_tolerance_deg: 10.0
     station_order: [left-01, left-02, left-03, left-04, left-05, left-06, left-07, left-08,
                     right-01, right-02, right-03, right-04, right-05, right-06, right-07, right-08]
 

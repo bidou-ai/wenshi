@@ -35,6 +35,8 @@ class JakaClient:
         self.log = log or (lambda _message: None)
         self._socket: socket.socket | None = None
         self._send_lock = threading.Lock()
+        self._motion_command_lock = threading.Lock()
+        self._stop_generation = 0
         self._data_lock = threading.Lock()
         self._running = threading.Event()
         self._cancel = threading.Event()
@@ -152,20 +154,30 @@ class JakaClient:
         accel: float,
         timeout: float = 120.0,
         tolerance_deg: float | None = None,
+        cancel_requested: Callable[[], bool] | None = None,
     ) -> bool:
         if len(target) != 6:
             self.last_error = "joint_move 需要 6 个关节角"
             return False
+        generation = self._stop_generation
         self.last_error = ""
-        self._cancel.clear()
-        if not self.send(
-            "joint_move",
-            relFlag=0,
-            jointPosition=[float(value) for value in target],
-            speed=float(speed),
-            accel=float(accel),
-        ):
-            return False
+        with self._motion_command_lock:
+            if generation != self._stop_generation or (cancel_requested is not None and cancel_requested()):
+                self.last_error = "机械臂运动已停止"
+                return False
+            self._cancel.clear()
+            if cancel_requested is not None and cancel_requested():
+                self._cancel.set()
+                self.last_error = "机械臂运动已停止"
+                return False
+            if not self.send(
+                "joint_move",
+                relFlag=0,
+                jointPosition=[float(value) for value in target],
+                speed=float(speed),
+                accel=float(accel),
+            ):
+                return False
 
         time.sleep(self.motion_start_wait_s)
         arrival_tolerance = (
@@ -180,7 +192,12 @@ class JakaClient:
         best_error: float | None = None
         last_progress = time.monotonic()
         next_progress_log = last_progress + self.motion_progress_log_s
-        while self.connected and not self._cancel.is_set() and time.monotonic() < deadline:
+        while (
+            self.connected
+            and not self._cancel.is_set()
+            and not (cancel_requested is not None and cancel_requested())
+            and time.monotonic() < deadline
+        ):
             self.send("get_joint_pos")
             time.sleep(0.1)
             if self.last_error:
@@ -216,7 +233,7 @@ class JakaClient:
                     return True
             else:
                 stable = 0
-        if self._cancel.is_set():
+        if self._cancel.is_set() or (cancel_requested is not None and cancel_requested()):
             self.last_error = "机械臂运动已停止"
         elif not self.connected:
             self.last_error = "机械臂连接中断"
@@ -234,9 +251,11 @@ class JakaClient:
         return False
 
     def stop(self):
-        self._cancel.set()
-        if self.connected:
-            self.send("stop_program")
+        with self._motion_command_lock:
+            self._stop_generation += 1
+            self._cancel.set()
+            if self.connected:
+                self.send("stop_program")
 
     def _receive_loop(self):
         decoder = json.JSONDecoder()
