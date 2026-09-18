@@ -1,0 +1,70 @@
+# 9.18 new-site expert Demo. All site data comes from runtime/9.18/demo_setup.json.
+agv:
+  ip: "192.168.192.5"
+  status_port: 19204
+  motion_port: 19205
+  status_interval_ms: 200
+  status_response_timeout_s: 0.8
+  connect_timeout_s: 3.0
+
+jaka:
+  ip: "192.168.192.160"
+  port: 10001
+  connect_timeout_s: 3.0
+  joint_tolerance_deg: 0.5
+  command_interval_s: 0.10
+  motion_start_wait_s: 0.50
+  motion_stall_timeout_s: 10.0
+  motion_timeout_s: 120.0
+
+camera:
+  server_url: "http://192.168.192.203:18080"
+  rate_hz: 10.0
+  timeout_s: 1.5
+  startup_wait_s: 3.0
+  frame_id: "camera_color_optical_frame"
+
+control:
+  rate_hz: 20.0
+  endpoint_tolerance_m: 0.10
+  cross_track_gain: 0.80
+  heading_gain: 1.60
+  max_angular_speed_rad_s: 0.35
+  correction_threshold_m: 0.04
+  rotate_in_place_threshold_deg: 30.0
+  heading_slowdown_threshold_deg: 10.0
+  min_heading_scale: 0.20
+
+demo_918:
+  route_speed_mps: 0.18
+  endpoint_slowdown_distance_m: 0.60
+  endpoint_min_speed_mps: 0.04
+  observation_hold_s: 2.0
+  arm_observe_speed_deg_s: 50.0
+  arm_retract_speed_deg_s: 60.0
+  arm_accel_deg_s2: 80.0
+  station_position_tolerance_m: 0.15
+  heading_alignment_tolerance_deg: 3.0
+  heading_alignment_timeout_s: 8.0
+  heading_alignment_gain: 2.0
+  heading_alignment_max_rad_s: 0.45
+  heading_alignment_min_rad_s: 0.08
+  setup_position_stability_m: 0.02
+  setup_heading_stability_deg: 2.0
+
+safety:
+  command_watchdog_s: 0.30
+  hard_cross_track_m: 0.25
+  station_stop_timeout_s: 2.0
+  reverse_motion_allowed: false
+  allow_unverified_reverse: false
+
+topics:
+  map: "/demo918/map"
+  markers: "/demo918/markers"
+  agv_pose: "/demo918/agv_pose"
+  state: "/demo918/state"
+  color: "/demo918/camera/color"
+  depth: "/demo918/camera/depth"
+  camera_info: "/demo918/camera/info"
+  camera_status: "/demo918/camera/status"

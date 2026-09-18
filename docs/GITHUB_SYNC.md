@@ -1,153 +1,167 @@
-# GitHub 同步操作手册
+# GitHub 上传操作手册
 
-本文适用于本机项目 `/home/ubuntu/jaka/wenshi` 和私有仓库
-`git@github.com:bidou-ai/wenshi.git`。
+本文只说明一件事：怎样把 `/home/ubuntu/jaka/wenshi` 的项目文件上传到
+`https://github.com/bidou-ai/wenshi`。
 
-## 一、已经完成的首次配置
-
-- GitHub 仓库：`https://github.com/bidou-ai/wenshi`
-- 默认分支：`main`；日常开发使用独立分支，例如 `codex/32-phenotyping-docs`
-- 远程名称：`origin`
-- SSH 公钥已添加到 GitHub。
-- 本仓库提交者：`bidou-ai <255785848+bidou-ai@users.noreply.github.com>`。
-
-查看这些配置：
+## 先记住三个命令
 
 ```bash
-cd /home/ubuntu/jaka/wenshi
-git remote -v
-git config user.name
-git config user.email
+git add 文件路径
+git commit -m "本次修改说明"
+git push
 ```
 
-## 二、每天开始工作
+- `git add`：选择这次要上传的文件。
+- `git commit`：把选择的文件保存为一次 Git 记录。
+- `git push`：把已经提交的记录上传到 GitHub。
 
-先进入项目并查看状态：
+只运行 `git push`，不会上传还没有执行 `git add` 和 `git commit` 的文件。
+
+## 每次上传的完整步骤
+
+### 1. 进入项目
 
 ```bash
 cd /home/ubuntu/jaka/wenshi
 git status
 ```
 
-如果工作区没有未提交修改，先获取远程信息，再把远程 `main` 合并到当前开发分支：
+`git status` 中常见的标记：
+
+- `M`：这个文件修改过，但还没有提交。
+- `??`：这是新文件，Git 还没有管理它。
+- 没有列出文件：当前没有需要提交的修改。
+
+### 2. 选择要上传的项目文件
+
+上传当前全部项目源码、脚本、配置和文档，可以运行：
 
 ```bash
-git fetch origin
-git merge origin/main
-```
-
-如果你明确就在本地 `main` 工作，也可以使用 `git pull --ff-only origin main`。
-不要在有未提交修改时随意执行合并或变基。看到冲突或错误时先停止，保存完整提示再处理。
-
-## 三、保存并上传一次修改
-
-先检查有哪些文件变化：
-
-```bash
+git add -A
 git status
-git diff
+git diff --cached --name-only
 ```
 
-运行测试：
+最后两个命令用于确认即将提交的文件。发现误生成文件、密码、密钥、数据集、模型或运行照片时，先取消该文件的暂存：
+
+```bash
+git restore --staged "文件路径"
+```
+
+取消暂存不会删除本机文件。
+
+### 3. 运行测试
 
 ```bash
 PYTHONPATH=app:. python3 -m pytest -q
 ```
 
-确认无误后提交。下面的暂存命令覆盖本项目源码、配置、文档和测试；执行后必须检查暂存内容：
+看到 `passed` 且没有 `failed` 后再继续。测试失败时不要提交和上传。
+
+### 4. 提交
 
 ```bash
-git add .gitignore README.md docs/ app/ tests/ config/wenshi.yaml models/README.md yubei/ wenshi.sh
-git status
-git diff --cached
 git commit -m "说明本次修改内容"
 ```
 
-`git add` 后必须再次运行 `git status`，确认没有把数据集、模型、日志或密钥加入提交。不要为了省事使用未知来源的递归删除、强制推送或历史重写命令。
+例如：
 
-开发分支先推送到 GitHub，并设置上游：
+```bash
+git commit -m "补齐 9.18 Demo 启动脚本和配置"
+```
+
+### 5. 上传当前分支
+
+第一次上传这个分支：
 
 ```bash
 git push -u origin HEAD
 ```
 
-然后在 GitHub 创建 Pull Request，将当前分支合并到 `main`。只有合并后，GitHub 默认分支才会更新。若已确认直接更新 `main`，应先同步远程并完成测试，再执行 `git push origin main`；日常工作不要直接向 `main` 推送。
+以后继续上传同一个分支：
 
-## 四、哪些内容不会上传
+```bash
+git push
+```
 
-`.gitignore` 默认排除：
+看到 `[new branch]` 或分支更新信息，才表示提交已经上传。
 
-- `runtime/` 下的巡检照片和日志；
-- `models/` 下的模型权重；
-- `datasets/` 下的数据集；
-- `calibration/` 下的现场标定产物；
-- Python 缓存、pytest 缓存和 `*.log`。
+### 6. 合并到 main
 
-这些目录中的 README 或 `.gitkeep` 是说明/占位文件，会正常上传。绝对不要提交 GitHub Token、SSH 私钥、密码、验证码或 `.env` 密钥文件。
+上传开发分支后，打开 GitHub 提示的 Pull Request 地址，将开发分支合并到
+`main`。只有完成合并，GitHub 默认显示的 `main` 才能看到新文件。
 
-## 五、GitHub 自动测试
+如果文件已经上传到开发分支，但在 GitHub 首页找不到，先在 GitHub 左上角的分支选择器中切换到当前开发分支。
 
-每次推送到 `main` 或创建目标为 `main` 的 Pull Request 后，GitHub Actions 会自动运行离线单元测试和 Python 编译检查。查看方法：
+## 本次 9.18 文件为什么没有上传
 
-1. 打开 `https://github.com/bidou-ai/wenshi`。
-2. 点击顶部 `Actions`。
-3. 打开最新的 `Python tests`。
-4. 绿色对勾表示通过；红色叉号表示失败，展开 `Run tests` 查看错误。
+`wenshi.sh` 已经提交并上传到了 `codex/32-phenotyping-docs`，但该分支还没有合并到 `main`。
 
-自动测试不会连接 AGV、JAKA 或 D435，也不能代替现场硬件验收。ROS2 集成测试在无 ROS2 的 GitHub 运行器上会按设计跳过。
+下面三个文件之前显示为 `??`，说明它们没有进入任何提交，所以 `git push` 不会上传它们：
 
-## 六、换电脑后下载项目
+```text
+9.18.sh
+config/9.18.yaml
+config/9.18.rviz
+```
 
-先在新电脑配置 GitHub SSH 公钥，再运行：
+把它们加入一次提交的命令是：
+
+```bash
+git add 9.18.sh config/9.18.yaml config/9.18.rviz
+git status
+git commit -m "补齐 9.18 Demo 启动脚本和配置"
+git push
+```
+
+## 哪些内容不上传
+
+`.gitignore` 会排除这些本机产物：
+
+- `runtime/` 中的现场运行照片和日志；
+- `models/` 中的模型权重；
+- `datasets/` 和 `yubei/data/` 中的数据集；
+- `yubei/training/` 中的训练结果；
+- Python 和 pytest 缓存；
+- `*.log` 日志。
+
+这些内容不是项目源码，体积可能很大，也可能包含现场数据。GitHub 用来保存源码、脚本、配置、文档和测试；现场数据另行备份。
+
+绝对不要上传 GitHub Token、SSH 私钥、密码、验证码或 `.env` 密钥文件。
+
+## 常见问题
+
+### `rejected` 或 `non-fast-forward`
+
+不要使用强制推送。先执行：
+
+```bash
+git status
+git fetch origin
+git merge origin/main
+PYTHONPATH=app:. python3 -m pytest -q
+git push
+```
+
+如果出现冲突，停止上传，先处理冲突并重新测试。
+
+### `Permission denied (publickey)`
+
+执行：
+
+```bash
+ssh -T git@github.com
+```
+
+该错误表示当前电脑的 SSH 公钥没有正确关联 GitHub 账号。
+
+### 换电脑下载项目
 
 ```bash
 mkdir -p ~/jaka
 cd ~/jaka
 git clone git@github.com:bidou-ai/wenshi.git
 cd wenshi
-git config user.name "bidou-ai"
-git config user.email "255785848+bidou-ai@users.noreply.github.com"
 ```
 
-模型、数据集、运行日志和现场标定文件不会从 GitHub 下载，需要通过单独的受控备份恢复。
-
-## 七、常见错误
-
-### `Permission denied (publickey)`
-
-当前电脑的 SSH 公钥没有添加到 GitHub，或 SSH 使用了错误账号。先测试：
-
-```bash
-ssh -T git@github.com
-```
-
-### `rejected` 或 `fetch first`
-
-远程分支比本地新。不要强制推送，先执行：
-
-```bash
-git status
-git fetch origin
-git merge origin/main
-PYTHONPATH=app:. python3 -m pytest -q
-```
-
-如果出现冲突，停止操作并根据冲突文件逐个处理；解决后重新运行测试，再推送当前分支。
-
-### 提交了不该上传的文件
-
-如果还没有 `push`，不要删除原始数据，先用以下命令仅从暂存区移除：
-
-```bash
-git restore --staged 文件路径
-```
-
-如果已经推送了密码、Token 或私钥，必须立刻在对应平台撤销/轮换该凭据；仅删除文件不能消除 Git 历史中的泄露。
-
-## 八、安全原则
-
-- 仓库保持 `Private`。
-- 不向聊天、Issue、提交记录或代码写入密码、Token、验证码和 SSH 私钥。
-- 不使用 `git push --force`，除非先评估并明确批准历史重写。
-- 上传前始终看一遍 `git status` 和 `git diff --cached`。
-- GitHub 只备份源码和文档，不是模型、数据集和巡检结果的备份系统。
+数据集、模型、运行日志和现场照片不会随源码仓库下载。
