@@ -1,40 +1,74 @@
-# GitHub 上传操作手册
+# Wenshi 上传 GitHub 操作手册
 
-本文只说明一件事：怎样把 `/home/ubuntu/jaka/wenshi` 的项目文件上传到
-`https://github.com/bidou-ai/wenshi`。
+本项目只使用 `main`。平时只在 `/home/ubuntu/jaka/wenshi` 工作，不使用
+`/home/ubuntu/jaka/past`，也不把 `past` 中的文件上传到 GitHub。
 
-## 先记住三个命令
+## 最短流程
 
-```bash
-git add 文件路径
-git commit -m "本次修改说明"
-git push
-```
-
-- `git add`：选择这次要上传的文件。
-- `git commit`：把选择的文件保存为一次 Git 记录。
-- `git push`：把已经提交的记录上传到 GitHub。
-
-只运行 `git push`，不会上传还没有执行 `git add` 和 `git commit` 的文件。
-
-## 每次上传的完整步骤
-
-### 1. 进入项目
+每次修改完成后，依次执行：
 
 ```bash
 cd /home/ubuntu/jaka/wenshi
 git status
+PYTHONPATH=app:. python3 -m pytest -q
+git add -A
+git status
+git diff --cached --name-only
+git commit -m "说明本次修改内容"
+git push origin main
 ```
 
-`git status` 中常见的标记：
+看到测试只有 `passed`、没有 `failed`，并且 `git push` 最后显示
+`main -> main`，才表示本次上传完成。
 
-- `M`：这个文件修改过，但还没有提交。
-- `??`：这是新文件，Git 还没有管理它。
-- 没有列出文件：当前没有需要提交的修改。
+## 每天开始工作
 
-### 2. 选择要上传的项目文件
+先进入正式项目并确认分支：
 
-上传当前全部项目源码、脚本、配置和文档，可以运行：
+```bash
+cd /home/ubuntu/jaka/wenshi
+git branch --show-current
+git status
+```
+
+第一条命令必须显示：
+
+```text
+main
+```
+
+如果 `git status` 没有显示待提交文件，再同步 GitHub：
+
+```bash
+git pull --ff-only origin main
+```
+
+如果存在未提交修改，先不要执行 `git pull`，先完成或确认这些修改。
+
+## 上传一次修改
+
+### 1. 查看改了什么
+
+```bash
+git status
+git diff
+```
+
+`git status` 中：
+
+- `M` 表示已经修改的文件；
+- `??` 表示还没有加入 Git 的新文件；
+- 没有列出文件表示当前没有修改。
+
+### 2. 运行测试
+
+```bash
+PYTHONPATH=app:. python3 -m pytest -q
+```
+
+测试失败时停止，不要提交和上传。
+
+### 3. 选择全部项目修改
 
 ```bash
 git add -A
@@ -42,108 +76,90 @@ git status
 git diff --cached --name-only
 ```
 
-最后两个命令用于确认即将提交的文件。发现误生成文件、密码、密钥、数据集、模型或运行照片时，先取消该文件的暂存：
+`git add -A` 会选择所有没有被 `.gitignore` 排除的项目文件，包括新脚本、新配置、源码、文档和测试。
+
+提交前必须查看文件列表。发现不该上传的文件时，使用：
 
 ```bash
 git restore --staged "文件路径"
 ```
 
-取消暂存不会删除本机文件。
+该命令只取消选择，不删除本机文件。
 
-### 3. 运行测试
-
-```bash
-PYTHONPATH=app:. python3 -m pytest -q
-```
-
-看到 `passed` 且没有 `failed` 后再继续。测试失败时不要提交和上传。
-
-### 4. 提交
+### 4. 提交并上传 main
 
 ```bash
 git commit -m "说明本次修改内容"
+git push origin main
 ```
 
-例如：
+`git commit` 只保存到本机，`git push origin main` 才会上传到 GitHub。
+
+## 上传后检查
+
+打开：
+
+`https://github.com/bidou-ai/wenshi`
+
+确认页面分支为 `main`，并确认最新提交说明与刚才的 `git commit` 一致。
+
+也可以在本机检查：
 
 ```bash
-git commit -m "补齐 9.18 Demo 启动脚本和配置"
+git status
 ```
 
-### 5. 上传当前分支
-
-第一次上传这个分支：
-
-```bash
-git push -u origin HEAD
-```
-
-以后继续上传同一个分支：
-
-```bash
-git push
-```
-
-看到 `[new branch]` 或分支更新信息，才表示提交已经上传。
-
-### 6. 合并到 main
-
-上传开发分支后，打开 GitHub 提示的 Pull Request 地址，将开发分支合并到
-`main`。只有完成合并，GitHub 默认显示的 `main` 才能看到新文件。
-
-如果文件已经上传到开发分支，但在 GitHub 首页找不到，先在 GitHub 左上角的分支选择器中切换到当前开发分支。
-
-## 本次 9.18 文件为什么没有上传
-
-`wenshi.sh` 已经提交并上传到了 `codex/32-phenotyping-docs`，但该分支还没有合并到 `main`。
-
-下面三个文件之前显示为 `??`，说明它们没有进入任何提交，所以 `git push` 不会上传它们：
+正常结果应包含：
 
 ```text
-9.18.sh
-config/9.18.yaml
-config/9.18.rviz
+位于分支 main
+您的分支与上游分支 'origin/main' 一致
 ```
 
-把它们加入一次提交的命令是：
+## 哪些内容不会上传
 
-```bash
-git add 9.18.sh config/9.18.yaml config/9.18.rviz
-git status
-git commit -m "补齐 9.18 Demo 启动脚本和配置"
-git push
-```
+`.gitignore` 会自动排除：
 
-## 哪些内容不上传
-
-`.gitignore` 会排除这些本机产物：
-
-- `runtime/` 中的现场运行照片和日志；
+- `runtime/` 中的运行照片和日志；
 - `models/` 中的模型权重；
-- `datasets/` 和 `yubei/data/` 中的数据集；
+- `datasets/`、`yubei/data/` 中的数据集；
 - `yubei/training/` 中的训练结果；
-- Python 和 pytest 缓存；
-- `*.log` 日志。
+- Python、pytest 缓存和 `*.log`；
+- 本机误生成的临时文件。
 
-这些内容不是项目源码，体积可能很大，也可能包含现场数据。GitHub 用来保存源码、脚本、配置、文档和测试；现场数据另行备份。
+这些内容不是源码备份的一部分。模型、数据集和现场运行记录需要单独备份。
 
-绝对不要上传 GitHub Token、SSH 私钥、密码、验证码或 `.env` 密钥文件。
+绝对不要上传密码、GitHub Token、SSH 私钥、验证码或 `.env` 密钥文件。
 
-## 常见问题
+## 常见错误
 
-### `rejected` 或 `non-fast-forward`
+### `non-fast-forward` 或 `fetch first`
 
-不要使用强制推送。先执行：
+表示 GitHub 的 `main` 出现了本机还没有的提交。确认本机修改已经提交后执行：
 
 ```bash
-git status
-git fetch origin
-git merge origin/main
+git pull --rebase origin main
 PYTHONPATH=app:. python3 -m pytest -q
-git push
+git push origin main
 ```
 
-如果出现冲突，停止上传，先处理冲突并重新测试。
+如果出现冲突，停止操作，不要使用 `git push --force`。
+
+### `Could not resolve hostname github.com`
+
+这是虚拟机网络或 DNS 故障，不是 Git 权限问题。先检查：
+
+```bash
+nmcli device status
+ip route
+getent hosts github.com
+```
+
+网络恢复后重新执行：
+
+```bash
+git push origin main
+```
 
 ### `Permission denied (publickey)`
 
@@ -155,13 +171,6 @@ ssh -T git@github.com
 
 该错误表示当前电脑的 SSH 公钥没有正确关联 GitHub 账号。
 
-### 换电脑下载项目
+## 关于分支
 
-```bash
-mkdir -p ~/jaka
-cd ~/jaka
-git clone git@github.com:bidou-ai/wenshi.git
-cd wenshi
-```
-
-数据集、模型、运行日志和现场照片不会随源码仓库下载。
+当前日常流程不创建开发分支，也不要求 Pull Request。以后只有多人同时修改项目、需要代码审查时，才考虑重新使用独立分支。
