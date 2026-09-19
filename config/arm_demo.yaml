@@ -1,0 +1,37 @@
+# Fixed-base JAKA panicle expert demonstration; no mobile-platform controls.
+jaka:
+  ip: "192.168.192.160"
+  port: 10001
+  connect_timeout_s: 3.0
+  joint_tolerance_deg: 0.5
+  command_interval_s: 0.10
+  motion_start_wait_s: 0.50
+  motion_stall_timeout_s: 10.0
+  motion_timeout_s: 120.0
+
+camera:
+  server_url: "http://192.168.192.203:18080"
+  rate_hz: 10.0
+  timeout_s: 1.5
+  startup_wait_s: 3.0
+
+vision:
+  enabled: true
+  motion_enable: false
+  model_path: "../yubei/training/panicle/panicle_20260904_134044/weights/best.pt"
+  conf_threshold: 0.25
+  max_age_s: 1.0
+
+arm_demo:
+  transition_speed_deg_s: 18.0
+  approach_speed_deg_s: 9.0
+  scan_speed_deg_s: 4.0
+  accel_deg_s2: 60.0
+  home_tolerance_deg: 3.0
+  joint_state_max_age_s: 0.5
+  recovery_corridor_deg: 3.0
+
+display:
+  width: 1600
+  height: 900
+  fullscreen: true

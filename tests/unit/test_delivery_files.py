@@ -36,6 +36,18 @@ def test_918_expert_demo_launcher_is_executable_and_separate():
     assert "runtime/9.18" in text
 
 
+def test_arm_panicle_demo_delivery_files_are_independent_and_documented():
+    launcher = ROOT / "arm_demo.sh"
+    config = ROOT / "config" / "arm_demo.yaml"
+    guide = ROOT / "docs" / "操作" / "机械臂双株稻穗展示.md"
+
+    assert launcher.is_file()
+    assert launcher.stat().st_mode & 0o111
+    assert config.is_file()
+    assert guide.is_file()
+    assert "docs/操作/机械臂双株稻穗展示.md" in (ROOT / "README.md").read_text(encoding="utf-8")
+
+
 def test_formal_launcher_help_is_safe_in_a_clean_shell():
     start = ROOT / "scripts" / "start_wenshi.sh"
     environment = dict(os.environ)
