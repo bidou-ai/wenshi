@@ -716,25 +716,40 @@ def _connect_setup_jaka(
     raise RuntimeError(f"setup 无法连接 JAKA {ip}:{port}，3 次尝试失败: {last_error}")
 
 
-def _sample_pose(client: Any, timeout_s: float = 2.0):
+def _sample_pose(client: Any, timeout_s: float = 3.0):
     samples: list[list[float]] = []
     tcp: list[float] | None = None
-    last_seq = int(client.snapshot().get("joint_seq", 0))
-    for _ in range(3):
-        deadline = time.monotonic() + timeout_s
-        while time.monotonic() < deadline:
-            client.refresh()
-            time.sleep(0.08)
+    for sample_index in range(3):
+        if not client.wait_for_joint_state(timeout=timeout_s):
             snapshot = client.snapshot()
-            seq = int(snapshot.get("joint_seq", 0))
-            if seq > last_seq:
-                samples.append(_finite_joint(snapshot.get("joint"), "JAKA 示教关节角"))
-                tcp = _finite_joint(snapshot.get("tcp"), "JAKA 示教 TCP")
-                last_seq = seq
-                break
-        else:
-            raise RuntimeError("读取 JAKA 示教姿态超时")
+            detail = str(getattr(client, "last_error", "") or snapshot.get("error") or "").strip()
+            raise RuntimeError(
+                f"读取 JAKA 示教姿态第 {sample_index + 1}/3 次超时"
+                f"（connected={snapshot.get('connected')}, "
+                f"joint_seq={snapshot.get('joint_seq')}, "
+                f"joint_age={snapshot.get('joint_status_age')}）"
+                + (f": {detail}" if detail else "")
+            )
+        snapshot = client.snapshot()
+        samples.append(_finite_joint(snapshot.get("joint"), "JAKA 示教关节角"))
+        tcp = _finite_joint(snapshot.get("tcp"), "JAKA 示教 TCP")
     return samples, tcp
+
+
+def _read_setup_pose(
+    client: Any,
+    arm_cfg: Mapping[str, Any],
+    sleep_fn: Callable[[float], None],
+) -> tuple[list[list[float]], list[float]]:
+    """Read one taught pose through a short-lived, read-only JAKA session."""
+
+    client.disconnect()
+    try:
+        _connect_setup_jaka(client, arm_cfg, sleep_fn)
+        samples, tcp = _sample_pose(client)
+        return samples, tcp
+    finally:
+        client.disconnect()
 
 
 def run_interactive_setup(
@@ -776,14 +791,21 @@ def run_interactive_setup(
     )
     _preflight_setup_camera(camera, server_url, sleep_fn)
     client = client or JakaClient(str(arm_cfg["ip"]), int(arm_cfg.get("port", 10001)))
-    _connect_setup_jaka(client, arm_cfg, sleep_fn)
     window = "Arm Demo Setup"
     window_created = False
+    announced_name: str | None = None
     try:
         cv.namedWindow(window, cv.WINDOW_NORMAL)
         window_created = True
         while len(setup.poses) < len(POSE_NAMES):
             name = POSE_NAMES[len(setup.poses)]
+            if announced_name != name:
+                print(
+                    f"[{len(setup.poses) + 1}/{len(POSE_NAMES)}] {name}: "
+                    f"摆好姿态后点击预览窗口，再按 Enter 登记；Q/Esc 保存草稿退出。",
+                    flush=True,
+                )
+                announced_name = name
             image = _camera_frame(camera)
             preview = image.copy()
             cv.putText(
@@ -802,8 +824,31 @@ def run_interactive_setup(
                 return 2
             if key not in (10, 13):
                 continue
-            samples, tcp = _sample_pose(client)
-            setup.record_pose(name, samples, tcp, image)
+            print(f"正在读取 {name} 的 3 次 JAKA 关节状态...", flush=True)
+            try:
+                samples, tcp = _read_setup_pose(client, arm_cfg, sleep_fn)
+                evidence_image = _camera_frame(camera)
+            except (OSError, RuntimeError, ValueError) as exc:
+                print(
+                    f"{name} 登记失败: {exc}；仍停留在 {name}，"
+                    "请保持姿态并在预览窗口再次按 Enter。",
+                    flush=True,
+                )
+                continue
+            try:
+                setup.record_pose(name, samples, tcp, evidence_image)
+            except ValueError as exc:
+                print(
+                    f"{name} 登记失败: {exc}；仍停留在 {name}，"
+                    "请保持姿态并在预览窗口再次按 Enter。",
+                    flush=True,
+                )
+                continue
+            print(
+                f"已登记 {name}（{len(setup.poses)}/{len(POSE_NAMES)}）",
+                flush=True,
+            )
+            announced_name = None
         setup.publish(Path(destination))
         return 0
     finally:
@@ -855,6 +900,9 @@ def main(argv: list[str] | None = None) -> int:
         except (OSError, RuntimeError, ValueError) as exc:
             print(f"arm demo setup 失败: {exc}", file=__import__("sys").stderr)
             return 1
+        except KeyboardInterrupt:
+            print("arm demo setup 已中止；已登记姿态仍保存在 setup 草稿中。", file=__import__("sys").stderr)
+            return 130
     try:
         setup = _local_preflight(config, setup_file)
     except (OSError, RuntimeError, ValueError) as exc:

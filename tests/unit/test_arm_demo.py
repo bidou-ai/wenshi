@@ -603,11 +603,11 @@ def test_interactive_setup_reads_state_and_never_sends_motion(tmp_path):
     class SetupArm(FakeJaka):
         def __init__(self):
             super().__init__()
-            self.refresh_calls = 0
+            self.connect_calls = 0
 
-        def refresh(self):
-            self.refresh_calls += 1
-            self.joint_seq += 1
+        def connect(self, timeout=0.0):
+            self.connect_calls += 1
+            return super().connect(timeout)
 
         def snapshot(self):
             value = super().snapshot()
@@ -641,9 +641,181 @@ def test_interactive_setup_reads_state_and_never_sends_motion(tmp_path):
     )
 
     assert result == 0
-    assert client.refresh_calls == 30
+    assert client.connect_calls == len(POSE_NAMES)
+    assert client.wait_calls == len(POSE_NAMES) * 4
+    assert client.disconnect_calls == len(POSE_NAMES) * 2 + 1
     assert client.moves == []
     assert (runtime / "demo_setup.json").is_file()
+
+
+def test_interactive_setup_reconnects_for_each_pose_after_preview_wait(tmp_path, capsys):
+    from wenshi_patrol.arm_demo import run_interactive_setup
+
+    class Camera:
+        def health(self):
+            return {"ok": True, "seq": 1}
+
+        def capture(self):
+            from wenshi_patrol.arm_demo_vision import RgbFrame
+
+            return RgbFrame(1, np.zeros((8, 8, 3), dtype=np.uint8), time.monotonic())
+
+    class IdleClosingJaka(FakeJaka):
+        def __init__(self):
+            super().__init__()
+            self.connect_calls = 0
+
+        def connect(self, timeout=0.0):
+            self.connect_calls += 1
+            self.connected = True
+            return True
+
+        def wait_for_joint_state(self, timeout=0.0):
+            self.wait_calls += 1
+            self.joint_seq += 1
+            return True
+
+        def refresh(self):
+            # Reproduces the field failure: the setup connection stopped
+            # returning packets while the operator was positioning the arm.
+            return False
+
+        def snapshot(self):
+            value = super().snapshot()
+            value["tcp"] = [100.0, 0.0, 300.0, 0.0, 0.0, 0.0]
+            return value
+
+    runtime = tmp_path / "runtime" / "arm_demo"
+    client = IdleClosingJaka()
+    config = _config()
+    config["camera"] = {"server_url": "http://camera.test"}
+
+    result = run_interactive_setup(
+        config,
+        runtime / "demo_setup.json",
+        runtime,
+        client=client,
+        camera=Camera(),
+        cv=_Cv2([], [13, ord("q")]),
+        input_fn=lambda _prompt: "operator-1",
+        sleep_fn=lambda _seconds: None,
+    )
+
+    assert result == 2
+    assert client.connect_calls == 1  # JAKA is opened only for the Enter-time read
+    assert client.wait_calls == 4  # one pose handshake, then three samples
+    assert client.moves == []
+    assert client.disconnect_calls >= 2
+    draft = next(runtime.glob("setup_*/setup_draft.json"))
+    assert '"home_safe"' in draft.read_text(encoding="utf-8")
+    output = capsys.readouterr().out
+    assert "[1/10] home_safe" in output
+    assert "预览窗口" in output
+
+
+def test_interactive_setup_pose_read_failure_stays_open_for_enter_retry(tmp_path, capsys):
+    from wenshi_patrol.arm_demo import run_interactive_setup
+
+    class Camera:
+        def health(self):
+            return {"ok": True, "seq": 1}
+
+        def capture(self):
+            from wenshi_patrol.arm_demo_vision import RgbFrame
+
+            return RgbFrame(1, np.zeros((8, 8, 3), dtype=np.uint8), time.monotonic())
+
+    class OneFailedSampleJaka(FakeJaka):
+        def __init__(self):
+            super().__init__()
+            self.wait_results = iter((True, True, False, True, True, True, True))
+
+        def wait_for_joint_state(self, timeout=0.0):
+            self.wait_calls += 1
+            result = next(self.wait_results)
+            if result:
+                self.joint_seq += 1
+            return result
+
+        def snapshot(self):
+            value = super().snapshot()
+            value["tcp"] = [100.0, 0.0, 300.0, 0.0, 0.0, 0.0]
+            return value
+
+    runtime = tmp_path / "runtime" / "arm_demo"
+    client = OneFailedSampleJaka()
+    config = _config()
+    config["camera"] = {"server_url": "http://camera.test"}
+
+    result = run_interactive_setup(
+        config,
+        runtime / "demo_setup.json",
+        runtime,
+        client=client,
+        camera=Camera(),
+        cv=_Cv2([], [13, 13, ord("q")]),
+        input_fn=lambda _prompt: "operator-1",
+        sleep_fn=lambda _seconds: None,
+    )
+
+    assert result == 2
+    draft_path = next(runtime.glob("setup_*/setup_draft.json"))
+    assert '"home_safe"' in draft_path.read_text(encoding="utf-8")
+    output = capsys.readouterr().out
+    assert "home_safe 登记失败" in output
+    assert "仍停留在 home_safe" in output
+
+
+def test_interactive_setup_does_not_continue_after_draft_write_failure(
+    tmp_path, monkeypatch
+):
+    from wenshi_patrol.arm_demo import run_interactive_setup
+    from wenshi_patrol.arm_demo_setup import ArmDemoSetupSession
+
+    class Camera:
+        def health(self):
+            return {"ok": True, "seq": 1}
+
+        def capture(self):
+            from wenshi_patrol.arm_demo_vision import RgbFrame
+
+            return RgbFrame(1, np.zeros((8, 8, 3), dtype=np.uint8), time.monotonic())
+
+    class SetupJaka(FakeJaka):
+        def snapshot(self):
+            value = super().snapshot()
+            value["tcp"] = [100.0, 0.0, 300.0, 0.0, 0.0, 0.0]
+            return value
+
+    real_checkpoint = ArmDemoSetupSession._checkpoint
+    checkpoint_calls = 0
+
+    def fail_pose_checkpoint(session):
+        nonlocal checkpoint_calls
+        checkpoint_calls += 1
+        if checkpoint_calls == 2:
+            raise OSError("draft disk full")
+        return real_checkpoint(session)
+
+    monkeypatch.setattr(ArmDemoSetupSession, "_checkpoint", fail_pose_checkpoint)
+    runtime = tmp_path / "runtime" / "arm_demo"
+    config = _config()
+    config["camera"] = {"server_url": "http://camera.test"}
+
+    with pytest.raises(OSError, match="draft disk full"):
+        run_interactive_setup(
+            config,
+            runtime / "demo_setup.json",
+            runtime,
+            client=SetupJaka(),
+            camera=Camera(),
+            cv=_Cv2([], [13, ord("q")]),
+            input_fn=lambda _prompt: "operator-1",
+            sleep_fn=lambda _seconds: None,
+        )
+
+    draft = next(runtime.glob("setup_*/setup_draft.json"))
+    assert '"home_safe"' not in draft.read_text(encoding="utf-8")
 
 
 def test_interactive_setup_disconnects_if_window_creation_fails(tmp_path):
@@ -747,15 +919,29 @@ def test_interactive_setup_retries_fresh_jaka_state_then_continues(tmp_path):
         def __init__(self):
             self.connect_calls = 0
             self.disconnect_calls = 0
-            self.wait_results = iter((False, True))
+            self.wait_results = iter((False, True, True, True, True))
             self.last_error = "state stale"
+            self.joint_seq = 0
 
         def connect(self, timeout=0.0):
             self.connect_calls += 1
             return True
 
         def wait_for_joint_state(self, timeout=0.0):
-            return next(self.wait_results)
+            result = next(self.wait_results)
+            if result:
+                self.joint_seq += 1
+            return result
+
+        def snapshot(self):
+            return {
+                "connected": True,
+                "joint": [0.0] * 6,
+                "tcp": [0.0, 0.0, 300.0, 0.0, 0.0, 0.0],
+                "joint_seq": self.joint_seq,
+                "joint_status_age": 0.0,
+                "error": self.last_error,
+            }
 
         def disconnect(self):
             self.disconnect_calls += 1
@@ -772,14 +958,14 @@ def test_interactive_setup_retries_fresh_jaka_state_then_continues(tmp_path):
         tmp_path / "runtime" / "arm_demo",
         client=client,
         camera=Camera(),
-        cv=_Cv2(events, [ord("q")]),
+        cv=_Cv2(events, [13, ord("q")]),
         input_fn=lambda _prompt: "operator-1",
         sleep_fn=sleeps.append,
     )
 
     assert result == 2
     assert client.connect_calls == 2
-    assert client.disconnect_calls == 2
+    assert client.disconnect_calls >= 3
     assert sleeps == [0.5]
 
 
@@ -819,23 +1005,25 @@ def test_interactive_setup_reports_jaka_retry_failure_and_keeps_resume_draft(tmp
     config = _config()
     config["camera"] = {"server_url": "http://d435.test"}
 
-    with pytest.raises(RuntimeError, match=r"192.0.2.160:10001.*3.*connection refused"):
-        run_interactive_setup(
-            config,
-            runtime / "demo_setup.json",
-            runtime,
-            resume_root=evidence,
-            client=client,
-            camera=Camera(),
-            sleep_fn=lambda _seconds: None,
-        )
+    result = run_interactive_setup(
+        config,
+        runtime / "demo_setup.json",
+        runtime,
+        resume_root=evidence,
+        client=client,
+        camera=Camera(),
+        cv=_Cv2([], [13, ord("q")]),
+        sleep_fn=lambda _seconds: None,
+    )
 
+    assert result == 2
     assert client.connect_calls == 3
-    assert client.disconnect_calls == 3
+    assert client.disconnect_calls >= 3
     assert draft.draft_path.is_file()
     output = capsys.readouterr().out
     assert str(evidence) in output
     assert f"./arm_demo.sh --setup --resume {evidence}" in output
+    assert "connection refused" in output
 
 
 def test_main_stops_vision_and_closes_controller_when_connect_fails(monkeypatch, tmp_path):
@@ -893,3 +1081,27 @@ def test_main_stops_vision_and_closes_controller_when_connect_fails(monkeypatch,
 
     assert result == 1
     assert events == ["vision.start", "controller.close", "vision.stop"]
+
+
+def test_setup_keyboard_interrupt_exits_cleanly(monkeypatch, tmp_path, capsys):
+    from wenshi_patrol import arm_demo
+
+    monkeypatch.setattr(arm_demo, "load_config", lambda _path: _config())
+
+    def interrupted(*_args, **_kwargs):
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(arm_demo, "run_interactive_setup", interrupted)
+
+    result = arm_demo.main(
+        [
+            "--setup",
+            "--config",
+            str(tmp_path / "config.yaml"),
+            "--runtime-root",
+            str(tmp_path / "runtime" / "arm_demo"),
+        ]
+    )
+
+    assert result == 130
+    assert "setup 已中止" in capsys.readouterr().err
