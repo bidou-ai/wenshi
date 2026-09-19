@@ -23,6 +23,7 @@ class JakaClient:
         motion_progress_epsilon_deg: float = 0.05,
         motion_progress_log_s: float = 5.0,
         log: Callable[[str], None] | None = None,
+        joint_state_timeout_s: float = 1.0,
     ):
         self.ip = ip
         self.port = int(port)
@@ -30,6 +31,7 @@ class JakaClient:
         self.command_interval_s = max(float(command_interval_s), 0.0)
         self.motion_start_wait_s = max(float(motion_start_wait_s), 0.0)
         self.motion_stall_timeout_s = max(float(motion_stall_timeout_s), 1.0)
+        self.joint_state_timeout_s = max(float(joint_state_timeout_s), 0.1)
         self.motion_progress_epsilon_deg = max(float(motion_progress_epsilon_deg), 0.001)
         self.motion_progress_log_s = max(float(motion_progress_log_s), 0.0)
         self.log = log or (lambda _message: None)
@@ -44,6 +46,9 @@ class JakaClient:
         self._joint: list[float] | None = None
         self._tcp: list[float] | None = None
         self._last_update = 0.0
+        self._joint_last_update = 0.0
+        self._tcp_last_update = 0.0
+        self._joint_seq = 0
         self._last_send = 0.0
         self._last_control_response: dict[str, Any] | None = None
         self.last_error = ""
@@ -97,6 +102,9 @@ class JakaClient:
             self._joint = None
             self._tcp = None
             self._last_update = 0.0
+            self._joint_last_update = 0.0
+            self._tcp_last_update = 0.0
+            self._joint_seq = 0
 
     def send(self, command: str, **values: Any) -> bool:
         sock = self._socket
@@ -126,24 +134,37 @@ class JakaClient:
             joint = list(self._joint) if self._joint else None
             tcp = list(self._tcp) if self._tcp else None
             updated = self._last_update
+            joint_updated = self._joint_last_update
+            tcp_updated = self._tcp_last_update
+            joint_seq = self._joint_seq
             response = copy.deepcopy(self._last_control_response)
+        now = time.monotonic()
         return {
             "connected": self.connected,
             "joint": joint,
             "tcp": tcp,
-            "status_age": time.monotonic() - updated if updated else None,
+            "status_age": now - updated if updated else None,
+            "joint_status_age": now - joint_updated if joint_updated else None,
+            "tcp_status_age": now - tcp_updated if tcp_updated else None,
+            "joint_seq": joint_seq,
             "last_control_response": response,
             "error": self.last_error,
         }
 
     def wait_for_joint_state(self, timeout: float = 2.0) -> bool:
+        baseline_seq = int(self.snapshot().get("joint_seq", 0))
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
             self.send("get_joint_pos")
             time.sleep(0.1)
             snapshot = self.snapshot()
-            age = snapshot.get("status_age")
-            if snapshot["joint"] is not None and age is not None and age <= 0.5:
+            age = snapshot.get("joint_status_age")
+            if (
+                snapshot["joint"] is not None
+                and int(snapshot.get("joint_seq", 0)) > baseline_seq
+                and age is not None
+                and age <= 0.5
+            ):
                 return True
         return False
 
@@ -187,10 +208,12 @@ class JakaClient:
         )
         deadline = time.monotonic() + float(timeout)
         stable = 0
+        last_joint_seq = int(self.snapshot().get("joint_seq", 0))
         last_joint: list[float] | None = None
         last_errors: list[float] | None = None
         best_error: float | None = None
         last_progress = time.monotonic()
+        last_joint_update = last_progress
         next_progress_log = last_progress + self.motion_progress_log_s
         while (
             self.connected
@@ -202,7 +225,19 @@ class JakaClient:
             time.sleep(0.1)
             if self.last_error:
                 return False
-            joint = self.snapshot()["joint"]
+            snapshot = self.snapshot()
+            joint_seq = int(snapshot.get("joint_seq", 0))
+            if joint_seq <= last_joint_seq:
+                if time.monotonic() - last_joint_update >= self.joint_state_timeout_s:
+                    self.last_error = (
+                        "JAKA 关节状态过期: "
+                        f"{time.monotonic() - last_joint_update:.1f}s 未收到新关节角"
+                    )
+                    return False
+                continue
+            last_joint_seq = joint_seq
+            last_joint_update = time.monotonic()
+            joint = snapshot["joint"]
             if joint is None or len(joint) != 6:
                 continue
             last_joint = joint
@@ -233,10 +268,12 @@ class JakaClient:
                     return True
             else:
                 stable = 0
-        if self._cancel.is_set() or (cancel_requested is not None and cancel_requested()):
-            self.last_error = "机械臂运动已停止"
+        if self.last_error:
+            return False
         elif not self.connected:
             self.last_error = "机械臂连接中断"
+        elif self._cancel.is_set() or (cancel_requested is not None and cancel_requested()):
+            self.last_error = "机械臂运动已停止"
         elif last_joint is not None and last_errors is not None:
             index = max(range(6), key=last_errors.__getitem__)
             response = self.snapshot().get("last_control_response")
@@ -297,11 +334,14 @@ class JakaClient:
             joint = value.get("joint_pos")
             if isinstance(joint, list) and len(joint) >= 6:
                 self._joint = [float(item) for item in joint[:6]]
+                self._joint_last_update = now
+                self._joint_seq += 1
                 self._last_update = now
                 has_position = True
             tcp = value.get("tcp_pos")
             if isinstance(tcp, list) and len(tcp) >= 6:
                 self._tcp = [float(item) for item in tcp[:6]]
+                self._tcp_last_update = now
                 self._last_update = now
                 has_position = True
             if not has_position:
