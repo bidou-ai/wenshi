@@ -660,6 +660,62 @@ def _camera_frame(camera: SnapshotCamera) -> np.ndarray:
     return camera.capture().image
 
 
+def _preflight_setup_camera(
+    camera: SnapshotCamera,
+    server_url: str,
+    sleep_fn: Callable[[float], None],
+) -> None:
+    """Prove both D435 endpoints work before opening a JAKA connection."""
+
+    last_stage = "health"
+    last_error = "unknown error"
+    for attempt in range(3):
+        try:
+            camera.health()
+        except Exception as exc:
+            last_stage = "health"
+            last_error = str(exc)
+        else:
+            try:
+                camera.capture()
+            except Exception as exc:
+                last_stage = "snapshot"
+                last_error = str(exc)
+            else:
+                return
+        if attempt < 2:
+            sleep_fn(0.2)
+    raise RuntimeError(
+        f"D435 {server_url} {last_stage} 预检连续 3 次失败: {last_error}"
+    )
+
+
+def _connect_setup_jaka(
+    client: Any,
+    arm_cfg: Mapping[str, Any],
+    sleep_fn: Callable[[float], None],
+) -> None:
+    """Connect and require a fresh joint update before interactive teaching."""
+
+    ip = str(arm_cfg["ip"])
+    port = int(arm_cfg.get("port", 10001))
+    timeout = float(arm_cfg.get("connect_timeout_s", 3.0))
+    last_error = "unknown error"
+    for attempt in range(1, 4):
+        try:
+            connected = bool(client.connect(timeout=timeout))
+            fresh = connected and bool(client.wait_for_joint_state(timeout=2.0))
+            if fresh:
+                return
+            last_error = str(getattr(client, "last_error", "") or "连接或新鲜关节状态握手失败")
+        except Exception as exc:
+            last_error = str(exc)
+        client.disconnect()
+        if attempt < 3:
+            sleep_fn(0.5)
+    raise RuntimeError(f"setup 无法连接 JAKA {ip}:{port}，3 次尝试失败: {last_error}")
+
+
 def _sample_pose(client: Any, timeout_s: float = 2.0):
     samples: list[list[float]] = []
     tcp: list[float] | None = None
@@ -691,6 +747,7 @@ def run_interactive_setup(
     camera: SnapshotCamera | None = None,
     cv: Any = cv2,
     input_fn: Callable[[str], str] = input,
+    sleep_fn: Callable[[float], None] = time.sleep,
 ) -> int:
     """Teach ten poses using state reads only; Enter records and Q checkpoints."""
 
@@ -705,16 +762,21 @@ def run_interactive_setup(
         if resume_root is not None
         else ArmDemoSetupSession(evidence_root, runtime_root)
     )
+    print(
+        f"setup 证据目录: {setup.root}；已记录 {len(setup.poses)}/{len(POSE_NAMES)}；"
+        f"恢复命令: ./arm_demo.sh --setup --resume {setup.root}"
+    )
     if not setup.operator:
         setup.set_operator(input_fn("操作员姓名/编号: "))
     arm_cfg = config.get("jaka", {})
     cam_cfg = config.get("camera", {})
-    client = client or JakaClient(str(arm_cfg["ip"]), int(arm_cfg.get("port", 10001)))
+    server_url = str(cam_cfg["server_url"])
     camera = camera or SnapshotCamera(
-        str(cam_cfg["server_url"]), timeout_s=float(cam_cfg.get("timeout_s", 1.0))
+        server_url, timeout_s=float(cam_cfg.get("timeout_s", 1.0))
     )
-    if not client.connect(timeout=float(arm_cfg.get("connect_timeout_s", 3.0))):
-        raise RuntimeError("setup 无法连接 JAKA")
+    _preflight_setup_camera(camera, server_url, sleep_fn)
+    client = client or JakaClient(str(arm_cfg["ip"]), int(arm_cfg.get("port", 10001)))
+    _connect_setup_jaka(client, arm_cfg, sleep_fn)
     window = "Arm Demo Setup"
     window_created = False
     try:

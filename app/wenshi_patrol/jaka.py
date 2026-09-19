@@ -72,7 +72,12 @@ class JakaClient:
             self.last_error = ""
             self._thread = threading.Thread(target=self._receive_loop, name="jaka-receive", daemon=True)
             self._thread.start()
-            self.refresh()
+            if not self.refresh():
+                error = self.last_error or "JAKA 初始状态请求发送失败"
+                self.disconnect()
+                self.last_error = error
+                self.log(f"JAKA 初始状态请求失败: {error}")
+                return False
             self.log(f"JAKA 已连接 {self.ip}:{self.port}（未执行上电或使能）")
             return True
         except OSError as exc:
@@ -125,9 +130,8 @@ class JakaClient:
             self._running.clear()
             return False
 
-    def refresh(self):
-        self.send("get_joint_pos")
-        self.send("get_tcp_pos")
+    def refresh(self) -> bool:
+        return self.send("get_joint_pos") and self.send("get_tcp_pos")
 
     def snapshot(self) -> dict[str, Any]:
         with self._data_lock:

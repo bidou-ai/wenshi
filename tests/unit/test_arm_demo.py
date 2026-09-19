@@ -660,6 +660,15 @@ def test_interactive_setup_disconnects_if_window_creation_fails(tmp_path):
         def destroyWindow(*_args):
             pass
 
+    class Camera:
+        def health(self):
+            return {"ok": True, "seq": 1}
+
+        def capture(self):
+            from wenshi_patrol.arm_demo_vision import RgbFrame
+
+            return RgbFrame(1, np.zeros((8, 8, 3), dtype=np.uint8), time.monotonic())
+
     client = FakeJaka()
     runtime = tmp_path / "runtime" / "arm_demo"
     config = _config()
@@ -671,12 +680,162 @@ def test_interactive_setup_disconnects_if_window_creation_fails(tmp_path):
             runtime / "demo_setup.json",
             runtime,
             client=client,
-            camera=object(),
+            camera=Camera(),
             cv=Gui(),
             input_fn=lambda _prompt: "operator-1",
         )
 
     assert client.disconnect_calls == 1
+
+
+def test_interactive_setup_preflights_camera_before_jaka_connect(tmp_path):
+    from wenshi_patrol.arm_demo import run_interactive_setup
+
+    class Camera:
+        def __init__(self):
+            self.calls = []
+
+        def health(self):
+            self.calls.append("health")
+            return {"ok": True, "seq": 1}
+
+        def capture(self):
+            self.calls.append("snapshot")
+            raise RuntimeError("JPEG timeout")
+
+    class Client:
+        def __init__(self):
+            self.connect_calls = 0
+
+        def connect(self, timeout=0.0):
+            self.connect_calls += 1
+            return True
+
+    camera = Camera()
+    client = Client()
+    config = _config()
+    config["camera"] = {"server_url": "http://d435.test"}
+
+    with pytest.raises(RuntimeError, match=r"D435.*http://d435.test.*snapshot.*JPEG timeout"):
+        run_interactive_setup(
+            config,
+            tmp_path / "runtime" / "arm_demo" / "demo_setup.json",
+            tmp_path / "runtime" / "arm_demo",
+            client=client,
+            camera=camera,
+            input_fn=lambda _prompt: "operator-1",
+            sleep_fn=lambda _seconds: None,
+        )
+
+    assert camera.calls == ["health", "snapshot"] * 3
+    assert client.connect_calls == 0
+
+
+def test_interactive_setup_retries_fresh_jaka_state_then_continues(tmp_path):
+    from wenshi_patrol.arm_demo import run_interactive_setup
+
+    class Camera:
+        def health(self):
+            return {"ok": True, "seq": 1}
+
+        def capture(self):
+            from wenshi_patrol.arm_demo_vision import RgbFrame
+
+            return RgbFrame(1, np.zeros((8, 8, 3), dtype=np.uint8), time.monotonic())
+
+    class Client:
+        def __init__(self):
+            self.connect_calls = 0
+            self.disconnect_calls = 0
+            self.wait_results = iter((False, True))
+            self.last_error = "state stale"
+
+        def connect(self, timeout=0.0):
+            self.connect_calls += 1
+            return True
+
+        def wait_for_joint_state(self, timeout=0.0):
+            return next(self.wait_results)
+
+        def disconnect(self):
+            self.disconnect_calls += 1
+
+    sleeps = []
+    client = Client()
+    config = _config()
+    config["camera"] = {"server_url": "http://d435.test"}
+    events = []
+
+    result = run_interactive_setup(
+        config,
+        tmp_path / "runtime" / "arm_demo" / "demo_setup.json",
+        tmp_path / "runtime" / "arm_demo",
+        client=client,
+        camera=Camera(),
+        cv=_Cv2(events, [ord("q")]),
+        input_fn=lambda _prompt: "operator-1",
+        sleep_fn=sleeps.append,
+    )
+
+    assert result == 2
+    assert client.connect_calls == 2
+    assert client.disconnect_calls == 2
+    assert sleeps == [0.5]
+
+
+def test_interactive_setup_reports_jaka_retry_failure_and_keeps_resume_draft(tmp_path, capsys):
+    from wenshi_patrol.arm_demo import run_interactive_setup
+    from wenshi_patrol.arm_demo_setup import ArmDemoSetupSession
+
+    runtime = tmp_path / "runtime" / "arm_demo"
+    evidence = runtime / "setup_existing"
+    draft = ArmDemoSetupSession(evidence, runtime)
+    draft.set_operator("operator-1")
+
+    class Camera:
+        def health(self):
+            return {"ok": True, "seq": 1}
+
+        def capture(self):
+            from wenshi_patrol.arm_demo_vision import RgbFrame
+
+            return RgbFrame(1, np.zeros((8, 8, 3), dtype=np.uint8), time.monotonic())
+
+    class Client:
+        last_error = "connection refused"
+
+        def __init__(self):
+            self.connect_calls = 0
+            self.disconnect_calls = 0
+
+        def connect(self, timeout=0.0):
+            self.connect_calls += 1
+            return False
+
+        def disconnect(self):
+            self.disconnect_calls += 1
+
+    client = Client()
+    config = _config()
+    config["camera"] = {"server_url": "http://d435.test"}
+
+    with pytest.raises(RuntimeError, match=r"192.0.2.160:10001.*3.*connection refused"):
+        run_interactive_setup(
+            config,
+            runtime / "demo_setup.json",
+            runtime,
+            resume_root=evidence,
+            client=client,
+            camera=Camera(),
+            sleep_fn=lambda _seconds: None,
+        )
+
+    assert client.connect_calls == 3
+    assert client.disconnect_calls == 3
+    assert draft.draft_path.is_file()
+    output = capsys.readouterr().out
+    assert str(evidence) in output
+    assert f"./arm_demo.sh --setup --resume {evidence}" in output
 
 
 def test_main_stops_vision_and_closes_controller_when_connect_fails(monkeypatch, tmp_path):

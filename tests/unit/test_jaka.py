@@ -54,6 +54,40 @@ def test_wait_for_joint_state_requires_an_update_after_wait_begins():
     assert fresh is False
 
 
+def test_connect_closes_socket_when_initial_refresh_send_fails(monkeypatch):
+    from wenshi_patrol.jaka import JakaClient
+
+    class Socket:
+        def __init__(self):
+            self.closed = False
+
+        def settimeout(self, _timeout):
+            pass
+
+        def shutdown(self, _how):
+            pass
+
+        def close(self):
+            self.closed = True
+
+    sock = Socket()
+    client = JakaClient("127.0.0.1")
+    monkeypatch.setattr("wenshi_patrol.jaka.socket.create_connection", lambda *_args, **_kwargs: sock)
+    monkeypatch.setattr(client, "_receive_loop", lambda: None)
+
+    def failed_send(_command, **_values):
+        client.last_error = "initial refresh send failed"
+        return False
+
+    monkeypatch.setattr(client, "send", failed_send)
+
+    assert client.connect() is False
+    assert sock.closed is True
+    assert client.connected is False
+    assert client._socket is None
+    assert client.last_error == "initial refresh send failed"
+
+
 def test_joint_move_fails_when_joint_updates_go_stale_before_motion_timeout():
     from wenshi_patrol.jaka import JakaClient
 
