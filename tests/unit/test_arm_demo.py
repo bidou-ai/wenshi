@@ -140,6 +140,7 @@ def test_lap_path_visits_both_plants_via_clearance_and_reverses_order():
     assert second[1].target == "rice2_pre"
     assert second[9].target == "rice1_pre"
     assert all(left.target == right.source for left, right in zip(first, first[1:]))
+    assert sum(step.hold_s for step in first) == pytest.approx(5.2)
 
 
 def test_controller_clamps_all_motion_limits_and_test_once_to_five(monkeypatch):
@@ -148,6 +149,9 @@ def test_controller_clamps_all_motion_limits_and_test_once_to_five(monkeypatch):
     client = FakeJaka()
     controller = ArmDemoController(_config(), _setup(), client=client)
     controller.connect()
+    assert controller._speed("transition", False) == 45.0
+    assert controller._speed("approach", False) == 30.0
+    assert controller._speed("scan", False) == 15.0
     monkeypatch.setattr(
         "wenshi_patrol.arm_demo.build_lap_steps",
         lambda _first: [
@@ -165,9 +169,38 @@ def test_controller_clamps_all_motion_limits_and_test_once_to_five(monkeypatch):
     controller.start(test_once=True)
     _wait_state(controller, "READY")
 
-    assert [move[1] for move in client.moves] == [5.0, 5.0, 5.0, 4.0, 4.0, 5.0, 5.0, 5.0]
+    assert [move[1] for move in client.moves] == [5.0] * 8
     assert all(move[2] == 60.0 for move in client.moves)
     assert client.wait_calls == 2 + len(client.moves)
+
+
+def test_completed_lap_logs_both_plant_progress_in_motion_order(monkeypatch):
+    from wenshi_patrol import arm_demo
+
+    original_build_lap_steps = arm_demo.build_lap_steps
+    monkeypatch.setattr(
+        arm_demo,
+        "build_lap_steps",
+        lambda first: [
+            arm_demo.MotionStep(step.source, step.target, step.speed_class)
+            for step in original_build_lap_steps(first)
+        ],
+    )
+    messages = []
+    controller = arm_demo.ArmDemoController(
+        _config(), _setup(), client=FakeJaka(), log=messages.append
+    )
+    controller.connect()
+
+    controller.start(test_once=True)
+    _wait_state(controller, "READY")
+
+    assert messages == [
+        "开始观察水稻1",
+        "水稻1观察完成，前往水稻2",
+        "水稻2观察完成",
+        "本轮完成：第1轮",
+    ]
 
 
 @pytest.mark.parametrize(
@@ -188,10 +221,10 @@ def test_controller_rejects_non_finite_motion_limits(section, name, value):
         ArmDemoController(config, _setup(), client=FakeJaka())
 
 
-def test_connect_rejects_unknown_or_non_home_start():
+def test_connect_rejects_unknown_start():
     from wenshi_patrol.arm_demo import ArmDemoController
 
-    for joint in (None, [10.0] * 6):
+    for joint in (None, [40.0] * 6):
         client = FakeJaka(joint=[0.0] * 6)
         if joint is None:
             client.snapshot = lambda: {
@@ -203,9 +236,114 @@ def test_connect_rejects_unknown_or_non_home_start():
         else:
             client.joint = joint
         controller = ArmDemoController(_config(), _setup(), client=client)
-        with pytest.raises(RuntimeError, match="home_safe|关节"):
+        with pytest.raises(RuntimeError, match="安全接入|关节"):
             controller.connect()
         assert not client.moves
+
+
+def test_connect_near_taught_non_home_pose_enters_hold_and_recovers_via_parents():
+    from wenshi_patrol.arm_demo import ArmDemoController
+
+    setup = _setup()
+    client = FakeJaka(joint=[10.0] * 6)
+    controller = ArmDemoController(_config(), setup, client=client)
+
+    controller.connect()
+
+    assert controller.snapshot()["state"] == "HOLD"
+    assert controller.snapshot()["current_pose"] == "rice2_scan_b"
+    assert client.moves == []
+
+    controller.recover_home()
+    _wait_state(controller, "READY")
+
+    assert [move[0] for move in client.moves] == [
+        setup["poses"]["rice2_center"]["joint"],
+        setup["poses"]["rice2_pre"]["joint"],
+        setup["poses"]["left_clearance"]["joint"],
+        setup["poses"]["home_safe"]["joint"],
+    ]
+    assert [move[1] for move in client.moves] == [15.0, 20.0, 20.0, 20.0]
+
+
+def test_connect_on_taught_edge_recovers_to_parent_then_home():
+    from wenshi_patrol.arm_demo import ArmDemoController
+
+    setup = _setup()
+    joints = {
+        "home_safe": [100.0] * 6,
+        "left_clearance": [80.0] * 6,
+        "rice1_pre": [-60.0] * 6,
+        "rice1_center": [-40.0] * 6,
+        "rice1_scan_a": [-20.0, -60.0, -20.0, -20.0, -20.0, -20.0],
+        "rice1_scan_b": [-60.0, -20.0, -60.0, -60.0, -60.0, -60.0],
+        "rice2_pre": [40.0, 40.0, 0.0, 0.0, 0.0, 0.0],
+        "rice2_center": [20.0, 20.0, 0.0, 0.0, 0.0, 0.0],
+        "rice2_scan_a": [-20.0, 20.0, 0.0, 0.0, 0.0, 0.0],
+        "rice2_scan_b": [20.0, -20.0, 0.0, 0.0, 0.0, 0.0],
+    }
+    for name, joint in joints.items():
+        setup["poses"][name]["joint"] = joint
+    client = FakeJaka(joint=[20.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+    controller = ArmDemoController(_config(), setup, client=client)
+
+    controller.connect()
+
+    assert controller.snapshot()["state"] == "HOLD"
+    assert controller.snapshot()["current_pose"] is None
+    assert client.moves == []
+
+    controller.recover_home()
+    _wait_state(controller, "READY")
+
+    assert [move[0] for move in client.moves] == [
+        joints["rice2_center"],
+        joints["rice2_pre"],
+        joints["left_clearance"],
+        joints["home_safe"],
+    ]
+    assert [move[1] for move in client.moves] == [15.0, 20.0, 20.0, 20.0]
+
+
+def test_connect_within_twenty_degree_bridge_joins_nearest_pose_then_recovers():
+    from wenshi_patrol.arm_demo import ArmDemoController
+
+    setup = _setup()
+    client = FakeJaka(joint=[22.0] * 6)
+    controller = ArmDemoController(_config(), setup, client=client)
+
+    location = controller.connect()
+
+    assert "rice2_scan_b" in location
+    assert controller.snapshot()["state"] == "HOLD"
+    assert controller.snapshot()["current_pose"] is None
+    assert client.moves == []
+
+    controller.recover_home()
+    _wait_state(controller, "READY")
+
+    assert [move[0] for move in client.moves] == [
+        setup["poses"]["rice2_scan_b"]["joint"],
+        setup["poses"]["rice2_center"]["joint"],
+        setup["poses"]["rice2_pre"]["joint"],
+        setup["poses"]["left_clearance"]["joint"],
+        setup["poses"]["home_safe"]["joint"],
+    ]
+    assert [move[1] for move in client.moves] == [15.0, 15.0, 20.0, 20.0, 20.0]
+
+
+def test_connect_rejects_ambiguous_taught_pose_match():
+    from wenshi_patrol.arm_demo import ArmDemoController
+
+    setup = _setup()
+    setup["poses"]["rice2_scan_a"]["joint"] = [9.0] * 6
+    client = FakeJaka(joint=[9.0] * 6)
+    controller = ArmDemoController(_config(), setup, client=client)
+
+    with pytest.raises(RuntimeError, match="无法唯一匹配"):
+        controller.connect()
+
+    assert client.moves == []
 
 
 def test_start_uses_same_three_degree_home_gate_as_connect(monkeypatch):
@@ -496,6 +634,9 @@ class _Cv2:
     def waitKey(self, _delay):
         return next(self.keys, ord("q"))
 
+    def waitKeyEx(self, _delay):
+        return self.waitKey(_delay)
+
     def getWindowProperty(self, *_args):
         return self.visible
 
@@ -523,6 +664,87 @@ def test_display_q_stops_controller_then_vision_then_destroys_without_home(tmp_p
     assert controller.recover_calls == 0
 
 
+def test_display_ignores_extended_key_whose_low_byte_matches_q(tmp_path):
+    from wenshi_patrol.arm_demo import run_display
+
+    events = []
+    controller = _DisplayController(events)
+    vision = _FakeVision(events)
+    gui = _Cv2(events, [0xFF51, ord("q")])
+
+    run_display(controller, vision, tmp_path, cv=gui)
+
+    assert len(gui.frames) == 2
+
+
+def test_display_logs_exact_exit_key_and_state(tmp_path):
+    from wenshi_patrol.arm_demo import run_display
+
+    events = []
+    messages = []
+    controller = _DisplayController(events)
+    vision = _FakeVision(events)
+
+    run_display(
+        controller,
+        vision,
+        tmp_path,
+        cv=_Cv2(events, [ord("q")]),
+        log=messages.append,
+    )
+
+    assert messages == ["界面退出: 按键 q raw=113 state=READY error=none"]
+
+
+def test_display_default_mode_autostarts_continuous_patrol_without_space(tmp_path):
+    from wenshi_patrol.arm_demo import run_display
+
+    events = []
+    controller = _DisplayController(events)
+    vision = _FakeVision(events)
+    gui = _Cv2(events, [-1, ord("q")])
+
+    run_display(controller, vision, tmp_path, auto_start=True, cv=gui)
+
+    assert controller.starts == [False]
+
+
+def test_display_does_not_exit_on_initial_false_wayland_visibility(tmp_path):
+    from wenshi_patrol.arm_demo import run_display
+
+    events = []
+    controller = _DisplayController(events)
+    vision = _FakeVision(events)
+    gui = _Cv2(events, [-1, ord("q")])
+    gui.visible = 0.0
+
+    run_display(controller, vision, tmp_path, cv=gui)
+
+    assert len(gui.frames) == 2
+
+
+def test_display_does_not_stop_when_wayland_visibility_flips_false(tmp_path):
+    from wenshi_patrol.arm_demo import run_display
+
+    events = []
+    controller = _DisplayController(events)
+    vision = _FakeVision(events)
+
+    class Gui(_Cv2):
+        def __init__(self):
+            super().__init__(events, [-1, -1, ord("q")])
+            self.visibility = iter([1.0, 0.0, 0.0])
+
+        def getWindowProperty(self, *_args):
+            return next(self.visibility)
+
+    gui = Gui()
+    run_display(controller, vision, tmp_path, auto_start=True, cv=gui)
+
+    assert len(gui.frames) == 3
+    assert controller.starts == [False]
+
+
 def test_display_cleans_up_if_window_creation_fails(tmp_path):
     from wenshi_patrol.arm_demo import run_display
 
@@ -540,33 +762,61 @@ def test_display_cleans_up_if_window_creation_fails(tmp_path):
     assert events == ["controller.stop", "vision.stop"]
 
 
-def test_display_visual_staleness_faults_before_quit(tmp_path):
+def test_display_visual_staleness_warns_and_recovers_without_stopping_arm(tmp_path):
     from wenshi_patrol.arm_demo import run_display
 
     events = []
+    messages = []
     controller = _DisplayController(events)
-    vision = _FakeVision(events, health="检测结果已过期")
-    gui = _Cv2(events, [ord("q")])
 
-    run_display(controller, vision, tmp_path, cv=gui)
+    class Vision(_FakeVision):
+        def __init__(self):
+            super().__init__(events)
+            self.health_results = iter(["<urlopen error timed out>", None])
 
-    assert controller.faults == ["检测结果已过期"]
+        def health_error(self, max_age_s):
+            return next(self.health_results, None)
+
+    gui = _Cv2(events, [-1, ord("q")])
+
+    run_display(
+        controller,
+        Vision(),
+        tmp_path,
+        cv=gui,
+        log=messages.append,
+    )
+
+    assert controller.faults == []
     assert controller.recover_calls == 0
+    assert messages == [
+        "视觉链路告警（机械臂继续循环并自动重试）: <urlopen error timed out>",
+        "视觉链路已恢复",
+        "界面退出: 按键 q raw=113 state=READY error=none",
+    ]
 
 
-def test_display_window_close_stops_without_home(tmp_path):
-    from wenshi_patrol.arm_demo import run_display
+def test_controller_fault_logs_reason_before_stopping():
+    from wenshi_patrol.arm_demo import ArmDemoController
 
-    events = []
-    controller = _DisplayController(events)
-    vision = _FakeVision(events)
-    gui = _Cv2(events, [])
-    gui.visible = 0.0
+    messages = []
+    controller = ArmDemoController(
+        _config(), _setup(), client=FakeJaka(), log=messages.append
+    )
+    controller.connect()
 
-    run_display(controller, vision, tmp_path, cv=gui)
+    controller.fault("视觉链路超过 5.0s 未更新")
 
-    assert events[-3:] == ["controller.stop", "vision.stop", "destroy"]
-    assert controller.recover_calls == 0
+    assert messages == ["机械臂演示故障停臂: 视觉链路超过 5.0s 未更新"]
+
+
+def test_arm_demo_visual_grace_exceeds_camera_request_timeout():
+    from wenshi_patrol.config import load_config
+
+    config = load_config(Path(__file__).parents[2] / "config" / "arm_demo.yaml")
+
+    assert config["vision"]["max_age_s"] == 5.0
+    assert config["vision"]["max_age_s"] > config["camera"]["timeout_s"]
 
 
 def test_display_space_pauses_recovery(tmp_path):
@@ -615,17 +865,22 @@ def test_interactive_setup_reads_state_and_never_sends_motion(tmp_path):
             return value
 
     class Camera:
+        def __init__(self):
+            self.calls = 0
+
         def health(self):
             return {"ok": True, "seq": 1}
 
         def capture(self):
             from wenshi_patrol.arm_demo_vision import RgbFrame
 
+            self.calls += 1
             return RgbFrame(1, np.zeros((20, 30, 3), dtype=np.uint8), time.monotonic())
 
     events = []
     gui = _Cv2(events, [13] * len(POSE_NAMES))
     client = SetupArm()
+    camera = Camera()
     config = _config()
     config["camera"] = {"server_url": "http://camera.test"}
     runtime = tmp_path / "runtime" / "arm_demo"
@@ -635,7 +890,7 @@ def test_interactive_setup_reads_state_and_never_sends_motion(tmp_path):
         runtime / "demo_setup.json",
         runtime,
         client=client,
-        camera=Camera(),
+        camera=camera,
         cv=gui,
         input_fn=lambda _prompt: "operator-1",
     )
@@ -645,6 +900,7 @@ def test_interactive_setup_reads_state_and_never_sends_motion(tmp_path):
     assert client.wait_calls == len(POSE_NAMES) * 4
     assert client.disconnect_calls == len(POSE_NAMES) * 2 + 1
     assert client.moves == []
+    assert camera.calls == len(POSE_NAMES) + 1  # one preflight plus one visible frame per pose
     assert (runtime / "demo_setup.json").is_file()
 
 
@@ -711,6 +967,51 @@ def test_interactive_setup_reconnects_for_each_pose_after_preview_wait(tmp_path,
     output = capsys.readouterr().out
     assert "[1/10] home_safe" in output
     assert "预览窗口" in output
+
+
+def test_interactive_setup_retries_transient_preview_timeout_without_losing_pose(
+    tmp_path, capsys
+):
+    from wenshi_patrol.arm_demo import run_interactive_setup
+    from wenshi_patrol.arm_demo_vision import RgbFrame
+
+    class Camera:
+        def __init__(self):
+            self.calls = 0
+
+        def capture(self):
+            self.calls += 1
+            if self.calls == 2:
+                raise TimeoutError("frame timed out")
+            return RgbFrame(
+                self.calls,
+                np.zeros((8, 8, 3), dtype=np.uint8),
+                time.monotonic(),
+            )
+
+    camera = Camera()
+    client = FakeJaka()
+    runtime = tmp_path / "runtime" / "arm_demo"
+    config = _config()
+    config["camera"] = {"server_url": "http://camera.test", "rate_hz": 10.0}
+
+    result = run_interactive_setup(
+        config,
+        runtime / "demo_setup.json",
+        runtime,
+        client=client,
+        camera=camera,
+        cv=_Cv2([], [-1, ord("q")]),
+        input_fn=lambda _prompt: "operator-1",
+        sleep_fn=lambda _seconds: None,
+    )
+
+    assert result == 2
+    assert camera.calls == 3  # preflight, failed preview, recovered preview
+    assert client.wait_calls == 0
+    output = capsys.readouterr().out
+    assert "frame timed out" in output
+    assert "home_safe" in output
 
 
 def test_interactive_setup_pose_read_failure_stays_open_for_enter_retry(tmp_path, capsys):
@@ -872,7 +1173,7 @@ def test_interactive_setup_preflights_camera_before_jaka_connect(tmp_path):
             return {"ok": True, "seq": 1}
 
         def capture(self):
-            self.calls.append("snapshot")
+            self.calls.append("frame")
             raise RuntimeError("JPEG timeout")
 
     class Client:
@@ -888,7 +1189,7 @@ def test_interactive_setup_preflights_camera_before_jaka_connect(tmp_path):
     config = _config()
     config["camera"] = {"server_url": "http://d435.test"}
 
-    with pytest.raises(RuntimeError, match=r"D435.*http://d435.test.*snapshot.*JPEG timeout"):
+    with pytest.raises(RuntimeError, match=r"D435.*http://d435.test.*frame.*JPEG timeout"):
         run_interactive_setup(
             config,
             tmp_path / "runtime" / "arm_demo" / "demo_setup.json",
@@ -899,7 +1200,7 @@ def test_interactive_setup_preflights_camera_before_jaka_connect(tmp_path):
             sleep_fn=lambda _seconds: None,
         )
 
-    assert camera.calls == ["health", "snapshot"] * 3
+    assert camera.calls == ["frame"] * 3
     assert client.connect_calls == 0
 
 
@@ -1026,7 +1327,9 @@ def test_interactive_setup_reports_jaka_retry_failure_and_keeps_resume_draft(tmp
     assert "connection refused" in output
 
 
-def test_main_stops_vision_and_closes_controller_when_connect_fails(monkeypatch, tmp_path):
+def test_main_reports_startup_stage_and_cleans_up_when_connect_fails(
+    monkeypatch, tmp_path, capsys
+):
     from wenshi_patrol import arm_demo
 
     events = []
@@ -1081,6 +1384,94 @@ def test_main_stops_vision_and_closes_controller_when_connect_fails(monkeypatch,
 
     assert result == 1
     assert events == ["vision.start", "controller.close", "vision.stop"]
+    output = capsys.readouterr()
+    assert "[1/4] 加载稻穗检测模型" in output.out
+    assert "[2/4] D435 与检测画面已就绪" in output.out
+    assert "[3/4] 连接 JAKA" in output.out
+    assert "connect failed" in output.err
+
+
+def test_main_automatically_recovers_recognized_start_pose_before_display(
+    monkeypatch, tmp_path, capsys
+):
+    from wenshi_patrol import arm_demo
+
+    events = []
+
+    class Vision:
+        fatal_error = None
+
+        def __init__(self, *_args, **_kwargs):
+            pass
+
+        def start(self):
+            events.append("vision.start")
+
+        def latest(self):
+            return object()
+
+        def stop(self):
+            events.append("vision.stop")
+
+    class Controller:
+        def __init__(self, *_args, **_kwargs):
+            self.state = "HOLD"
+
+        def connect(self):
+            events.append("controller.connect")
+            return "rice2_scan_b"
+
+        def snapshot(self):
+            return {"state": self.state, "error": ""}
+
+        def recover_home(self):
+            events.append("controller.recover_home")
+            self.state = "READY"
+
+        def close(self):
+            events.append("controller.close")
+
+    config = _config()
+    config.update(
+        {
+            "camera": {"server_url": "http://camera.test", "startup_wait_s": 0.1},
+            "vision": {"model_path": "model.pt"},
+        }
+    )
+    monkeypatch.setattr(arm_demo, "load_config", lambda _path: config)
+    monkeypatch.setattr(arm_demo, "_local_preflight", lambda *_args: _setup())
+    monkeypatch.setattr(arm_demo, "SnapshotCamera", lambda *_args, **_kwargs: object())
+    monkeypatch.setattr(arm_demo, "PanicleVisionPipeline", Vision)
+    monkeypatch.setattr(arm_demo, "ArmDemoController", Controller)
+    monkeypatch.setattr(arm_demo, "resolve_config_path", lambda *_args: tmp_path / "model.pt")
+
+    def display(controller, *_args, **kwargs):
+        events.append(
+            f"display.{controller.snapshot()['state']}.auto={kwargs.get('auto_start')}"
+        )
+        return 0
+
+    monkeypatch.setattr(arm_demo, "run_display", display)
+
+    result = arm_demo.main(
+        [
+            "--config",
+            str(tmp_path / "config.yaml"),
+            "--setup-file",
+            str(tmp_path / "setup.json"),
+        ]
+    )
+
+    assert result == 0
+    assert events == [
+        "vision.start",
+        "controller.connect",
+        "controller.recover_home",
+        "display.READY.auto=True",
+        "controller.close",
+        "vision.stop",
+    ]
+    assert "自动低速回 home_safe" in capsys.readouterr().out
 
 
 def test_setup_keyboard_interrupt_exits_cleanly(monkeypatch, tmp_path, capsys):

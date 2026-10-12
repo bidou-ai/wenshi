@@ -1,0 +1,489 @@
+{
+  "classes": {
+    "rice_plant": 0
+  },
+  "created_at": "2026-08-28T07:44:48+00:00",
+  "images": [
+    {
+      "filename": "images/000001.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:46:27+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T07:46:27.518+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 239.675,
+          "contrast": 183.0,
+          "mean_luma": 118.979,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "",
+      "seq": 234577,
+      "camera_received_at": 64040.64084886
+    },
+    {
+      "filename": "images/000002.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:46:28+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T07:46:28.326+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 241.101,
+          "contrast": 183.0,
+          "mean_luma": 120.575,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "",
+      "seq": 234588,
+      "camera_received_at": 64041.446242412
+    },
+    {
+      "filename": "images/000003.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:49:11+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T07:49:11.542+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 213.718,
+          "contrast": 180.0,
+          "mean_luma": 110.516,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "",
+      "seq": 237035,
+      "camera_received_at": 64204.667037906
+    },
+    {
+      "filename": "images/000004.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:49:12+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T07:49:12.003+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 214.247,
+          "contrast": 180.0,
+          "mean_luma": 110.588,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "000003.jpg",
+      "seq": 237042,
+      "camera_received_at": 64205.131450855
+    },
+    {
+      "filename": "images/000005.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:53:10+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T07:53:10.860+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 209.808,
+          "contrast": 220.0,
+          "mean_luma": 114.465,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "",
+      "seq": 240623,
+      "camera_received_at": 64443.982127974
+    },
+    {
+      "filename": "images/000006.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:53:11+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T07:53:11.889+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 208.781,
+          "contrast": 220.0,
+          "mean_luma": 114.366,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "000005.jpg",
+      "seq": 240638,
+      "camera_received_at": 64445.015450261
+    },
+    {
+      "filename": "images/000007.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:54:05+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T07:54:05.842+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 204.988,
+          "contrast": 219.0,
+          "mean_luma": 110.407,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "",
+      "seq": 241447,
+      "camera_received_at": 64498.957716766
+    },
+    {
+      "filename": "images/000008.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:54:06+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T07:54:06.254+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 204.707,
+          "contrast": 218.0,
+          "mean_luma": 109.755,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "000007.jpg",
+      "seq": 241453,
+      "camera_received_at": 64499.381927701
+    },
+    {
+      "filename": "images/000009.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:55:27+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T07:55:27.381+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 250.052,
+          "contrast": 220.0,
+          "mean_luma": 111.583,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "",
+      "seq": 242669,
+      "camera_received_at": 64580.503595959
+    },
+    {
+      "filename": "images/000010.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:55:27+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T07:55:27.850+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 249.217,
+          "contrast": 220.0,
+          "mean_luma": 111.597,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "000009.jpg",
+      "seq": 242676,
+      "camera_received_at": 64580.974503665
+    },
+    {
+      "filename": "images/000011.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:56:46+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T07:56:46.446+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 254.927,
+          "contrast": 216.0,
+          "mean_luma": 107.054,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "",
+      "seq": 243854,
+      "camera_received_at": 64659.556276584
+    },
+    {
+      "filename": "images/000012.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:56:46+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T07:56:46.874+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 254.745,
+          "contrast": 216.0,
+          "mean_luma": 107.021,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "000011.jpg",
+      "seq": 243861,
+      "camera_received_at": 64659.998155354
+    },
+    {
+      "filename": "images/000013.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:58:40+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T07:58:40.415+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 252.774,
+          "contrast": 224.0,
+          "mean_luma": 105.278,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "",
+      "seq": 245562,
+      "camera_received_at": 64773.515684981
+    },
+    {
+      "filename": "images/000014.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:58:40+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T07:58:40.825+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 248.986,
+          "contrast": 223.0,
+          "mean_luma": 105.058,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "000013.jpg",
+      "seq": 245569,
+      "camera_received_at": 64773.944261342
+    },
+    {
+      "filename": "images/000015.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T08:00:54+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T08:00:54.954+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 290.616,
+          "contrast": 192.0,
+          "mean_luma": 116.704,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "",
+      "seq": 247579,
+      "camera_received_at": 64908.066892198
+    },
+    {
+      "filename": "images/000016.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T08:00:55+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T08:00:55.418+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 290.639,
+          "contrast": 187.0,
+          "mean_luma": 114.615,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "000015.jpg",
+      "seq": 247586,
+      "camera_received_at": 64908.546666031
+    },
+    {
+      "filename": "images/000017.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T08:02:34+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T08:02:34.075+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 218.532,
+          "contrast": 216.0,
+          "mean_luma": 110.863,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "",
+      "seq": 249065,
+      "camera_received_at": 65007.192323533
+    },
+    {
+      "filename": "images/000018.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T08:02:34+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T08:02:34.514+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 216.871,
+          "contrast": 216.0,
+          "mean_luma": 111.049,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "000017.jpg",
+      "seq": 249071,
+      "camera_received_at": 65007.641735577
+    },
+    {
+      "filename": "images/000019.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T08:04:36+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T08:04:36.012+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 188.233,
+          "contrast": 217.0,
+          "mean_luma": 107.822,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "",
+      "seq": 250893,
+      "camera_received_at": 65129.128481133
+    },
+    {
+      "filename": "images/000020.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T08:04:36+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "plant",
+      "captured_at": "2026-08-28T08:04:36.444+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 185.967,
+          "contrast": 217.0,
+          "mean_luma": 107.733,
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "duplicate_of": "000019.jpg",
+      "seq": 250899,
+      "camera_received_at": 65129.570416317
+    }
+  ],
+  "dataset_type": "plant"
+}

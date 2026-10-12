@@ -35,5 +35,8 @@ jobs:
           PYTHONPATH: app:.
         run: python -m pytest -q
 
+      - name: Check GitHub upload policy
+        run: python scripts/check_github_upload.py
+
       - name: Compile Python sources
         run: python -m compileall -q app yubei dashboard

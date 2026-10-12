@@ -1,0 +1,3645 @@
+{
+  "session": "/home/ubuntu/jaka/wenshi/yubei/data/dataset_20260825_152027_142240",
+  "images": 227,
+  "tags": {
+    "flower": 188,
+    "rice": 39,
+    "neutral": 0
+  },
+  "quality_warnings": 130,
+  "duplicates": 130,
+  "items": [
+    {
+      "filename": "images/000001.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 215.05,
+          "contrast": 144.0,
+          "mean_luma": 87.026,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000002.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 238.802,
+          "contrast": 150.0,
+          "mean_luma": 91.87,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000001.jpg"
+    },
+    {
+      "filename": "images/000003.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 324.984,
+          "contrast": 176.0,
+          "mean_luma": 93.6,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000004.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 322.852,
+          "contrast": 176.0,
+          "mean_luma": 92.984,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000003.jpg"
+    },
+    {
+      "filename": "images/000005.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 438.414,
+          "contrast": 195.0,
+          "mean_luma": 91.944,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000006.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 453.323,
+          "contrast": 200.0,
+          "mean_luma": 94.655,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000005.jpg"
+    },
+    {
+      "filename": "images/000007.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 429.381,
+          "contrast": 181.0,
+          "mean_luma": 87.571,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000008.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 565.555,
+          "contrast": 207.0,
+          "mean_luma": 102.486,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000009.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 411.92,
+          "contrast": 187.0,
+          "mean_luma": 90.718,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000010.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 408.615,
+          "contrast": 185.0,
+          "mean_luma": 91.019,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000011.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 299.692,
+          "contrast": 196.0,
+          "mean_luma": 106.142,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000012.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 298.188,
+          "contrast": 194.0,
+          "mean_luma": 105.842,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000011.jpg"
+    },
+    {
+      "filename": "images/000013.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 382.713,
+          "contrast": 202.0,
+          "mean_luma": 72.026,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000014.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 340.238,
+          "contrast": 199.0,
+          "mean_luma": 82.792,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000015.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 363.2,
+          "contrast": 141.0,
+          "mean_luma": 113.28,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000016.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 456.725,
+          "contrast": 175.0,
+          "mean_luma": 123.043,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000017.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 482.948,
+          "contrast": 195.0,
+          "mean_luma": 127.076,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000018.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 486.512,
+          "contrast": 195.0,
+          "mean_luma": 127.064,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000017.jpg"
+    },
+    {
+      "filename": "images/000019.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 471.817,
+          "contrast": 190.0,
+          "mean_luma": 139.055,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000020.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 418.34,
+          "contrast": 187.0,
+          "mean_luma": 150.151,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000021.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 439.032,
+          "contrast": 186.0,
+          "mean_luma": 150.256,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000020.jpg"
+    },
+    {
+      "filename": "images/000022.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 433.209,
+          "contrast": 186.0,
+          "mean_luma": 151.583,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000021.jpg"
+    },
+    {
+      "filename": "images/000023.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 445.917,
+          "contrast": 216.0,
+          "mean_luma": 133.969,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000024.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 347.809,
+          "contrast": 201.0,
+          "mean_luma": 104.554,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000025.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 395.323,
+          "contrast": 206.0,
+          "mean_luma": 90.509,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000026.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 373.448,
+          "contrast": 213.0,
+          "mean_luma": 102.373,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000027.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 354.121,
+          "contrast": 201.0,
+          "mean_luma": 100.513,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000028.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 358.111,
+          "contrast": 201.0,
+          "mean_luma": 98.834,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000029.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 419.566,
+          "contrast": 213.0,
+          "mean_luma": 78.682,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000030.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 401.884,
+          "contrast": 221.0,
+          "mean_luma": 100.931,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000031.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 380.289,
+          "contrast": 208.0,
+          "mean_luma": 96.815,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000030.jpg"
+    },
+    {
+      "filename": "images/000032.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 438.546,
+          "contrast": 219.0,
+          "mean_luma": 83.871,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000033.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 449.592,
+          "contrast": 231.0,
+          "mean_luma": 89.591,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000032.jpg"
+    },
+    {
+      "filename": "images/000034.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 393.226,
+          "contrast": 224.0,
+          "mean_luma": 92.276,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000035.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 396.159,
+          "contrast": 224.0,
+          "mean_luma": 92.356,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000034.jpg"
+    },
+    {
+      "filename": "images/000036.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 444.095,
+          "contrast": 219.0,
+          "mean_luma": 91.658,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000037.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 446.012,
+          "contrast": 219.0,
+          "mean_luma": 92.571,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000036.jpg"
+    },
+    {
+      "filename": "images/000038.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 425.458,
+          "contrast": 222.0,
+          "mean_luma": 89.171,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000039.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 485.91,
+          "contrast": 224.0,
+          "mean_luma": 92.336,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000040.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 358.215,
+          "contrast": 148.0,
+          "mean_luma": 106.411,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000041.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 374.352,
+          "contrast": 151.0,
+          "mean_luma": 109.948,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000042.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 361.343,
+          "contrast": 149.0,
+          "mean_luma": 109.708,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000041.jpg"
+    },
+    {
+      "filename": "images/000043.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 390.772,
+          "contrast": 205.0,
+          "mean_luma": 101.933,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000044.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 267.099,
+          "contrast": 134.0,
+          "mean_luma": 109.789,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000045.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 270.172,
+          "contrast": 135.0,
+          "mean_luma": 111.267,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000044.jpg"
+    },
+    {
+      "filename": "images/000046.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 269.65,
+          "contrast": 135.0,
+          "mean_luma": 112.547,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000045.jpg"
+    },
+    {
+      "filename": "images/000047.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 268.51,
+          "contrast": 136.0,
+          "mean_luma": 112.356,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000046.jpg"
+    },
+    {
+      "filename": "images/000048.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 313.268,
+          "contrast": 198.0,
+          "mean_luma": 113.371,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000049.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 325.263,
+          "contrast": 199.0,
+          "mean_luma": 114.429,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000048.jpg"
+    },
+    {
+      "filename": "images/000050.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 506.203,
+          "contrast": 185.0,
+          "mean_luma": 157.625,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000051.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 427.801,
+          "contrast": 223.0,
+          "mean_luma": 101.832,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000050.jpg"
+    },
+    {
+      "filename": "images/000052.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 428.28,
+          "contrast": 223.0,
+          "mean_luma": 101.879,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000051.jpg"
+    },
+    {
+      "filename": "images/000053.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 397.724,
+          "contrast": 182.0,
+          "mean_luma": 84.428,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000054.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 393.212,
+          "contrast": 182.0,
+          "mean_luma": 85.68,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000053.jpg"
+    },
+    {
+      "filename": "images/000055.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 326.876,
+          "contrast": 217.0,
+          "mean_luma": 93.543,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000056.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 310.041,
+          "contrast": 217.0,
+          "mean_luma": 93.512,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000057.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 319.029,
+          "contrast": 217.0,
+          "mean_luma": 93.91,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000055.jpg"
+    },
+    {
+      "filename": "images/000058.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 341.844,
+          "contrast": 218.0,
+          "mean_luma": 95.887,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000059.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 320.634,
+          "contrast": 218.0,
+          "mean_luma": 91.234,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000058.jpg"
+    },
+    {
+      "filename": "images/000060.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 324.827,
+          "contrast": 184.0,
+          "mean_luma": 87.113,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000061.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 319.289,
+          "contrast": 183.0,
+          "mean_luma": 86.596,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000060.jpg"
+    },
+    {
+      "filename": "images/000062.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 275.961,
+          "contrast": 213.0,
+          "mean_luma": 84.69,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000063.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 278.419,
+          "contrast": 214.0,
+          "mean_luma": 81.587,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000062.jpg"
+    },
+    {
+      "filename": "images/000064.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 609.395,
+          "contrast": 236.0,
+          "mean_luma": 106.96,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000065.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 609.834,
+          "contrast": 236.0,
+          "mean_luma": 106.937,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000064.jpg"
+    },
+    {
+      "filename": "images/000066.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 641.164,
+          "contrast": 236.0,
+          "mean_luma": 96.567,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000067.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 641.733,
+          "contrast": 236.0,
+          "mean_luma": 96.578,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000066.jpg"
+    },
+    {
+      "filename": "images/000068.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 617.29,
+          "contrast": 236.0,
+          "mean_luma": 93.636,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000069.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 747.973,
+          "contrast": 204.0,
+          "mean_luma": 93.698,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000070.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 749.297,
+          "contrast": 204.0,
+          "mean_luma": 93.719,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000069.jpg"
+    },
+    {
+      "filename": "images/000071.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 748.138,
+          "contrast": 204.0,
+          "mean_luma": 93.725,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000070.jpg"
+    },
+    {
+      "filename": "images/000072.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 748.883,
+          "contrast": 204.0,
+          "mean_luma": 93.735,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000071.jpg"
+    },
+    {
+      "filename": "images/000073.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 752.542,
+          "contrast": 204.0,
+          "mean_luma": 93.737,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000072.jpg"
+    },
+    {
+      "filename": "images/000074.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 747.77,
+          "contrast": 204.0,
+          "mean_luma": 93.756,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000073.jpg"
+    },
+    {
+      "filename": "images/000075.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 656.777,
+          "contrast": 195.0,
+          "mean_luma": 88.097,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000076.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 656.357,
+          "contrast": 195.0,
+          "mean_luma": 88.124,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000075.jpg"
+    },
+    {
+      "filename": "images/000077.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 658.462,
+          "contrast": 195.0,
+          "mean_luma": 88.092,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000076.jpg"
+    },
+    {
+      "filename": "images/000078.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 658.239,
+          "contrast": 195.0,
+          "mean_luma": 88.106,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000077.jpg"
+    },
+    {
+      "filename": "images/000079.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 660.955,
+          "contrast": 195.0,
+          "mean_luma": 88.099,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000078.jpg"
+    },
+    {
+      "filename": "images/000080.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 590.129,
+          "contrast": 196.0,
+          "mean_luma": 87.534,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000081.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 578.526,
+          "contrast": 196.0,
+          "mean_luma": 87.319,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000082.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 554.811,
+          "contrast": 196.0,
+          "mean_luma": 88.306,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000081.jpg"
+    },
+    {
+      "filename": "images/000083.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 525.502,
+          "contrast": 203.0,
+          "mean_luma": 92.297,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000084.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 678.945,
+          "contrast": 212.0,
+          "mean_luma": 102.235,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000085.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 678.203,
+          "contrast": 213.0,
+          "mean_luma": 102.237,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000084.jpg"
+    },
+    {
+      "filename": "images/000086.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 683.039,
+          "contrast": 213.0,
+          "mean_luma": 102.218,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000085.jpg"
+    },
+    {
+      "filename": "images/000087.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 682.99,
+          "contrast": 212.0,
+          "mean_luma": 102.229,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000086.jpg"
+    },
+    {
+      "filename": "images/000088.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 679.48,
+          "contrast": 212.0,
+          "mean_luma": 102.238,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000087.jpg"
+    },
+    {
+      "filename": "images/000089.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 676.379,
+          "contrast": 213.0,
+          "mean_luma": 102.255,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000088.jpg"
+    },
+    {
+      "filename": "images/000090.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 548.136,
+          "contrast": 207.0,
+          "mean_luma": 116.677,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000091.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 549.324,
+          "contrast": 207.0,
+          "mean_luma": 116.772,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000090.jpg"
+    },
+    {
+      "filename": "images/000092.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 551.542,
+          "contrast": 207.0,
+          "mean_luma": 116.802,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000091.jpg"
+    },
+    {
+      "filename": "images/000093.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 658.189,
+          "contrast": 174.0,
+          "mean_luma": 113.829,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000094.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 657.833,
+          "contrast": 173.0,
+          "mean_luma": 113.772,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000093.jpg"
+    },
+    {
+      "filename": "images/000095.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 657.74,
+          "contrast": 173.0,
+          "mean_luma": 113.79,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000094.jpg"
+    },
+    {
+      "filename": "images/000096.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 658.815,
+          "contrast": 174.0,
+          "mean_luma": 113.866,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000095.jpg"
+    },
+    {
+      "filename": "images/000097.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 657.164,
+          "contrast": 173.02,
+          "mean_luma": 113.813,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000096.jpg"
+    },
+    {
+      "filename": "images/000098.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 660.271,
+          "contrast": 173.0,
+          "mean_luma": 113.792,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000097.jpg"
+    },
+    {
+      "filename": "images/000099.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 658.068,
+          "contrast": 174.0,
+          "mean_luma": 113.87,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000098.jpg"
+    },
+    {
+      "filename": "images/000100.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 658.177,
+          "contrast": 173.0,
+          "mean_luma": 113.78,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000099.jpg"
+    },
+    {
+      "filename": "images/000101.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 659.537,
+          "contrast": 173.0,
+          "mean_luma": 113.768,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000100.jpg"
+    },
+    {
+      "filename": "images/000102.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 659.922,
+          "contrast": 173.0,
+          "mean_luma": 113.766,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000101.jpg"
+    },
+    {
+      "filename": "images/000103.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 657.983,
+          "contrast": 173.0,
+          "mean_luma": 113.765,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000102.jpg"
+    },
+    {
+      "filename": "images/000104.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 657.553,
+          "contrast": 174.0,
+          "mean_luma": 113.759,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000103.jpg"
+    },
+    {
+      "filename": "images/000105.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 710.806,
+          "contrast": 164.0,
+          "mean_luma": 115.064,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000106.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 710.855,
+          "contrast": 163.0,
+          "mean_luma": 115.307,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000105.jpg"
+    },
+    {
+      "filename": "images/000107.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 714.267,
+          "contrast": 163.0,
+          "mean_luma": 115.42,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000106.jpg"
+    },
+    {
+      "filename": "images/000108.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 708.171,
+          "contrast": 163.0,
+          "mean_luma": 115.174,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000107.jpg"
+    },
+    {
+      "filename": "images/000109.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 710.186,
+          "contrast": 164.0,
+          "mean_luma": 114.595,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000108.jpg"
+    },
+    {
+      "filename": "images/000110.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 708.662,
+          "contrast": 164.0,
+          "mean_luma": 114.27,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000109.jpg"
+    },
+    {
+      "filename": "images/000111.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 710.405,
+          "contrast": 164.0,
+          "mean_luma": 114.524,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000110.jpg"
+    },
+    {
+      "filename": "images/000112.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 709.353,
+          "contrast": 165.0,
+          "mean_luma": 114.584,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000111.jpg"
+    },
+    {
+      "filename": "images/000113.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 706.621,
+          "contrast": 164.0,
+          "mean_luma": 114.753,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000112.jpg"
+    },
+    {
+      "filename": "images/000114.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 710.184,
+          "contrast": 164.0,
+          "mean_luma": 114.995,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000113.jpg"
+    },
+    {
+      "filename": "images/000115.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 710.057,
+          "contrast": 193.0,
+          "mean_luma": 125.619,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000116.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 709.887,
+          "contrast": 193.0,
+          "mean_luma": 125.614,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000115.jpg"
+    },
+    {
+      "filename": "images/000117.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 707.784,
+          "contrast": 193.0,
+          "mean_luma": 125.607,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000116.jpg"
+    },
+    {
+      "filename": "images/000118.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 707.599,
+          "contrast": 193.0,
+          "mean_luma": 125.607,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000117.jpg"
+    },
+    {
+      "filename": "images/000119.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 709.14,
+          "contrast": 193.0,
+          "mean_luma": 125.604,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000118.jpg"
+    },
+    {
+      "filename": "images/000120.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 708.138,
+          "contrast": 193.0,
+          "mean_luma": 125.592,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000119.jpg"
+    },
+    {
+      "filename": "images/000121.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 709.982,
+          "contrast": 193.0,
+          "mean_luma": 125.593,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000120.jpg"
+    },
+    {
+      "filename": "images/000122.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 708.138,
+          "contrast": 193.0,
+          "mean_luma": 125.605,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000121.jpg"
+    },
+    {
+      "filename": "images/000123.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 708.163,
+          "contrast": 193.0,
+          "mean_luma": 125.616,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000122.jpg"
+    },
+    {
+      "filename": "images/000124.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 709.73,
+          "contrast": 193.0,
+          "mean_luma": 125.625,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000123.jpg"
+    },
+    {
+      "filename": "images/000125.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 707.286,
+          "contrast": 193.0,
+          "mean_luma": 125.629,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000124.jpg"
+    },
+    {
+      "filename": "images/000126.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 708.117,
+          "contrast": 193.0,
+          "mean_luma": 125.621,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000125.jpg"
+    },
+    {
+      "filename": "images/000127.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 706.946,
+          "contrast": 193.0,
+          "mean_luma": 125.612,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000126.jpg"
+    },
+    {
+      "filename": "images/000128.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 708.654,
+          "contrast": 193.0,
+          "mean_luma": 125.614,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000127.jpg"
+    },
+    {
+      "filename": "images/000129.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 657.408,
+          "contrast": 187.0,
+          "mean_luma": 123.617,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000130.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 654.702,
+          "contrast": 187.0,
+          "mean_luma": 123.525,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000129.jpg"
+    },
+    {
+      "filename": "images/000131.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 654.24,
+          "contrast": 187.0,
+          "mean_luma": 123.557,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000130.jpg"
+    },
+    {
+      "filename": "images/000132.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 654.72,
+          "contrast": 187.0,
+          "mean_luma": 123.524,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000131.jpg"
+    },
+    {
+      "filename": "images/000133.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 652.55,
+          "contrast": 187.0,
+          "mean_luma": 123.549,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000132.jpg"
+    },
+    {
+      "filename": "images/000134.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 660.448,
+          "contrast": 187.0,
+          "mean_luma": 123.54,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000133.jpg"
+    },
+    {
+      "filename": "images/000135.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 661.574,
+          "contrast": 187.0,
+          "mean_luma": 123.535,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000134.jpg"
+    },
+    {
+      "filename": "images/000136.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 658.056,
+          "contrast": 187.0,
+          "mean_luma": 123.528,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000135.jpg"
+    },
+    {
+      "filename": "images/000137.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 653.242,
+          "contrast": 187.0,
+          "mean_luma": 123.516,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000136.jpg"
+    },
+    {
+      "filename": "images/000138.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 652.503,
+          "contrast": 187.0,
+          "mean_luma": 123.54,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000137.jpg"
+    },
+    {
+      "filename": "images/000139.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 652.668,
+          "contrast": 187.0,
+          "mean_luma": 123.571,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000138.jpg"
+    },
+    {
+      "filename": "images/000140.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 657.079,
+          "contrast": 187.0,
+          "mean_luma": 123.47,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000139.jpg"
+    },
+    {
+      "filename": "images/000141.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 658.281,
+          "contrast": 187.0,
+          "mean_luma": 123.469,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000140.jpg"
+    },
+    {
+      "filename": "images/000142.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 478.986,
+          "contrast": 207.0,
+          "mean_luma": 95.847,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000143.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 483.759,
+          "contrast": 207.0,
+          "mean_luma": 95.852,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000142.jpg"
+    },
+    {
+      "filename": "images/000144.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 478.405,
+          "contrast": 207.0,
+          "mean_luma": 95.781,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000143.jpg"
+    },
+    {
+      "filename": "images/000145.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 481.114,
+          "contrast": 207.0,
+          "mean_luma": 95.832,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000144.jpg"
+    },
+    {
+      "filename": "images/000146.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 480.379,
+          "contrast": 207.0,
+          "mean_luma": 95.806,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000145.jpg"
+    },
+    {
+      "filename": "images/000147.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 482.912,
+          "contrast": 207.0,
+          "mean_luma": 95.799,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000146.jpg"
+    },
+    {
+      "filename": "images/000148.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 478.961,
+          "contrast": 207.0,
+          "mean_luma": 95.89,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000147.jpg"
+    },
+    {
+      "filename": "images/000149.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 478.786,
+          "contrast": 207.0,
+          "mean_luma": 95.853,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000148.jpg"
+    },
+    {
+      "filename": "images/000150.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 478.929,
+          "contrast": 207.0,
+          "mean_luma": 95.804,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000149.jpg"
+    },
+    {
+      "filename": "images/000151.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 479.367,
+          "contrast": 207.0,
+          "mean_luma": 95.838,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000150.jpg"
+    },
+    {
+      "filename": "images/000152.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 479.024,
+          "contrast": 207.0,
+          "mean_luma": 95.844,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000151.jpg"
+    },
+    {
+      "filename": "images/000153.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 342.535,
+          "contrast": 215.0,
+          "mean_luma": 83.19,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000154.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 342.754,
+          "contrast": 217.0,
+          "mean_luma": 84.143,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000153.jpg"
+    },
+    {
+      "filename": "images/000155.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 340.024,
+          "contrast": 215.0,
+          "mean_luma": 83.169,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000154.jpg"
+    },
+    {
+      "filename": "images/000156.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 343.757,
+          "contrast": 217.0,
+          "mean_luma": 84.227,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000155.jpg"
+    },
+    {
+      "filename": "images/000157.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 342.312,
+          "contrast": 215.0,
+          "mean_luma": 83.243,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000156.jpg"
+    },
+    {
+      "filename": "images/000158.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 344.554,
+          "contrast": 218.0,
+          "mean_luma": 84.286,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000157.jpg"
+    },
+    {
+      "filename": "images/000159.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 344.988,
+          "contrast": 215.0,
+          "mean_luma": 83.379,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000158.jpg"
+    },
+    {
+      "filename": "images/000160.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 368.906,
+          "contrast": 228.0,
+          "mean_luma": 88.604,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000161.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 365.631,
+          "contrast": 228.0,
+          "mean_luma": 87.737,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000160.jpg"
+    },
+    {
+      "filename": "images/000162.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 364.813,
+          "contrast": 228.0,
+          "mean_luma": 87.54,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000161.jpg"
+    },
+    {
+      "filename": "images/000163.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 364.773,
+          "contrast": 228.0,
+          "mean_luma": 87.633,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000162.jpg"
+    },
+    {
+      "filename": "images/000164.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 364.149,
+          "contrast": 228.0,
+          "mean_luma": 87.756,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000163.jpg"
+    },
+    {
+      "filename": "images/000165.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 363.744,
+          "contrast": 228.0,
+          "mean_luma": 87.839,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000164.jpg"
+    },
+    {
+      "filename": "images/000166.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 365.025,
+          "contrast": 228.0,
+          "mean_luma": 87.955,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000165.jpg"
+    },
+    {
+      "filename": "images/000167.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 364.98,
+          "contrast": 228.0,
+          "mean_luma": 88.195,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000166.jpg"
+    },
+    {
+      "filename": "images/000168.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 368.63,
+          "contrast": 228.0,
+          "mean_luma": 88.779,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000167.jpg"
+    },
+    {
+      "filename": "images/000169.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 322.187,
+          "contrast": 227.0,
+          "mean_luma": 93.009,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000170.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 314.899,
+          "contrast": 227.0,
+          "mean_luma": 92.336,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000169.jpg"
+    },
+    {
+      "filename": "images/000171.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 317.752,
+          "contrast": 227.0,
+          "mean_luma": 92.207,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000170.jpg"
+    },
+    {
+      "filename": "images/000172.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 314.353,
+          "contrast": 227.0,
+          "mean_luma": 92.182,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000171.jpg"
+    },
+    {
+      "filename": "images/000173.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 316.909,
+          "contrast": 227.0,
+          "mean_luma": 92.387,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000171.jpg"
+    },
+    {
+      "filename": "images/000174.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 319.668,
+          "contrast": 227.0,
+          "mean_luma": 92.44,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000173.jpg"
+    },
+    {
+      "filename": "images/000175.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 315.691,
+          "contrast": 227.0,
+          "mean_luma": 92.432,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000174.jpg"
+    },
+    {
+      "filename": "images/000176.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 315.486,
+          "contrast": 227.0,
+          "mean_luma": 92.511,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000175.jpg"
+    },
+    {
+      "filename": "images/000177.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 318.221,
+          "contrast": 227.0,
+          "mean_luma": 92.382,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000176.jpg"
+    },
+    {
+      "filename": "images/000178.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 315.706,
+          "contrast": 227.0,
+          "mean_luma": 92.312,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000177.jpg"
+    },
+    {
+      "filename": "images/000179.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 317.652,
+          "contrast": 227.0,
+          "mean_luma": 92.266,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000178.jpg"
+    },
+    {
+      "filename": "images/000180.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 318.694,
+          "contrast": 227.0,
+          "mean_luma": 92.25,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000179.jpg"
+    },
+    {
+      "filename": "images/000181.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 317.899,
+          "contrast": 226.0,
+          "mean_luma": 90.46,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000182.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 323.596,
+          "contrast": 226.0,
+          "mean_luma": 92.615,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000183.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 325.059,
+          "contrast": 226.0,
+          "mean_luma": 92.752,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000182.jpg"
+    },
+    {
+      "filename": "images/000184.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 322.401,
+          "contrast": 227.0,
+          "mean_luma": 92.442,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000182.jpg"
+    },
+    {
+      "filename": "images/000185.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 428.455,
+          "contrast": 217.0,
+          "mean_luma": 91.611,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000186.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 432.773,
+          "contrast": 217.0,
+          "mean_luma": 91.646,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000185.jpg"
+    },
+    {
+      "filename": "images/000187.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 427.832,
+          "contrast": 217.0,
+          "mean_luma": 91.657,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000186.jpg"
+    },
+    {
+      "filename": "images/000188.jpg",
+      "capture_tag": "flower",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 432.6,
+          "contrast": 217.0,
+          "mean_luma": 91.668,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000187.jpg"
+    },
+    {
+      "filename": "images/000189.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 630.677,
+          "contrast": 201.0,
+          "mean_luma": 93.128,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000190.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 631.616,
+          "contrast": 200.0,
+          "mean_luma": 93.088,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000189.jpg"
+    },
+    {
+      "filename": "images/000191.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 581.836,
+          "contrast": 207.02,
+          "mean_luma": 87.579,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000192.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 624.19,
+          "contrast": 229.0,
+          "mean_luma": 93.907,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000193.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 413.85,
+          "contrast": 189.0,
+          "mean_luma": 94.588,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000194.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 422.823,
+          "contrast": 190.0,
+          "mean_luma": 94.642,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000195.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 401.627,
+          "contrast": 193.0,
+          "mean_luma": 94.973,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000196.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 446.168,
+          "contrast": 193.0,
+          "mean_luma": 96.651,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000197.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 493.058,
+          "contrast": 193.0,
+          "mean_luma": 97.266,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000198.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 500.393,
+          "contrast": 197.0,
+          "mean_luma": 98.484,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000199.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 503.115,
+          "contrast": 194.0,
+          "mean_luma": 96.838,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000200.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 526.49,
+          "contrast": 195.0,
+          "mean_luma": 95.661,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000201.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 542.531,
+          "contrast": 198.0,
+          "mean_luma": 95.525,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000202.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 561.542,
+          "contrast": 202.0,
+          "mean_luma": 99.015,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000203.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 555.941,
+          "contrast": 206.0,
+          "mean_luma": 100.386,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000204.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 560.211,
+          "contrast": 205.0,
+          "mean_luma": 100.589,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000205.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 596.576,
+          "contrast": 199.0,
+          "mean_luma": 104.232,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000206.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 628.52,
+          "contrast": 193.0,
+          "mean_luma": 106.899,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000207.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 704.93,
+          "contrast": 195.0,
+          "mean_luma": 107.564,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000208.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 772.712,
+          "contrast": 195.0,
+          "mean_luma": 103.274,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000209.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 716.154,
+          "contrast": 196.0,
+          "mean_luma": 100.674,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000210.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 792.62,
+          "contrast": 203.0,
+          "mean_luma": 104.857,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000211.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 764.49,
+          "contrast": 202.0,
+          "mean_luma": 105.129,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000212.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 740.791,
+          "contrast": 202.0,
+          "mean_luma": 103.757,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000213.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 725.542,
+          "contrast": 202.0,
+          "mean_luma": 103.767,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000214.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 725.568,
+          "contrast": 203.0,
+          "mean_luma": 103.357,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000215.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 718.844,
+          "contrast": 208.0,
+          "mean_luma": 101.769,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000216.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 721.59,
+          "contrast": 208.0,
+          "mean_luma": 101.06,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000217.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 705.291,
+          "contrast": 210.0,
+          "mean_luma": 101.938,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000218.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 687.228,
+          "contrast": 210.0,
+          "mean_luma": 102.356,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000219.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 714.397,
+          "contrast": 209.0,
+          "mean_luma": 100.254,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000220.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 706.526,
+          "contrast": 210.0,
+          "mean_luma": 99.08,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000221.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 672.729,
+          "contrast": 210.0,
+          "mean_luma": 99.193,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000222.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 643.111,
+          "contrast": 206.0,
+          "mean_luma": 101.072,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000223.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 648.615,
+          "contrast": 204.0,
+          "mean_luma": 101.448,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000224.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 659.378,
+          "contrast": 206.0,
+          "mean_luma": 100.67,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000225.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 662.936,
+          "contrast": 202.0,
+          "mean_luma": 99.84,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": ""
+    },
+    {
+      "filename": "images/000226.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 637.149,
+          "contrast": 202.0,
+          "mean_luma": 98.559,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000225.jpg"
+    },
+    {
+      "filename": "images/000227.jpg",
+      "capture_tag": "rice",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 641.454,
+          "contrast": 202.0,
+          "mean_luma": 98.429,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "images/000226.jpg"
+    }
+  ]
+}

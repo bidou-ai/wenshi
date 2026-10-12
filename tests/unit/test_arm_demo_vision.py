@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import json
 import threading
 import time
@@ -71,7 +72,15 @@ class _Opener:
         self.urls: list[str] = []
         self.responses = {
             "/health": _Response(json.dumps({"ok": True, "seq": 12}).encode()),
-            "/snapshot.jpg": _Response(encoded.tobytes()),
+            "/frame": _Response(
+                json.dumps(
+                    {
+                        "ok": True,
+                        "seq": 12,
+                        "color_jpeg_b64": base64.b64encode(encoded.tobytes()).decode("ascii"),
+                    }
+                ).encode()
+            ),
         }
 
     def open(self, url, timeout):
@@ -87,9 +96,46 @@ class _PayloadOpener:
     def open(self, url, timeout):
         if url.endswith("/health"):
             return _Response(self.health_payload)
-        if url.endswith("/snapshot.jpg"):
-            return _Response(self.jpeg_payload)
+        if url.endswith("/frame"):
+            return _Response(
+                json.dumps(
+                    {
+                        "ok": True,
+                        "seq": 1,
+                        "color_jpeg_b64": base64.b64encode(self.jpeg_payload).decode("ascii"),
+                    }
+                ).encode()
+            )
         raise AssertionError(url)
+
+
+class _FrameOpener:
+    def __init__(self, image: np.ndarray):
+        ok, encoded = cv2.imencode(".jpg", image)
+        assert ok
+        self.urls: list[str] = []
+        self.payload = json.dumps(
+            {
+                "ok": True,
+                "seq": 23,
+                "color_jpeg_b64": base64.b64encode(encoded.tobytes()).decode("ascii"),
+            }
+        ).encode()
+
+    def open(self, url, timeout):
+        self.urls.append(url)
+        return _Response(self.payload)
+
+
+def test_snapshot_camera_uses_the_field_test_frame_endpoint_once():
+    opener = _FrameOpener(np.full((8, 10, 3), 127, dtype=np.uint8))
+    camera = SnapshotCamera("http://camera.test:18080", opener=opener)
+
+    frame = camera.capture()
+
+    assert frame.seq == 23
+    assert frame.image.shape == (8, 10, 3)
+    assert opener.urls == ["http://camera.test:18080/frame"]
 
 
 def test_snapshot_camera_decodes_jpeg_and_health_seq():
@@ -104,7 +150,7 @@ def test_snapshot_camera_decodes_jpeg_and_health_seq():
     assert frame.image.shape == (8, 10, 3)
     assert opener.urls == [
         "http://camera.test:18080/health",
-        "http://camera.test:18080/snapshot.jpg",
+        "http://camera.test:18080/frame",
     ]
 
 
@@ -140,7 +186,7 @@ class _Camera:
         self.seq = 0
 
     def health(self):
-        return {"ok": True, "seq": self.seq + 1}
+        raise AssertionError("pipeline must not poll the separate health endpoint")
 
     def capture(self):
         self.seq += 1
@@ -161,18 +207,15 @@ class _FlakyCamera(_Camera):
         super().__init__()
         self.fail = False
 
-    def health(self):
+    def capture(self):
         if self.fail:
             raise RuntimeError("HTTP 503")
-        return super().health()
+        return super().capture()
 
 
 class _OfflineCamera:
-    def health(self):
-        raise RuntimeError("HTTP 503")
-
     def capture(self):
-        raise AssertionError("capture must not run after failed health")
+        raise RuntimeError("HTTP 503")
 
 
 class _RestartCamera(_Camera):
@@ -213,7 +256,7 @@ class _Detector:
         return image
 
 
-def test_pipeline_loads_panicle_model_once_and_keeps_same_frame_raw(monkeypatch):
+def test_pipeline_loads_model_once_without_synthetic_warmup_and_keeps_same_frame_raw(monkeypatch):
     _Detector.instances = 0
     _Detector.warmups = 0
     pipeline = PanicleVisionPipeline(_Camera(), model_path="panicle.pt", poll_interval_s=0.005, detector_factory=_Detector)
@@ -226,7 +269,7 @@ def test_pipeline_loads_panicle_model_once_and_keeps_same_frame_raw(monkeypatch)
 
     assert result is not None
     assert _Detector.instances == 1
-    assert _Detector.warmups == 1
+    assert _Detector.warmups == 0
     assert result.raw.shape == result.annotated.shape
     assert not np.array_equal(result.raw, result.annotated)
     assert np.count_nonzero(result.raw[:, :, 1]) == 0
@@ -259,11 +302,6 @@ class _FailingDetector(_Detector):
 class _LoadFailureDetector(_Detector):
     def load_model(self):
         return False
-
-
-class _WarmupFailureDetector(_Detector):
-    def detect(self, image):
-        raise RuntimeError("warmup boom")
 
 
 class _MutatingDetector(_Detector):
@@ -417,17 +455,10 @@ def test_pipeline_health_error_reports_stale_camera_without_http_error():
     assert pipeline.health_error(max_age_s=0.001) == "相机已过期"
 
 
-@pytest.mark.parametrize(
-    ("detector_factory", "message"),
-    [
-        (_LoadFailureDetector, "模型加载失败"),
-        (_WarmupFailureDetector, "warmup boom"),
-    ],
-)
-def test_pipeline_start_propagates_model_load_and_warmup_errors(detector_factory, message):
-    pipeline = PanicleVisionPipeline(_Camera(), detector_factory=detector_factory)
+def test_pipeline_start_propagates_model_load_error():
+    pipeline = PanicleVisionPipeline(_Camera(), detector_factory=_LoadFailureDetector)
 
-    with pytest.raises(RuntimeError, match=message):
+    with pytest.raises(RuntimeError, match="模型加载失败"):
         pipeline.start()
 
     assert pipeline._threads == []
@@ -489,7 +520,7 @@ def test_pipeline_restart_replaces_slots_and_discards_prior_round_state():
         assert pipeline._frames is not old_frames
         assert pipeline._results is not old_results
         assert pipeline.latest() is None
-        assert pipeline._last_health_at is not None
+        assert pipeline._last_health_at is None
         assert pipeline._last_frame_at is None
         assert pipeline._last_result_at is None
         assert pipeline._health_message is None

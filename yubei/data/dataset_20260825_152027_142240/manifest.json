@@ -1,0 +1,5230 @@
+{
+  "classes": {
+    "rice": 0,
+    "flower": 1
+  },
+  "created_at": "2026-08-25T07:20:27+00:00",
+  "images": [
+    {
+      "filename": "images/000001.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:24:01+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:24:01.923+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 215.162,
+          "contrast": 144.0,
+          "mean_luma": 87.028,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 15363,
+      "camera_received_at": 13754.191836904
+    },
+    {
+      "filename": "images/000002.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:24:21+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:24:21.601+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 238.908,
+          "contrast": 150.0,
+          "mean_luma": 91.872,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000001.jpg",
+      "seq": 15953,
+      "camera_received_at": 13773.883360789
+    },
+    {
+      "filename": "images/000003.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:25:32+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:25:32.232+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 325.018,
+          "contrast": 176.0,
+          "mean_luma": 93.602,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 18071,
+      "camera_received_at": 13844.506230501
+    },
+    {
+      "filename": "images/000004.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:25:35+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:25:35.183+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 322.898,
+          "contrast": 176.0,
+          "mean_luma": 92.986,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000003.jpg",
+      "seq": 18159,
+      "camera_received_at": 13847.461166534
+    },
+    {
+      "filename": "images/000005.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:25:56+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:25:56.621+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 438.385,
+          "contrast": 195.0,
+          "mean_luma": 91.946,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 18802,
+      "camera_received_at": 13868.904494314
+    },
+    {
+      "filename": "images/000006.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:25:57+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:25:57.646+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 453.397,
+          "contrast": 200.0,
+          "mean_luma": 94.657,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000005.jpg",
+      "seq": 18833,
+      "camera_received_at": 13869.928168185
+    },
+    {
+      "filename": "images/000007.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:26:08+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:26:08.258+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 429.485,
+          "contrast": 181.0,
+          "mean_luma": 87.573,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 19150,
+      "camera_received_at": 13880.532986642
+    },
+    {
+      "filename": "images/000008.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:26:10+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:26:10.058+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 565.648,
+          "contrast": 207.0,
+          "mean_luma": 102.492,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 19204,
+      "camera_received_at": 13882.313928254
+    },
+    {
+      "filename": "images/000009.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:26:12+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:26:12.276+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 411.987,
+          "contrast": 187.0,
+          "mean_luma": 90.72,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 19271,
+      "camera_received_at": 13884.559958321
+    },
+    {
+      "filename": "images/000010.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:26:13+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:26:13.739+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 408.593,
+          "contrast": 185.0,
+          "mean_luma": 91.022,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 19315,
+      "camera_received_at": 13886.006974075
+    },
+    {
+      "filename": "images/000011.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:26:52+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:26:52.016+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 299.689,
+          "contrast": 196.0,
+          "mean_luma": 106.142,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 20462,
+      "camera_received_at": 13924.297488092
+    },
+    {
+      "filename": "images/000012.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:26:53+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:26:53.036+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 298.242,
+          "contrast": 194.0,
+          "mean_luma": 105.842,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000011.jpg",
+      "seq": 20493,
+      "camera_received_at": 13925.300696196
+    },
+    {
+      "filename": "images/000013.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:26:58+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:26:58.491+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 382.747,
+          "contrast": 202.0,
+          "mean_luma": 72.027,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 20657,
+      "camera_received_at": 13930.772719224
+    },
+    {
+      "filename": "images/000014.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:27:00+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:27:00.084+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 340.319,
+          "contrast": 199.0,
+          "mean_luma": 82.795,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 20705,
+      "camera_received_at": 13932.3673825
+    },
+    {
+      "filename": "images/000015.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:27:05+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:27:05.881+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 363.306,
+          "contrast": 141.0,
+          "mean_luma": 113.283,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 20878,
+      "camera_received_at": 13938.152634887
+    },
+    {
+      "filename": "images/000016.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:27:13+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:27:13.387+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 456.879,
+          "contrast": 175.0,
+          "mean_luma": 123.048,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 21103,
+      "camera_received_at": 13945.653955202
+    },
+    {
+      "filename": "images/000017.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:27:14+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:27:14.478+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 482.893,
+          "contrast": 195.0,
+          "mean_luma": 127.085,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 21135,
+      "camera_received_at": 13946.736179863
+    },
+    {
+      "filename": "images/000018.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:27:15+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:27:15.850+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 486.73,
+          "contrast": 195.0,
+          "mean_luma": 127.071,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000017.jpg",
+      "seq": 21176,
+      "camera_received_at": 13948.106793969
+    },
+    {
+      "filename": "images/000019.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:27:19+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:27:19.473+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 471.47,
+          "contrast": 190.0,
+          "mean_luma": 139.068,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 21286,
+      "camera_received_at": 13951.757073781
+    },
+    {
+      "filename": "images/000020.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:27:21+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:27:21.094+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 418.072,
+          "contrast": 187.0,
+          "mean_luma": 150.167,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 21334,
+      "camera_received_at": 13953.376841355
+    },
+    {
+      "filename": "images/000021.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:27:28+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:27:28.573+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 438.902,
+          "contrast": 186.0,
+          "mean_luma": 150.273,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000020.jpg",
+      "seq": 21558,
+      "camera_received_at": 13960.85719664
+    },
+    {
+      "filename": "images/000022.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:27:31+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:27:31.503+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 432.896,
+          "contrast": 186.0,
+          "mean_luma": 151.6,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000021.jpg",
+      "seq": 21646,
+      "camera_received_at": 13963.786596432
+    },
+    {
+      "filename": "images/000023.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:27:35+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:27:35.459+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 446.11,
+          "contrast": 216.0,
+          "mean_luma": 133.985,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 21765,
+      "camera_received_at": 13967.741516542
+    },
+    {
+      "filename": "images/000024.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:28:00+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:28:00.838+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 347.752,
+          "contrast": 201.0,
+          "mean_luma": 104.555,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 22526,
+      "camera_received_at": 13993.120310523
+    },
+    {
+      "filename": "images/000025.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:28:02+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:28:02.521+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 395.318,
+          "contrast": 206.0,
+          "mean_luma": 90.51,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 22575,
+      "camera_received_at": 13994.785316638
+    },
+    {
+      "filename": "images/000026.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:28:03+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:28:03.471+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 373.448,
+          "contrast": 213.0,
+          "mean_luma": 102.374,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 22604,
+      "camera_received_at": 13995.753826256
+    },
+    {
+      "filename": "images/000027.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:28:04+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:28:04.336+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 354.121,
+          "contrast": 201.0,
+          "mean_luma": 100.513,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 22630,
+      "camera_received_at": 13996.610458175
+    },
+    {
+      "filename": "images/000028.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:28:05+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:28:05.174+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 358.157,
+          "contrast": 201.0,
+          "mean_luma": 98.834,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 22656,
+      "camera_received_at": 13997.457811051
+    },
+    {
+      "filename": "images/000029.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:28:06+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:28:06.118+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 419.609,
+          "contrast": 213.0,
+          "mean_luma": 78.682,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 22684,
+      "camera_received_at": 13998.391852876
+    },
+    {
+      "filename": "images/000030.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:28:08+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:28:08.173+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 401.949,
+          "contrast": 221.0,
+          "mean_luma": 100.932,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 22745,
+      "camera_received_at": 14000.452221944
+    },
+    {
+      "filename": "images/000031.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:28:09+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:28:09.789+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 380.371,
+          "contrast": 208.0,
+          "mean_luma": 96.815,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000030.jpg",
+      "seq": 22794,
+      "camera_received_at": 14002.071858498
+    },
+    {
+      "filename": "images/000032.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:28:10+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:28:10.956+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 438.581,
+          "contrast": 219.0,
+          "mean_luma": 83.871,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 22828,
+      "camera_received_at": 14003.222721792
+    },
+    {
+      "filename": "images/000033.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:28:12+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:28:12.722+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 449.685,
+          "contrast": 232.0,
+          "mean_luma": 89.595,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000032.jpg",
+      "seq": 22882,
+      "camera_received_at": 14005.005777764
+    },
+    {
+      "filename": "images/000034.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:31:49+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:31:49.622+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 393.27,
+          "contrast": 224.0,
+          "mean_luma": 92.281,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 29384,
+      "camera_received_at": 14221.899156803
+    },
+    {
+      "filename": "images/000035.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:31:50+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:31:50.195+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 396.282,
+          "contrast": 224.0,
+          "mean_luma": 92.362,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000034.jpg",
+      "seq": 29401,
+      "camera_received_at": 14222.475027415
+    },
+    {
+      "filename": "images/000036.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:31:54+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:31:54.546+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 444.234,
+          "contrast": 219.0,
+          "mean_luma": 91.664,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 29532,
+      "camera_received_at": 14226.820441703
+    },
+    {
+      "filename": "images/000037.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:31:55+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:31:55.106+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 446.041,
+          "contrast": 219.0,
+          "mean_luma": 92.576,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000036.jpg",
+      "seq": 29548,
+      "camera_received_at": 14227.377573176
+    },
+    {
+      "filename": "images/000038.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:31:59+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:31:59.256+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 425.54,
+          "contrast": 222.0,
+          "mean_luma": 89.176,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 29673,
+      "camera_received_at": 14231.540250199
+    },
+    {
+      "filename": "images/000039.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:32:01+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:32:01.046+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 485.999,
+          "contrast": 224.0,
+          "mean_luma": 92.341,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 29726,
+      "camera_received_at": 14233.325383702
+    },
+    {
+      "filename": "images/000040.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:32:39+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:32:39.516+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 358.61,
+          "contrast": 148.0,
+          "mean_luma": 106.415,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 30880,
+      "camera_received_at": 14271.788469078
+    },
+    {
+      "filename": "images/000041.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:32:49+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:32:49.764+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 374.396,
+          "contrast": 151.0,
+          "mean_luma": 109.951,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 31187,
+      "camera_received_at": 14282.019259604
+    },
+    {
+      "filename": "images/000042.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:32:50+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:32:50.396+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 361.581,
+          "contrast": 149.0,
+          "mean_luma": 109.712,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000041.jpg",
+      "seq": 31206,
+      "camera_received_at": 14282.649500419
+    },
+    {
+      "filename": "images/000043.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:32:54+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:32:54.183+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 391.235,
+          "contrast": 205.0,
+          "mean_luma": 101.941,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 31319,
+      "camera_received_at": 14286.432834453
+    },
+    {
+      "filename": "images/000044.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:33:00+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:33:00.320+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 267.3,
+          "contrast": 134.0,
+          "mean_luma": 109.793,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 31504,
+      "camera_received_at": 14292.605583066
+    },
+    {
+      "filename": "images/000045.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:33:00+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:33:00.706+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 270.462,
+          "contrast": 135.0,
+          "mean_luma": 111.271,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000044.jpg",
+      "seq": 31515,
+      "camera_received_at": 14292.968143224
+    },
+    {
+      "filename": "images/000046.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:33:01+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:33:01.141+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 269.88,
+          "contrast": 135.0,
+          "mean_luma": 112.55,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000045.jpg",
+      "seq": 31528,
+      "camera_received_at": 14293.424906563
+    },
+    {
+      "filename": "images/000047.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:33:01+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:33:01.765+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 268.831,
+          "contrast": 136.0,
+          "mean_luma": 112.359,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000046.jpg",
+      "seq": 31546,
+      "camera_received_at": 14294.013705235
+    },
+    {
+      "filename": "images/000048.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:33:57+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:33:57.417+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 313.431,
+          "contrast": 198.0,
+          "mean_luma": 113.378,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 33215,
+      "camera_received_at": 14349.701177822
+    },
+    {
+      "filename": "images/000049.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:33:57+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:33:57.962+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 325.425,
+          "contrast": 199.0,
+          "mean_luma": 114.436,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000048.jpg",
+      "seq": 33232,
+      "camera_received_at": 14350.243277889
+    },
+    {
+      "filename": "images/000050.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:34:01+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:34:01.902+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 505.629,
+          "contrast": 185.0,
+          "mean_luma": 157.654,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 33349,
+      "camera_received_at": 14354.185990305
+    },
+    {
+      "filename": "images/000051.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:34:03+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:34:03.221+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 427.855,
+          "contrast": 223.0,
+          "mean_luma": 101.842,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000050.jpg",
+      "seq": 33389,
+      "camera_received_at": 14355.478329878
+    },
+    {
+      "filename": "images/000052.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:34:04+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:34:04.183+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 428.5,
+          "contrast": 223.0,
+          "mean_luma": 101.889,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000051.jpg",
+      "seq": 33418,
+      "camera_received_at": 14356.453521018
+    },
+    {
+      "filename": "images/000053.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:34:08+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:34:08.975+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 397.837,
+          "contrast": 182.0,
+          "mean_luma": 84.433,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 33562,
+      "camera_received_at": 14361.258298033
+    },
+    {
+      "filename": "images/000054.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:34:10+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:34:10.525+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 393.443,
+          "contrast": 182.0,
+          "mean_luma": 85.685,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000053.jpg",
+      "seq": 33608,
+      "camera_received_at": 14362.808114147
+    },
+    {
+      "filename": "images/000055.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:35:01+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:35:01.710+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 326.743,
+          "contrast": 217.0,
+          "mean_luma": 93.548,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 35143,
+      "camera_received_at": 14413.993562323
+    },
+    {
+      "filename": "images/000056.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:35:02+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:35:02.273+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 309.967,
+          "contrast": 217.0,
+          "mean_luma": 93.516,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 35160,
+      "camera_received_at": 14414.557691198
+    },
+    {
+      "filename": "images/000057.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:35:03+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:35:03.205+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 319.001,
+          "contrast": 217.0,
+          "mean_luma": 93.915,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000055.jpg",
+      "seq": 35188,
+      "camera_received_at": 14415.48884657
+    },
+    {
+      "filename": "images/000058.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:35:08+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:35:08.074+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 341.95,
+          "contrast": 218.0,
+          "mean_luma": 95.894,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 35333,
+      "camera_received_at": 14420.348215441
+    },
+    {
+      "filename": "images/000059.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:35:08+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:35:08.929+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 320.56,
+          "contrast": 218.0,
+          "mean_luma": 91.238,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000058.jpg",
+      "seq": 35359,
+      "camera_received_at": 14421.204302875
+    },
+    {
+      "filename": "images/000060.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:35:22+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:35:22.600+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 324.904,
+          "contrast": 184.0,
+          "mean_luma": 87.115,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 35769,
+      "camera_received_at": 14434.867458164
+    },
+    {
+      "filename": "images/000061.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:35:23+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:35:23.149+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 319.379,
+          "contrast": 183.0,
+          "mean_luma": 86.598,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000060.jpg",
+      "seq": 35785,
+      "camera_received_at": 14435.42402507
+    },
+    {
+      "filename": "images/000062.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:35:47+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:35:47.533+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 275.84,
+          "contrast": 213.0,
+          "mean_luma": 84.692,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 36516,
+      "camera_received_at": 14459.798780912
+    },
+    {
+      "filename": "images/000063.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:35:48+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:35:48.181+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 278.325,
+          "contrast": 214.0,
+          "mean_luma": 81.589,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000062.jpg",
+      "seq": 36536,
+      "camera_received_at": 14460.453290625
+    },
+    {
+      "filename": "images/000064.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:09+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:09.709+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 609.31,
+          "contrast": 236.0,
+          "mean_luma": 106.966,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 40778,
+      "camera_received_at": 14601.99304186
+    },
+    {
+      "filename": "images/000065.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:10+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:10.083+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 609.869,
+          "contrast": 236.0,
+          "mean_luma": 106.942,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000064.jpg",
+      "seq": 40789,
+      "camera_received_at": 14602.353370604
+    },
+    {
+      "filename": "images/000066.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:20+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:20.020+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 640.993,
+          "contrast": 236.0,
+          "mean_luma": 96.574,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 41087,
+      "camera_received_at": 14612.277355416
+    },
+    {
+      "filename": "images/000067.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:20+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:20.501+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 641.542,
+          "contrast": 235.0,
+          "mean_luma": 96.583,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000066.jpg",
+      "seq": 41102,
+      "camera_received_at": 14612.785043257
+    },
+    {
+      "filename": "images/000068.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:20+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:20.775+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 617.241,
+          "contrast": 236.0,
+          "mean_luma": 93.642,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 41110,
+      "camera_received_at": 14613.058783441
+    },
+    {
+      "filename": "images/000069.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:41+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:41.649+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 747.82,
+          "contrast": 204.0,
+          "mean_luma": 93.701,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 41735,
+      "camera_received_at": 14633.917021817
+    },
+    {
+      "filename": "images/000070.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:41+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:41.918+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 749.309,
+          "contrast": 204.0,
+          "mean_luma": 93.722,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000069.jpg",
+      "seq": 41744,
+      "camera_received_at": 14634.202421833
+    },
+    {
+      "filename": "images/000071.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:42+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:42.200+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 748.126,
+          "contrast": 204.0,
+          "mean_luma": 93.728,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000070.jpg",
+      "seq": 41752,
+      "camera_received_at": 14634.468136033
+    },
+    {
+      "filename": "images/000072.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:42+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:42.396+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 748.701,
+          "contrast": 204.0,
+          "mean_luma": 93.738,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000071.jpg",
+      "seq": 41758,
+      "camera_received_at": 14634.680759197
+    },
+    {
+      "filename": "images/000073.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:42+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:42.615+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 752.425,
+          "contrast": 204.0,
+          "mean_luma": 93.739,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000072.jpg",
+      "seq": 41763,
+      "camera_received_at": 14634.85703079
+    },
+    {
+      "filename": "images/000074.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:42+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:42.920+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 747.715,
+          "contrast": 204.0,
+          "mean_luma": 93.758,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000073.jpg",
+      "seq": 41774,
+      "camera_received_at": 14635.193095874
+    },
+    {
+      "filename": "images/000075.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:50+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:50.165+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 656.726,
+          "contrast": 195.0,
+          "mean_luma": 88.099,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 41991,
+      "camera_received_at": 14642.448704827
+    },
+    {
+      "filename": "images/000076.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:50+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:50.354+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 656.364,
+          "contrast": 195.0,
+          "mean_luma": 88.125,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000075.jpg",
+      "seq": 41996,
+      "camera_received_at": 14642.637789788
+    },
+    {
+      "filename": "images/000077.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:50+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:50.543+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 658.485,
+          "contrast": 195.0,
+          "mean_luma": 88.093,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000076.jpg",
+      "seq": 42002,
+      "camera_received_at": 14642.817987684
+    },
+    {
+      "filename": "images/000078.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:50+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:50.758+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 658.191,
+          "contrast": 195.0,
+          "mean_luma": 88.107,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000077.jpg",
+      "seq": 42008,
+      "camera_received_at": 14643.028029876
+    },
+    {
+      "filename": "images/000079.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:51+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:51.056+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 660.841,
+          "contrast": 195.0,
+          "mean_luma": 88.1,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000078.jpg",
+      "seq": 42017,
+      "camera_received_at": 14643.327663386
+    },
+    {
+      "filename": "images/000080.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:51+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:51.647+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 589.971,
+          "contrast": 196.0,
+          "mean_luma": 87.535,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 42036,
+      "camera_received_at": 14643.929288384
+    },
+    {
+      "filename": "images/000081.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:51+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:51.831+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 578.338,
+          "contrast": 196.0,
+          "mean_luma": 87.32,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 42041,
+      "camera_received_at": 14644.115802775
+    },
+    {
+      "filename": "images/000082.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:52+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:52.028+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 554.83,
+          "contrast": 196.0,
+          "mean_luma": 88.307,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000081.jpg",
+      "seq": 42047,
+      "camera_received_at": 14644.299209418
+    },
+    {
+      "filename": "images/000083.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:52+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:52.218+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 525.459,
+          "contrast": 203.0,
+          "mean_luma": 92.299,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 42052,
+      "camera_received_at": 14644.498000984
+    },
+    {
+      "filename": "images/000084.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:56+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:56.644+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 678.86,
+          "contrast": 212.0,
+          "mean_luma": 102.237,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 42185,
+      "camera_received_at": 14648.927700506
+    },
+    {
+      "filename": "images/000085.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:56+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:56.830+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 678.137,
+          "contrast": 213.0,
+          "mean_luma": 102.239,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000084.jpg",
+      "seq": 42191,
+      "camera_received_at": 14649.114152177
+    },
+    {
+      "filename": "images/000086.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:57+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:57.019+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 682.873,
+          "contrast": 213.0,
+          "mean_luma": 102.219,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000085.jpg",
+      "seq": 42196,
+      "camera_received_at": 14649.289696112
+    },
+    {
+      "filename": "images/000087.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:57+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:57.122+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 683.02,
+          "contrast": 212.0,
+          "mean_luma": 102.23,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000086.jpg",
+      "seq": 42199,
+      "camera_received_at": 14649.396364843
+    },
+    {
+      "filename": "images/000088.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:57+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:57.312+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 679.426,
+          "contrast": 212.0,
+          "mean_luma": 102.24,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000087.jpg",
+      "seq": 42205,
+      "camera_received_at": 14649.595837222
+    },
+    {
+      "filename": "images/000089.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:38:57+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:38:57.509+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 676.424,
+          "contrast": 213.0,
+          "mean_luma": 102.257,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000088.jpg",
+      "seq": 42211,
+      "camera_received_at": 14649.79215337
+    },
+    {
+      "filename": "images/000090.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:14+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:14.644+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 548.13,
+          "contrast": 207.0,
+          "mean_luma": 116.678,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 42724,
+      "camera_received_at": 14666.895827039
+    },
+    {
+      "filename": "images/000091.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:14+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:14.939+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 549.251,
+          "contrast": 207.0,
+          "mean_luma": 116.774,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000090.jpg",
+      "seq": 42733,
+      "camera_received_at": 14667.207329225
+    },
+    {
+      "filename": "images/000092.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:15+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:15.116+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 551.486,
+          "contrast": 207.0,
+          "mean_luma": 116.804,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000091.jpg",
+      "seq": 42739,
+      "camera_received_at": 14667.400772564
+    },
+    {
+      "filename": "images/000093.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:30+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:30.862+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 658.34,
+          "contrast": 174.0,
+          "mean_luma": 113.834,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 43211,
+      "camera_received_at": 14683.135845731
+    },
+    {
+      "filename": "images/000094.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:31+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:31.041+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 658.047,
+          "contrast": 174.0,
+          "mean_luma": 113.776,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000093.jpg",
+      "seq": 43217,
+      "camera_received_at": 14683.311012587
+    },
+    {
+      "filename": "images/000095.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:31+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:31.199+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 657.938,
+          "contrast": 173.0,
+          "mean_luma": 113.794,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000094.jpg",
+      "seq": 43221,
+      "camera_received_at": 14683.477050675
+    },
+    {
+      "filename": "images/000096.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:31+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:31.358+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 658.997,
+          "contrast": 174.0,
+          "mean_luma": 113.871,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000095.jpg",
+      "seq": 43226,
+      "camera_received_at": 14683.641363041
+    },
+    {
+      "filename": "images/000097.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:31+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:31.614+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 657.098,
+          "contrast": 174.0,
+          "mean_luma": 113.817,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000096.jpg",
+      "seq": 43234,
+      "camera_received_at": 14683.887103745
+    },
+    {
+      "filename": "images/000098.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:31+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:31.780+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 660.373,
+          "contrast": 173.0,
+          "mean_luma": 113.797,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000097.jpg",
+      "seq": 43239,
+      "camera_received_at": 14684.062919101
+    },
+    {
+      "filename": "images/000099.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:32+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:32.091+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 658.197,
+          "contrast": 174.0,
+          "mean_luma": 113.874,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000098.jpg",
+      "seq": 43247,
+      "camera_received_at": 14684.348340665
+    },
+    {
+      "filename": "images/000100.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:32+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:32.269+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 658.154,
+          "contrast": 173.0,
+          "mean_luma": 113.784,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000099.jpg",
+      "seq": 43253,
+      "camera_received_at": 14684.551263167
+    },
+    {
+      "filename": "images/000101.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:32+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:32.524+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 659.639,
+          "contrast": 173.0,
+          "mean_luma": 113.773,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000100.jpg",
+      "seq": 43261,
+      "camera_received_at": 14684.78443024
+    },
+    {
+      "filename": "images/000102.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:32+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:32.778+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 659.991,
+          "contrast": 174.0,
+          "mean_luma": 113.77,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000101.jpg",
+      "seq": 43268,
+      "camera_received_at": 14685.040905302
+    },
+    {
+      "filename": "images/000103.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:32+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:32.961+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 658.008,
+          "contrast": 173.0,
+          "mean_luma": 113.77,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000102.jpg",
+      "seq": 43274,
+      "camera_received_at": 14685.236810177
+    },
+    {
+      "filename": "images/000104.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:33+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:33.209+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 657.713,
+          "contrast": 174.0,
+          "mean_luma": 113.763,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000103.jpg",
+      "seq": 43282,
+      "camera_received_at": 14685.484639385
+    },
+    {
+      "filename": "images/000105.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:54+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:54.240+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 711.176,
+          "contrast": 164.0,
+          "mean_luma": 115.069,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 43912,
+      "camera_received_at": 14706.502747066
+    },
+    {
+      "filename": "images/000106.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:54+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:54.431+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 711.151,
+          "contrast": 163.0,
+          "mean_luma": 115.312,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000105.jpg",
+      "seq": 43917,
+      "camera_received_at": 14706.692011712
+    },
+    {
+      "filename": "images/000107.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:54+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:54.624+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 714.336,
+          "contrast": 163.0,
+          "mean_luma": 115.425,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000106.jpg",
+      "seq": 43923,
+      "camera_received_at": 14706.878603479
+    },
+    {
+      "filename": "images/000108.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:54+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:54.800+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 708.319,
+          "contrast": 163.0,
+          "mean_luma": 115.179,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000107.jpg",
+      "seq": 43928,
+      "camera_received_at": 14707.065538981
+    },
+    {
+      "filename": "images/000109.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:55+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:55.004+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 710.292,
+          "contrast": 164.0,
+          "mean_luma": 114.6,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000108.jpg",
+      "seq": 43934,
+      "camera_received_at": 14707.238152358
+    },
+    {
+      "filename": "images/000110.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:55+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:55.296+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 708.777,
+          "contrast": 164.0,
+          "mean_luma": 114.275,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000109.jpg",
+      "seq": 43943,
+      "camera_received_at": 14707.538643754
+    },
+    {
+      "filename": "images/000111.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:55+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:55.468+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 710.46,
+          "contrast": 164.0,
+          "mean_luma": 114.528,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000110.jpg",
+      "seq": 43949,
+      "camera_received_at": 14707.744849292
+    },
+    {
+      "filename": "images/000112.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:55+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:55.625+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 709.45,
+          "contrast": 165.0,
+          "mean_luma": 114.588,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000111.jpg",
+      "seq": 43954,
+      "camera_received_at": 14707.909498757
+    },
+    {
+      "filename": "images/000113.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:55+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:55.792+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 706.687,
+          "contrast": 164.0,
+          "mean_luma": 114.758,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000112.jpg",
+      "seq": 43958,
+      "camera_received_at": 14708.06384284
+    },
+    {
+      "filename": "images/000114.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:39:56+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:39:56.038+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 710.19,
+          "contrast": 164.0,
+          "mean_luma": 115.0,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000113.jpg",
+      "seq": 43966,
+      "camera_received_at": 14708.323219659
+    },
+    {
+      "filename": "images/000115.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:12+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:12.421+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 710.274,
+          "contrast": 193.0,
+          "mean_luma": 125.627,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 44457,
+      "camera_received_at": 14724.696503824
+    },
+    {
+      "filename": "images/000116.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:12+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:12.680+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 710.044,
+          "contrast": 193.0,
+          "mean_luma": 125.622,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000115.jpg",
+      "seq": 44465,
+      "camera_received_at": 14724.957526822
+    },
+    {
+      "filename": "images/000117.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:12+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:12.835+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 707.922,
+          "contrast": 193.0,
+          "mean_luma": 125.616,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000116.jpg",
+      "seq": 44470,
+      "camera_received_at": 14725.119536318
+    },
+    {
+      "filename": "images/000118.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:13+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:13.080+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 707.672,
+          "contrast": 193.0,
+          "mean_luma": 125.616,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000117.jpg",
+      "seq": 44477,
+      "camera_received_at": 14725.35652788
+    },
+    {
+      "filename": "images/000119.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:13+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:13.244+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 709.277,
+          "contrast": 193.0,
+          "mean_luma": 125.613,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000118.jpg",
+      "seq": 44482,
+      "camera_received_at": 14725.528823368
+    },
+    {
+      "filename": "images/000120.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:13+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:13.436+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 708.308,
+          "contrast": 193.0,
+          "mean_luma": 125.601,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000119.jpg",
+      "seq": 44487,
+      "camera_received_at": 14725.68306311
+    },
+    {
+      "filename": "images/000121.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:13+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:13.610+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 709.993,
+          "contrast": 193.0,
+          "mean_luma": 125.601,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000120.jpg",
+      "seq": 44493,
+      "camera_received_at": 14725.881227877
+    },
+    {
+      "filename": "images/000122.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:13+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:13.793+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 708.282,
+          "contrast": 193.0,
+          "mean_luma": 125.614,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000121.jpg",
+      "seq": 44498,
+      "camera_received_at": 14726.07002679
+    },
+    {
+      "filename": "images/000123.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:13+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:13.995+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 708.229,
+          "contrast": 193.0,
+          "mean_luma": 125.626,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000122.jpg",
+      "seq": 44503,
+      "camera_received_at": 14726.275521912
+    },
+    {
+      "filename": "images/000124.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:14+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:14.178+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 709.597,
+          "contrast": 193.0,
+          "mean_luma": 125.634,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000123.jpg",
+      "seq": 44509,
+      "camera_received_at": 14726.436803521
+    },
+    {
+      "filename": "images/000125.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:14+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:14.372+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 707.572,
+          "contrast": 193.0,
+          "mean_luma": 125.638,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000124.jpg",
+      "seq": 44516,
+      "camera_received_at": 14726.651471318
+    },
+    {
+      "filename": "images/000126.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:14+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:14.560+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 708.334,
+          "contrast": 193.0,
+          "mean_luma": 125.629,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000125.jpg",
+      "seq": 44521,
+      "camera_received_at": 14726.84428681
+    },
+    {
+      "filename": "images/000127.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:14+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:14.731+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 706.863,
+          "contrast": 193.0,
+          "mean_luma": 125.621,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000126.jpg",
+      "seq": 44526,
+      "camera_received_at": 14727.017014313
+    },
+    {
+      "filename": "images/000128.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:14+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:14.887+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 708.648,
+          "contrast": 193.0,
+          "mean_luma": 125.623,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000127.jpg",
+      "seq": 44531,
+      "camera_received_at": 14727.171513115
+    },
+    {
+      "filename": "images/000129.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:26+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:26.559+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 657.342,
+          "contrast": 186.0,
+          "mean_luma": 123.624,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 44880,
+      "camera_received_at": 14738.81331835
+    },
+    {
+      "filename": "images/000130.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:26+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:26.733+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 654.732,
+          "contrast": 187.0,
+          "mean_luma": 123.532,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000129.jpg",
+      "seq": 44886,
+      "camera_received_at": 14738.998213117
+    },
+    {
+      "filename": "images/000131.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:26+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:26.907+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 654.354,
+          "contrast": 187.0,
+          "mean_luma": 123.564,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000130.jpg",
+      "seq": 44891,
+      "camera_received_at": 14739.169579118
+    },
+    {
+      "filename": "images/000132.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:27+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:27.095+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 654.685,
+          "contrast": 188.0,
+          "mean_luma": 123.531,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000131.jpg",
+      "seq": 44896,
+      "camera_received_at": 14739.345207608
+    },
+    {
+      "filename": "images/000133.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:27+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:27.266+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 652.492,
+          "contrast": 187.0,
+          "mean_luma": 123.555,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000132.jpg",
+      "seq": 44902,
+      "camera_received_at": 14739.55072729
+    },
+    {
+      "filename": "images/000134.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:27+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:27.444+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 660.43,
+          "contrast": 187.0,
+          "mean_luma": 123.547,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000133.jpg",
+      "seq": 44907,
+      "camera_received_at": 14739.702348675
+    },
+    {
+      "filename": "images/000135.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:27+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:27.620+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 661.733,
+          "contrast": 188.0,
+          "mean_luma": 123.54,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000134.jpg",
+      "seq": 44912,
+      "camera_received_at": 14739.890876983
+    },
+    {
+      "filename": "images/000136.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:27+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:27.801+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 658.299,
+          "contrast": 187.0,
+          "mean_luma": 123.534,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000135.jpg",
+      "seq": 44918,
+      "camera_received_at": 14740.082817634
+    },
+    {
+      "filename": "images/000137.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:27+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:27.999+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 653.337,
+          "contrast": 188.0,
+          "mean_luma": 123.523,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000136.jpg",
+      "seq": 44923,
+      "camera_received_at": 14740.265619964
+    },
+    {
+      "filename": "images/000138.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:28+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:28.173+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 652.466,
+          "contrast": 187.0,
+          "mean_luma": 123.548,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000137.jpg",
+      "seq": 44929,
+      "camera_received_at": 14740.455529676
+    },
+    {
+      "filename": "images/000139.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:28+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:28.339+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 652.728,
+          "contrast": 187.0,
+          "mean_luma": 123.578,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000138.jpg",
+      "seq": 44934,
+      "camera_received_at": 14740.611639377
+    },
+    {
+      "filename": "images/000140.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:28+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:28.565+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 657.052,
+          "contrast": 187.0,
+          "mean_luma": 123.477,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000139.jpg",
+      "seq": 44940,
+      "camera_received_at": 14740.832060497
+    },
+    {
+      "filename": "images/000141.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:28+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:28.652+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 658.407,
+          "contrast": 187.0,
+          "mean_luma": 123.474,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000140.jpg",
+      "seq": 44943,
+      "camera_received_at": 14740.921645656
+    },
+    {
+      "filename": "images/000142.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:59+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:59.662+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 479.053,
+          "contrast": 207.0,
+          "mean_luma": 95.848,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 45872,
+      "camera_received_at": 14771.908512222
+    },
+    {
+      "filename": "images/000143.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:40:59+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:40:59.863+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 483.704,
+          "contrast": 207.0,
+          "mean_luma": 95.852,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000142.jpg",
+      "seq": 45879,
+      "camera_received_at": 14772.127324009
+    },
+    {
+      "filename": "images/000144.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:41:00+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:41:00.140+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 478.301,
+          "contrast": 207.0,
+          "mean_luma": 95.782,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000143.jpg",
+      "seq": 45887,
+      "camera_received_at": 14772.406485039
+    },
+    {
+      "filename": "images/000145.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:41:00+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:41:00.299+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 481.126,
+          "contrast": 207.0,
+          "mean_luma": 95.834,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000144.jpg",
+      "seq": 45893,
+      "camera_received_at": 14772.58384301
+    },
+    {
+      "filename": "images/000146.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:41:00+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:41:00.473+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 480.321,
+          "contrast": 207.0,
+          "mean_luma": 95.806,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000145.jpg",
+      "seq": 45898,
+      "camera_received_at": 14772.750494382
+    },
+    {
+      "filename": "images/000147.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:41:00+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:41:00.654+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 482.849,
+          "contrast": 207.0,
+          "mean_luma": 95.799,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000146.jpg",
+      "seq": 45903,
+      "camera_received_at": 14772.93877118
+    },
+    {
+      "filename": "images/000148.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:41:00+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:41:00.837+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 479.085,
+          "contrast": 207.0,
+          "mean_luma": 95.891,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000147.jpg",
+      "seq": 45908,
+      "camera_received_at": 14773.114092717
+    },
+    {
+      "filename": "images/000149.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:41:01+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:41:01.009+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 478.719,
+          "contrast": 207.0,
+          "mean_luma": 95.854,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000148.jpg",
+      "seq": 45914,
+      "camera_received_at": 14773.294063995
+    },
+    {
+      "filename": "images/000150.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:41:01+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:41:01.198+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 479.058,
+          "contrast": 207.0,
+          "mean_luma": 95.804,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000149.jpg",
+      "seq": 45919,
+      "camera_received_at": 14773.480536116
+    },
+    {
+      "filename": "images/000151.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:41:01+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:41:01.401+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 479.311,
+          "contrast": 207.0,
+          "mean_luma": 95.838,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000150.jpg",
+      "seq": 45924,
+      "camera_received_at": 14773.651160765
+    },
+    {
+      "filename": "images/000152.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:41:01+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:41:01.564+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 479.02,
+          "contrast": 207.0,
+          "mean_luma": 95.845,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000151.jpg",
+      "seq": 45931,
+      "camera_received_at": 14773.84949973
+    },
+    {
+      "filename": "images/000153.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:41:27+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:41:27.627+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 342.461,
+          "contrast": 215.0,
+          "mean_luma": 83.191,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 46712,
+      "camera_received_at": 14799.904793719
+    },
+    {
+      "filename": "images/000154.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:41:27+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:41:27.791+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 342.787,
+          "contrast": 217.0,
+          "mean_luma": 84.143,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000153.jpg",
+      "seq": 46717,
+      "camera_received_at": 14800.072609108
+    },
+    {
+      "filename": "images/000155.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:41:28+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:41:28.046+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 339.984,
+          "contrast": 215.0,
+          "mean_luma": 83.17,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000154.jpg",
+      "seq": 46724,
+      "camera_received_at": 14800.331024923
+    },
+    {
+      "filename": "images/000156.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:41:28+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:41:28.238+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 343.822,
+          "contrast": 217.0,
+          "mean_luma": 84.226,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000155.jpg",
+      "seq": 46729,
+      "camera_received_at": 14800.499091601
+    },
+    {
+      "filename": "images/000157.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:41:28+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:41:28.405+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 342.319,
+          "contrast": 215.0,
+          "mean_luma": 83.243,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000156.jpg",
+      "seq": 46735,
+      "camera_received_at": 14800.679926529
+    },
+    {
+      "filename": "images/000158.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:41:28+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:41:28.604+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 344.584,
+          "contrast": 218.0,
+          "mean_luma": 84.287,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000157.jpg",
+      "seq": 46740,
+      "camera_received_at": 14800.872666644
+    },
+    {
+      "filename": "images/000159.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:41:28+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:41:28.779+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 345.05,
+          "contrast": 215.0,
+          "mean_luma": 83.379,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000158.jpg",
+      "seq": 46746,
+      "camera_received_at": 14801.0505603
+    },
+    {
+      "filename": "images/000160.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:05+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:05.440+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 368.832,
+          "contrast": 228.0,
+          "mean_luma": 88.606,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 47845,
+      "camera_received_at": 14837.725012226
+    },
+    {
+      "filename": "images/000161.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:05+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:05.696+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 365.594,
+          "contrast": 228.0,
+          "mean_luma": 87.739,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000160.jpg",
+      "seq": 47853,
+      "camera_received_at": 14837.981557281
+    },
+    {
+      "filename": "images/000162.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:05+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:05.959+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 364.848,
+          "contrast": 228.0,
+          "mean_luma": 87.542,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000161.jpg",
+      "seq": 47861,
+      "camera_received_at": 14838.226672548
+    },
+    {
+      "filename": "images/000163.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:06+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:06.205+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 364.787,
+          "contrast": 228.0,
+          "mean_luma": 87.635,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000162.jpg",
+      "seq": 47868,
+      "camera_received_at": 14838.48627573
+    },
+    {
+      "filename": "images/000164.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:06+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:06.396+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 364.205,
+          "contrast": 228.0,
+          "mean_luma": 87.757,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000163.jpg",
+      "seq": 47873,
+      "camera_received_at": 14838.657505812
+    },
+    {
+      "filename": "images/000165.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:06+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:06.568+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 363.767,
+          "contrast": 228.0,
+          "mean_luma": 87.84,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000164.jpg",
+      "seq": 47879,
+      "camera_received_at": 14838.84089013
+    },
+    {
+      "filename": "images/000166.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:06+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:06.764+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 365.11,
+          "contrast": 228.0,
+          "mean_luma": 87.955,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000165.jpg",
+      "seq": 47885,
+      "camera_received_at": 14839.029909043
+    },
+    {
+      "filename": "images/000167.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:06+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:06.959+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 365.05,
+          "contrast": 228.0,
+          "mean_luma": 88.197,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000166.jpg",
+      "seq": 47890,
+      "camera_received_at": 14839.221392986
+    },
+    {
+      "filename": "images/000168.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:07+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:07.151+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 368.617,
+          "contrast": 228.0,
+          "mean_luma": 88.781,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000167.jpg",
+      "seq": 47896,
+      "camera_received_at": 14839.416963231
+    },
+    {
+      "filename": "images/000169.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:44+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:44.532+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 322.099,
+          "contrast": 227.0,
+          "mean_luma": 93.01,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 49017,
+      "camera_received_at": 14876.805137728
+    },
+    {
+      "filename": "images/000170.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:44+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:44.791+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 314.928,
+          "contrast": 227.0,
+          "mean_luma": 92.338,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000169.jpg",
+      "seq": 49025,
+      "camera_received_at": 14877.066417391
+    },
+    {
+      "filename": "images/000171.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:44+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:44.971+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 317.821,
+          "contrast": 227.0,
+          "mean_luma": 92.208,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000170.jpg",
+      "seq": 49030,
+      "camera_received_at": 14877.232524712
+    },
+    {
+      "filename": "images/000172.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:45+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:45.153+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 314.449,
+          "contrast": 227.0,
+          "mean_luma": 92.183,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000171.jpg",
+      "seq": 49035,
+      "camera_received_at": 14877.410637223
+    },
+    {
+      "filename": "images/000173.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:45+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:45.330+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 316.944,
+          "contrast": 227.0,
+          "mean_luma": 92.389,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000171.jpg",
+      "seq": 49041,
+      "camera_received_at": 14877.588976695
+    },
+    {
+      "filename": "images/000174.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:45+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:45.508+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 319.661,
+          "contrast": 227.0,
+          "mean_luma": 92.442,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000173.jpg",
+      "seq": 49046,
+      "camera_received_at": 14877.784635628
+    },
+    {
+      "filename": "images/000175.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:45+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:45.715+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 315.689,
+          "contrast": 227.0,
+          "mean_luma": 92.434,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000174.jpg",
+      "seq": 49052,
+      "camera_received_at": 14877.95922573
+    },
+    {
+      "filename": "images/000176.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:46+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:46.007+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 315.491,
+          "contrast": 227.0,
+          "mean_luma": 92.512,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000175.jpg",
+      "seq": 49060,
+      "camera_received_at": 14878.242524127
+    },
+    {
+      "filename": "images/000177.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:46+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:46.200+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 318.195,
+          "contrast": 227.0,
+          "mean_luma": 92.384,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000176.jpg",
+      "seq": 49066,
+      "camera_received_at": 14878.452403513
+    },
+    {
+      "filename": "images/000178.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:46+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:46.302+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 315.702,
+          "contrast": 227.0,
+          "mean_luma": 92.314,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000177.jpg",
+      "seq": 49069,
+      "camera_received_at": 14878.578434236
+    },
+    {
+      "filename": "images/000179.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:46+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:46.497+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 317.666,
+          "contrast": 227.0,
+          "mean_luma": 92.268,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000178.jpg",
+      "seq": 49076,
+      "camera_received_at": 14878.757355267
+    },
+    {
+      "filename": "images/000180.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:46+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:46.702+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 318.698,
+          "contrast": 227.0,
+          "mean_luma": 92.251,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000179.jpg",
+      "seq": 49081,
+      "camera_received_at": 14878.95327076
+    },
+    {
+      "filename": "images/000181.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:48+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:48.338+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 317.918,
+          "contrast": 226.0,
+          "mean_luma": 90.462,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 49131,
+      "camera_received_at": 14880.620555606
+    },
+    {
+      "filename": "images/000182.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:48+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:48.601+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 323.604,
+          "contrast": 226.0,
+          "mean_luma": 92.617,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 49139,
+      "camera_received_at": 14880.885046455
+    },
+    {
+      "filename": "images/000183.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:48+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:48.790+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 325.086,
+          "contrast": 226.0,
+          "mean_luma": 92.756,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000182.jpg",
+      "seq": 49144,
+      "camera_received_at": 14881.05640286
+    },
+    {
+      "filename": "images/000184.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:42:49+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:42:49.913+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 322.339,
+          "contrast": 227.0,
+          "mean_luma": 92.445,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000182.jpg",
+      "seq": 49178,
+      "camera_received_at": 14882.187726913
+    },
+    {
+      "filename": "images/000185.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:43:11+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:43:11.803+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 428.551,
+          "contrast": 217.0,
+          "mean_luma": 91.618,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 49834,
+      "camera_received_at": 14904.083885284
+    },
+    {
+      "filename": "images/000186.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:43:12+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:43:12.955+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 432.915,
+          "contrast": 217.0,
+          "mean_luma": 91.653,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000185.jpg",
+      "seq": 49869,
+      "camera_received_at": 14905.216144695
+    },
+    {
+      "filename": "images/000187.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:43:13+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:43:13.524+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 428.023,
+          "contrast": 217.0,
+          "mean_luma": 91.664,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000186.jpg",
+      "seq": 49886,
+      "camera_received_at": 14905.807672052
+    },
+    {
+      "filename": "images/000188.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:43:13+00:00",
+      "capture_tag": "flower",
+      "captured_at": "2026-08-25T07:43:13.979+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 432.715,
+          "contrast": 217.0,
+          "mean_luma": 91.674,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000187.jpg",
+      "seq": 49899,
+      "camera_received_at": 14906.233234484
+    },
+    {
+      "filename": "images/000189.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:44:54+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:44:54.668+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 630.597,
+          "contrast": 201.0,
+          "mean_luma": 93.13,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 52918,
+      "camera_received_at": 15006.95084697
+    },
+    {
+      "filename": "images/000190.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:44:55+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:44:55.500+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 631.6,
+          "contrast": 200.0,
+          "mean_luma": 93.09,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000189.jpg",
+      "seq": 52943,
+      "camera_received_at": 15007.781106919
+    },
+    {
+      "filename": "images/000191.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:44:57+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:44:57.462+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 581.849,
+          "contrast": 207.02,
+          "mean_luma": 87.58,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 53002,
+      "camera_received_at": 15009.747540382
+    },
+    {
+      "filename": "images/000192.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:44:58+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:44:58.483+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 624.378,
+          "contrast": 229.0,
+          "mean_luma": 93.908,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 53032,
+      "camera_received_at": 15010.766935799
+    },
+    {
+      "filename": "images/000193.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:45:44+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:45:44.920+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 413.851,
+          "contrast": 189.0,
+          "mean_luma": 94.589,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 54424,
+      "camera_received_at": 15057.200068484
+    },
+    {
+      "filename": "images/000194.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:45:46+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:45:46.175+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 422.796,
+          "contrast": 190.0,
+          "mean_luma": 94.643,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 54462,
+      "camera_received_at": 15058.454133135
+    },
+    {
+      "filename": "images/000195.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:45:47+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:45:47.517+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 401.745,
+          "contrast": 193.0,
+          "mean_luma": 94.974,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 54502,
+      "camera_received_at": 15059.763133499
+    },
+    {
+      "filename": "images/000196.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:45:48+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:45:48.615+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 446.013,
+          "contrast": 193.0,
+          "mean_luma": 96.652,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 54536,
+      "camera_received_at": 15060.89883566
+    },
+    {
+      "filename": "images/000197.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:45:49+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:45:49.733+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 492.928,
+          "contrast": 193.0,
+          "mean_luma": 97.266,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 54569,
+      "camera_received_at": 15062.015516
+    },
+    {
+      "filename": "images/000198.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:45:51+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:45:51.087+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 500.43,
+          "contrast": 197.0,
+          "mean_luma": 98.485,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 54610,
+      "camera_received_at": 15063.369528464
+    },
+    {
+      "filename": "images/000199.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:45:52+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:45:52.353+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 503.044,
+          "contrast": 194.0,
+          "mean_luma": 96.839,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 54647,
+      "camera_received_at": 15064.629245443
+    },
+    {
+      "filename": "images/000200.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:45:53+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:45:53.409+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 526.549,
+          "contrast": 195.0,
+          "mean_luma": 95.662,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 54679,
+      "camera_received_at": 15065.691137135
+    },
+    {
+      "filename": "images/000201.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:45:54+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:45:54.598+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 542.449,
+          "contrast": 198.0,
+          "mean_luma": 95.527,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 54714,
+      "camera_received_at": 15066.857411902
+    },
+    {
+      "filename": "images/000202.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:45:55+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:45:55.666+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 561.64,
+          "contrast": 202.0,
+          "mean_luma": 99.017,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 54746,
+      "camera_received_at": 15067.948317767
+    },
+    {
+      "filename": "images/000203.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:45:56+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:45:56.814+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 555.859,
+          "contrast": 206.0,
+          "mean_luma": 100.387,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 54781,
+      "camera_received_at": 15069.097868407
+    },
+    {
+      "filename": "images/000204.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:45:57+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:45:57.940+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 560.201,
+          "contrast": 205.0,
+          "mean_luma": 100.589,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 54815,
+      "camera_received_at": 15070.223330105
+    },
+    {
+      "filename": "images/000205.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:45:59+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:45:59.203+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 596.558,
+          "contrast": 199.0,
+          "mean_luma": 104.233,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 54853,
+      "camera_received_at": 15071.4875576
+    },
+    {
+      "filename": "images/000206.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:00+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:00.798+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 628.542,
+          "contrast": 193.0,
+          "mean_luma": 106.9,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 54900,
+      "camera_received_at": 15073.060639882
+    },
+    {
+      "filename": "images/000207.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:29+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:29.934+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 704.959,
+          "contrast": 195.0,
+          "mean_luma": 107.564,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 55773,
+      "camera_received_at": 15102.19477893
+    },
+    {
+      "filename": "images/000208.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:31+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:31.205+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 772.682,
+          "contrast": 195.0,
+          "mean_luma": 103.275,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 55812,
+      "camera_received_at": 15103.486332566
+    },
+    {
+      "filename": "images/000209.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:32+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:32.164+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 716.085,
+          "contrast": 196.0,
+          "mean_luma": 100.674,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 55841,
+      "camera_received_at": 15104.447013929
+    },
+    {
+      "filename": "images/000210.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:33+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:33.152+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 792.57,
+          "contrast": 203.0,
+          "mean_luma": 104.857,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 55870,
+      "camera_received_at": 15105.414539168
+    },
+    {
+      "filename": "images/000211.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:34+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:34.268+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 764.413,
+          "contrast": 202.0,
+          "mean_luma": 105.13,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 55903,
+      "camera_received_at": 15106.529664368
+    },
+    {
+      "filename": "images/000212.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:35+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:35.312+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 740.754,
+          "contrast": 202.0,
+          "mean_luma": 103.757,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 55935,
+      "camera_received_at": 15107.595544132
+    },
+    {
+      "filename": "images/000213.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:36+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:36.303+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 725.553,
+          "contrast": 202.0,
+          "mean_luma": 103.768,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 55965,
+      "camera_received_at": 15108.587142445
+    },
+    {
+      "filename": "images/000214.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:37+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:37.459+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 725.486,
+          "contrast": 203.0,
+          "mean_luma": 103.358,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 56000,
+      "camera_received_at": 15109.742030498
+    },
+    {
+      "filename": "images/000215.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:38+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:38.512+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 718.772,
+          "contrast": 208.0,
+          "mean_luma": 101.77,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 56031,
+      "camera_received_at": 15110.792605108
+    },
+    {
+      "filename": "images/000216.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:39+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:39.491+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 721.495,
+          "contrast": 208.0,
+          "mean_luma": 101.061,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 56060,
+      "camera_received_at": 15111.77438682
+    },
+    {
+      "filename": "images/000217.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:40+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:40.569+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 705.275,
+          "contrast": 210.0,
+          "mean_luma": 101.939,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 56093,
+      "camera_received_at": 15112.838598679
+    },
+    {
+      "filename": "images/000218.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:41+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:41.566+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 687.331,
+          "contrast": 210.0,
+          "mean_luma": 102.356,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 56122,
+      "camera_received_at": 15113.841228278
+    },
+    {
+      "filename": "images/000219.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:42+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:42.428+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 714.391,
+          "contrast": 209.0,
+          "mean_luma": 100.255,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 56148,
+      "camera_received_at": 15114.704754977
+    },
+    {
+      "filename": "images/000220.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:43+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:43.345+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 706.476,
+          "contrast": 210.0,
+          "mean_luma": 99.081,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 56175,
+      "camera_received_at": 15115.606737154
+    },
+    {
+      "filename": "images/000221.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:44+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:44.247+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 672.618,
+          "contrast": 210.0,
+          "mean_luma": 99.193,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 56202,
+      "camera_received_at": 15116.502281246
+    },
+    {
+      "filename": "images/000222.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:45+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:45.183+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 643.146,
+          "contrast": 206.0,
+          "mean_luma": 101.073,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 56230,
+      "camera_received_at": 15117.450613037
+    },
+    {
+      "filename": "images/000223.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:46+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:46.079+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 648.617,
+          "contrast": 204.0,
+          "mean_luma": 101.448,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 56257,
+      "camera_received_at": 15118.344297285
+    },
+    {
+      "filename": "images/000224.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:47+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:47.018+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 659.175,
+          "contrast": 205.02,
+          "mean_luma": 100.671,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 56286,
+      "camera_received_at": 15119.27630241
+    },
+    {
+      "filename": "images/000225.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:48+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:48.234+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 662.906,
+          "contrast": 202.0,
+          "mean_luma": 99.84,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "",
+      "seq": 56323,
+      "camera_received_at": 15120.517683378
+    },
+    {
+      "filename": "images/000226.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:49+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:49.049+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 637.051,
+          "contrast": 202.0,
+          "mean_luma": 98.56,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000225.jpg",
+      "seq": 56347,
+      "camera_received_at": 15121.326109324
+    },
+    {
+      "filename": "images/000227.jpg",
+      "width": 640,
+      "height": 480,
+      "status": "captured",
+      "updated_at": "2026-08-25T07:46:50+00:00",
+      "capture_tag": "rice",
+      "captured_at": "2026-08-25T07:46:50.282+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 641.371,
+          "contrast": 202.0,
+          "mean_luma": 98.429,
+          "width": 640,
+          "height": 480
+        }
+      },
+      "duplicate_of": "000226.jpg",
+      "seq": 56384,
+      "camera_received_at": 15122.56448769
+    }
+  ]
+}

@@ -20,16 +20,18 @@ vision:
   motion_enable: false
   model_path: "../yubei/training/panicle/panicle_20260904_134044/weights/best.pt"
   conf_threshold: 0.25
-  max_age_s: 1.0
+  max_age_s: 5.0
 
 arm_demo:
-  transition_speed_deg_s: 18.0
-  approach_speed_deg_s: 9.0
-  scan_speed_deg_s: 4.0
+  transition_speed_deg_s: 45.0
+  approach_speed_deg_s: 30.0
+  scan_speed_deg_s: 15.0
   accel_deg_s2: 60.0
   home_tolerance_deg: 3.0
   joint_state_max_age_s: 0.5
   recovery_corridor_deg: 3.0
+  startup_bridge_max_joint_deg: 20.0
+  recovery_speed_cap_deg_s: 20.0
 
 display:
   width: 1600

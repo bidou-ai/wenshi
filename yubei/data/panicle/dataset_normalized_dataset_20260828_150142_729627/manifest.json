@@ -1,0 +1,2173 @@
+{
+  "classes": {
+    "panicle": 0
+  },
+  "created_at": "2026-08-28T07:01:42+00:00",
+  "images": [
+    {
+      "filename": "images/000001.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:04:30+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:04:30.549+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 409.414,
+          "contrast": 209.0,
+          "mean_luma": 104.458,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 196849,
+      "camera_received_at": 61523.668426801
+    },
+    {
+      "filename": "images/000002.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:04:39+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:04:39.726+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 410.468,
+          "contrast": 208.0,
+          "mean_luma": 104.832,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000001.jpg",
+      "seq": 196987,
+      "camera_received_at": 61532.838358874
+    },
+    {
+      "filename": "images/000003.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:04:44+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:04:44.351+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 408.358,
+          "contrast": 210.0,
+          "mean_luma": 105.159,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000002.jpg",
+      "seq": 197056,
+      "camera_received_at": 61537.475063687
+    },
+    {
+      "filename": "images/000004.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:07:23+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:07:23.400+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 266.072,
+          "contrast": 227.0,
+          "mean_luma": 101.868,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 199440,
+      "camera_received_at": 61696.515943479
+    },
+    {
+      "filename": "images/000005.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:07:23+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:07:23.985+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 265.754,
+          "contrast": 227.0,
+          "mean_luma": 101.918,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000004.jpg",
+      "seq": 199449,
+      "camera_received_at": 61697.086972748
+    },
+    {
+      "filename": "images/000006.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:07:24+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:07:24.988+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 267.11,
+          "contrast": 227.0,
+          "mean_luma": 101.882,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000005.jpg",
+      "seq": 199464,
+      "camera_received_at": 61698.107196708
+    },
+    {
+      "filename": "images/000007.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:08:11+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:08:11.373+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 282.229,
+          "contrast": 222.0,
+          "mean_luma": 104.8,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 200159,
+      "camera_received_at": 61744.480476664
+    },
+    {
+      "filename": "images/000008.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:08:11+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:08:11.935+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 283.772,
+          "contrast": 222.0,
+          "mean_luma": 104.457,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000007.jpg",
+      "seq": 200168,
+      "camera_received_at": 61745.05273279
+    },
+    {
+      "filename": "images/000009.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:08:12+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:08:12.251+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 282.746,
+          "contrast": 222.0,
+          "mean_luma": 104.568,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000008.jpg",
+      "seq": 200172,
+      "camera_received_at": 61745.362392668
+    },
+    {
+      "filename": "images/000010.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:11:06+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:11:06.222+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 181.884,
+          "contrast": 220.0,
+          "mean_luma": 106.358,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 202780,
+      "camera_received_at": 61919.348638576
+    },
+    {
+      "filename": "images/000011.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:11:06+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:11:06.740+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 181.844,
+          "contrast": 220.0,
+          "mean_luma": 106.389,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000010.jpg",
+      "seq": 202788,
+      "camera_received_at": 61919.863927688
+    },
+    {
+      "filename": "images/000012.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:11:07+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:11:07.294+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 182.215,
+          "contrast": 219.0,
+          "mean_luma": 106.603,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000011.jpg",
+      "seq": 202796,
+      "camera_received_at": 61920.410155435
+    },
+    {
+      "filename": "images/000013.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:12:16+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:12:16.058+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 202.036,
+          "contrast": 227.0,
+          "mean_luma": 102.692,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 203827,
+      "camera_received_at": 61989.182301316
+    },
+    {
+      "filename": "images/000014.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:12:16+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:12:16.629+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 204.678,
+          "contrast": 227.0,
+          "mean_luma": 102.634,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000013.jpg",
+      "seq": 203836,
+      "camera_received_at": 61989.753622456
+    },
+    {
+      "filename": "images/000015.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:12:16+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:12:16.898+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 203.85,
+          "contrast": 227.0,
+          "mean_luma": 102.598,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000014.jpg",
+      "seq": 203840,
+      "camera_received_at": 61990.006479691
+    },
+    {
+      "filename": "images/000016.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:13:38+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:13:38.152+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 232.532,
+          "contrast": 220.0,
+          "mean_luma": 101.773,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 205058,
+      "camera_received_at": 62071.272463843
+    },
+    {
+      "filename": "images/000017.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:13:38+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:13:38.709+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 235.629,
+          "contrast": 220.0,
+          "mean_luma": 101.874,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000016.jpg",
+      "seq": 205066,
+      "camera_received_at": 62071.811037726
+    },
+    {
+      "filename": "images/000018.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:13:39+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:13:39.175+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 233.131,
+          "contrast": 221.0,
+          "mean_luma": 101.966,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000017.jpg",
+      "seq": 205073,
+      "camera_received_at": 62072.289375523
+    },
+    {
+      "filename": "images/000019.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:14:08+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:14:08.751+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 108.861,
+          "contrast": 228.0,
+          "mean_luma": 107.303,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 205516,
+      "camera_received_at": 62101.857842675
+    },
+    {
+      "filename": "images/000020.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:14:09+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:14:09.289+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 109.173,
+          "contrast": 228.0,
+          "mean_luma": 107.173,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000019.jpg",
+      "seq": 205524,
+      "camera_received_at": 62102.413382826
+    },
+    {
+      "filename": "images/000021.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:14:09+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:14:09.672+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 109.162,
+          "contrast": 229.0,
+          "mean_luma": 107.016,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000020.jpg",
+      "seq": 205530,
+      "camera_received_at": 62102.789269411
+    },
+    {
+      "filename": "images/000022.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:14:31+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:14:31.996+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 144.274,
+          "contrast": 223.0,
+          "mean_luma": 106.187,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 205864,
+      "camera_received_at": 62125.123147887
+    },
+    {
+      "filename": "images/000023.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:14:32+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:14:32.385+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 142.946,
+          "contrast": 223.0,
+          "mean_luma": 106.234,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000022.jpg",
+      "seq": 205871,
+      "camera_received_at": 62125.498657595
+    },
+    {
+      "filename": "images/000024.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:14:32+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:14:32.802+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 141.648,
+          "contrast": 222.0,
+          "mean_luma": 106.435,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000023.jpg",
+      "seq": 205876,
+      "camera_received_at": 62125.90076454
+    },
+    {
+      "filename": "images/000025.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:15:35+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:15:35.765+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 122.275,
+          "contrast": 222.0,
+          "mean_luma": 101.009,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 206820,
+      "camera_received_at": 62188.865436457
+    },
+    {
+      "filename": "images/000026.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:15:36+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:15:36.295+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 123.06,
+          "contrast": 222.0,
+          "mean_luma": 101.006,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000025.jpg",
+      "seq": 206829,
+      "camera_received_at": 62189.415923863
+    },
+    {
+      "filename": "images/000027.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:15:36+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:15:36.833+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 123.138,
+          "contrast": 222.0,
+          "mean_luma": 100.929,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000026.jpg",
+      "seq": 206837,
+      "camera_received_at": 62189.957881775
+    },
+    {
+      "filename": "images/000028.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:18:30+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:18:30.264+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 266.303,
+          "contrast": 225.0,
+          "mean_luma": 107.608,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 209436,
+      "camera_received_at": 62363.38929573
+    },
+    {
+      "filename": "images/000029.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:18:30+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:18:30.860+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 265.956,
+          "contrast": 226.0,
+          "mean_luma": 107.459,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000028.jpg",
+      "seq": 209445,
+      "camera_received_at": 62363.953258187
+    },
+    {
+      "filename": "images/000030.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:18:31+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:18:31.639+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 265.449,
+          "contrast": 226.0,
+          "mean_luma": 107.526,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000029.jpg",
+      "seq": 209456,
+      "camera_received_at": 62364.754063093
+    },
+    {
+      "filename": "images/000031.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:19:41+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:19:41.651+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 280.355,
+          "contrast": 228.0,
+          "mean_luma": 101.909,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 210506,
+      "camera_received_at": 62434.76946825
+    },
+    {
+      "filename": "images/000032.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:19:42+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:19:42.085+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 278.955,
+          "contrast": 228.0,
+          "mean_luma": 101.925,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000031.jpg",
+      "seq": 210513,
+      "camera_received_at": 62435.20976688
+    },
+    {
+      "filename": "images/000033.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:19:42+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:19:42.519+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 279.037,
+          "contrast": 228.0,
+          "mean_luma": 101.926,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000032.jpg",
+      "seq": 210519,
+      "camera_received_at": 62435.634930142
+    },
+    {
+      "filename": "images/000034.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:20:30+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:20:30.857+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 179.186,
+          "contrast": 228.0,
+          "mean_luma": 103.924,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 211243,
+      "camera_received_at": 62483.97605762
+    },
+    {
+      "filename": "images/000035.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:20:31+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:20:31.247+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 179.141,
+          "contrast": 228.0,
+          "mean_luma": 103.87,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000034.jpg",
+      "seq": 211250,
+      "camera_received_at": 62484.366760285
+    },
+    {
+      "filename": "images/000036.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:20:31+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:20:31.652+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 179.044,
+          "contrast": 228.0,
+          "mean_luma": 103.763,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000035.jpg",
+      "seq": 211255,
+      "camera_received_at": 62484.767226129
+    },
+    {
+      "filename": "images/000037.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:23:08+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:23:08.501+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 322.298,
+          "contrast": 233.0,
+          "mean_luma": 107.383,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 213606,
+      "camera_received_at": 62641.602613481
+    },
+    {
+      "filename": "images/000038.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:23:08+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:23:08.790+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 320.46,
+          "contrast": 233.0,
+          "mean_luma": 107.392,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000037.jpg",
+      "seq": 213611,
+      "camera_received_at": 62641.906340231
+    },
+    {
+      "filename": "images/000039.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:23:09+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:23:09.254+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 320.02,
+          "contrast": 233.0,
+          "mean_luma": 107.543,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000038.jpg",
+      "seq": 213618,
+      "camera_received_at": 62642.377279458
+    },
+    {
+      "filename": "images/000040.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:23:52+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:23:52.623+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 175.48,
+          "contrast": 215.0,
+          "mean_luma": 110.057,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 214268,
+      "camera_received_at": 62685.73100372
+    },
+    {
+      "filename": "images/000041.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:23:53+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:23:53.087+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 176.031,
+          "contrast": 215.0,
+          "mean_luma": 110.032,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000040.jpg",
+      "seq": 214275,
+      "camera_received_at": 62686.187858547
+    },
+    {
+      "filename": "images/000042.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:23:53+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:23:53.541+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 174.916,
+          "contrast": 215.0,
+          "mean_luma": 110.027,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000041.jpg",
+      "seq": 214281,
+      "camera_received_at": 62686.642786144
+    },
+    {
+      "filename": "images/000043.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:25:05+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:25:05.045+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 208.634,
+          "contrast": 187.0,
+          "mean_luma": 101.252,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 215353,
+      "camera_received_at": 62758.162205872
+    },
+    {
+      "filename": "images/000044.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:25:05+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:25:05.346+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 212.778,
+          "contrast": 187.0,
+          "mean_luma": 101.358,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000043.jpg",
+      "seq": 215358,
+      "camera_received_at": 62758.442096895
+    },
+    {
+      "filename": "images/000045.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:25:05+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:25:05.825+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 212.921,
+          "contrast": 193.0,
+          "mean_luma": 101.948,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000044.jpg",
+      "seq": 215365,
+      "camera_received_at": 62758.913623525
+    },
+    {
+      "filename": "images/000046.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:25:39+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:25:39.973+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 211.395,
+          "contrast": 196.0,
+          "mean_luma": 103.95,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 215877,
+      "camera_received_at": 62793.089258442
+    },
+    {
+      "filename": "images/000047.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:25:40+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:25:40.424+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 203.209,
+          "contrast": 186.0,
+          "mean_luma": 99.785,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000046.jpg",
+      "seq": 215884,
+      "camera_received_at": 62793.520393232
+    },
+    {
+      "filename": "images/000048.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:25:40+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:25:40.743+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 199.187,
+          "contrast": 180.0,
+          "mean_luma": 96.629,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000047.jpg",
+      "seq": 215888,
+      "camera_received_at": 62793.830573007
+    },
+    {
+      "filename": "images/000049.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:26:27+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:26:27.928+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 261.144,
+          "contrast": 220.0,
+          "mean_luma": 107.269,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 216596,
+      "camera_received_at": 62841.042901332
+    },
+    {
+      "filename": "images/000050.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:26:28+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:26:28.316+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 254.265,
+          "contrast": 220.0,
+          "mean_luma": 103.514,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000049.jpg",
+      "seq": 216602,
+      "camera_received_at": 62841.4355164
+    },
+    {
+      "filename": "images/000051.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:26:28+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:26:28.720+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 252.365,
+          "contrast": 219.0,
+          "mean_luma": 100.903,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000050.jpg",
+      "seq": 216608,
+      "camera_received_at": 62841.818418031
+    },
+    {
+      "filename": "images/000052.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:27:26+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:27:26.544+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 196.322,
+          "contrast": 219.0,
+          "mean_luma": 100.667,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 217475,
+      "camera_received_at": 62899.665016457
+    },
+    {
+      "filename": "images/000053.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:27:27+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:27:27.128+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 192.644,
+          "contrast": 216.0,
+          "mean_luma": 104.494,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000052.jpg",
+      "seq": 217483,
+      "camera_received_at": 62900.24792749
+    },
+    {
+      "filename": "images/000054.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:27:27+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:27:27.570+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 191.276,
+          "contrast": 216.0,
+          "mean_luma": 104.872,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000053.jpg",
+      "seq": 217489,
+      "camera_received_at": 62900.654790606
+    },
+    {
+      "filename": "images/000055.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:28:16+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:28:16.173+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 169.139,
+          "contrast": 191.0,
+          "mean_luma": 102.443,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 218218,
+      "camera_received_at": 62949.286409826
+    },
+    {
+      "filename": "images/000056.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:28:16+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:28:16.586+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 168.968,
+          "contrast": 192.0,
+          "mean_luma": 103.049,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000055.jpg",
+      "seq": 218225,
+      "camera_received_at": 62949.705030969
+    },
+    {
+      "filename": "images/000057.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:28:17+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:28:17.048+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 159.176,
+          "contrast": 201.0,
+          "mean_luma": 101.567,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000056.jpg",
+      "seq": 218231,
+      "camera_received_at": 62950.151827074
+    },
+    {
+      "filename": "images/000058.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:29:41+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:29:41.059+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 250.255,
+          "contrast": 212.0,
+          "mean_luma": 100.825,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 219491,
+      "camera_received_at": 63034.174649187
+    },
+    {
+      "filename": "images/000059.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:29:41+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:29:41.383+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 249.737,
+          "contrast": 212.0,
+          "mean_luma": 100.358,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000058.jpg",
+      "seq": 219496,
+      "camera_received_at": 63034.500096525
+    },
+    {
+      "filename": "images/000060.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:29:41+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:29:41.842+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 250.661,
+          "contrast": 213.0,
+          "mean_luma": 100.363,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000059.jpg",
+      "seq": 219502,
+      "camera_received_at": 63034.951985836
+    },
+    {
+      "filename": "images/000061.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:30:12+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:30:12.775+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 144.456,
+          "contrast": 211.0,
+          "mean_luma": 103.697,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 219966,
+      "camera_received_at": 63065.885631783
+    },
+    {
+      "filename": "images/000062.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:30:13+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:30:13.196+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 145.054,
+          "contrast": 211.0,
+          "mean_luma": 103.694,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000061.jpg",
+      "seq": 219973,
+      "camera_received_at": 63066.310279956
+    },
+    {
+      "filename": "images/000063.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:30:13+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:30:13.620+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 145.633,
+          "contrast": 211.0,
+          "mean_luma": 103.691,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000062.jpg",
+      "seq": 219978,
+      "camera_received_at": 63066.705279816
+    },
+    {
+      "filename": "images/000064.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:31:33+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:31:33.855+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 275.659,
+          "contrast": 223.0,
+          "mean_luma": 115.52,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 221181,
+      "camera_received_at": 63146.961278898
+    },
+    {
+      "filename": "images/000065.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:31:35+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:31:35.380+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 258.505,
+          "contrast": 222.0,
+          "mean_luma": 115.843,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 221205,
+      "camera_received_at": 63148.505184724
+    },
+    {
+      "filename": "images/000066.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:31:35+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:31:35.935+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 252.921,
+          "contrast": 225.0,
+          "mean_luma": 111.271,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 221213,
+      "camera_received_at": 63149.057531242
+    },
+    {
+      "filename": "images/000067.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:32:30+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:32:30.391+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 314.886,
+          "contrast": 222.0,
+          "mean_luma": 104.739,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 222029,
+      "camera_received_at": 63203.513890976
+    },
+    {
+      "filename": "images/000068.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:32:31+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:32:31.288+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 319.786,
+          "contrast": 222.0,
+          "mean_luma": 105.368,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000067.jpg",
+      "seq": 222042,
+      "camera_received_at": 63204.408460555
+    },
+    {
+      "filename": "images/000069.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:32:31+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:32:31.854+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 318.772,
+          "contrast": 221.0,
+          "mean_luma": 105.918,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000068.jpg",
+      "seq": 222051,
+      "camera_received_at": 63204.977825445
+    },
+    {
+      "filename": "images/000070.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:33:09+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:33:09.859+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 157.141,
+          "contrast": 229.0,
+          "mean_luma": 108.516,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 222621,
+      "camera_received_at": 63242.977264933
+    },
+    {
+      "filename": "images/000071.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:33:10+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:33:10.291+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 158.694,
+          "contrast": 228.0,
+          "mean_luma": 108.803,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000070.jpg",
+      "seq": 222627,
+      "camera_received_at": 63243.384558716
+    },
+    {
+      "filename": "images/000072.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:33:10+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:33:10.725+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 158.521,
+          "contrast": 228.0,
+          "mean_luma": 109.258,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000071.jpg",
+      "seq": 222633,
+      "camera_received_at": 63243.809566431
+    },
+    {
+      "filename": "images/000073.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:35:03+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:35:03.476+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 176.312,
+          "contrast": 220.0,
+          "mean_luma": 110.489,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 224323,
+      "camera_received_at": 63356.562566714
+    },
+    {
+      "filename": "images/000074.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:35:04+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:35:04.088+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 174.659,
+          "contrast": 221.0,
+          "mean_luma": 110.034,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000073.jpg",
+      "seq": 224332,
+      "camera_received_at": 63357.211389889
+    },
+    {
+      "filename": "images/000075.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:35:04+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:35:04.405+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 170.85,
+          "contrast": 221.0,
+          "mean_luma": 108.805,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000074.jpg",
+      "seq": 224337,
+      "camera_received_at": 63357.516505086
+    },
+    {
+      "filename": "images/000076.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:36:22+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:36:22.077+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 154.769,
+          "contrast": 225.0,
+          "mean_luma": 95.958,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 225502,
+      "camera_received_at": 63435.202758223
+    },
+    {
+      "filename": "images/000077.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:36:22+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:36:22.510+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 156.901,
+          "contrast": 225.0,
+          "mean_luma": 95.672,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000076.jpg",
+      "seq": 225508,
+      "camera_received_at": 63435.616574958
+    },
+    {
+      "filename": "images/000078.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:36:22+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:36:22.959+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 161.134,
+          "contrast": 223.0,
+          "mean_luma": 96.193,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000077.jpg",
+      "seq": 225515,
+      "camera_received_at": 63436.06201747
+    },
+    {
+      "filename": "images/000079.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:37:25+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:37:25.711+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 150.27,
+          "contrast": 224.0,
+          "mean_luma": 106.836,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 226456,
+      "camera_received_at": 63498.824379592
+    },
+    {
+      "filename": "images/000080.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:37:38+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:37:38.880+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 154.623,
+          "contrast": 222.0,
+          "mean_luma": 111.781,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 226652,
+      "camera_received_at": 63511.986133743
+    },
+    {
+      "filename": "images/000081.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:37:39+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:37:39.436+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 154.369,
+          "contrast": 222.0,
+          "mean_luma": 111.88,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000080.jpg",
+      "seq": 226661,
+      "camera_received_at": 63512.542430197
+    },
+    {
+      "filename": "images/000082.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:38:22+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:38:22.722+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 140.133,
+          "contrast": 177.0,
+          "mean_luma": 113.668,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 227310,
+      "camera_received_at": 63555.838851287
+    },
+    {
+      "filename": "images/000083.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:38:23+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:38:23.195+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 140.403,
+          "contrast": 177.0,
+          "mean_luma": 113.625,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000082.jpg",
+      "seq": 227317,
+      "camera_received_at": 63556.276129481
+    },
+    {
+      "filename": "images/000084.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:38:23+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:38:23.618+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 140.15,
+          "contrast": 176.0,
+          "mean_luma": 113.578,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000083.jpg",
+      "seq": 227324,
+      "camera_received_at": 63556.725880916
+    },
+    {
+      "filename": "images/000085.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:38:53+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:38:53.716+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 163.38,
+          "contrast": 216.0,
+          "mean_luma": 110.674,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 227774,
+      "camera_received_at": 63586.762725169
+    },
+    {
+      "filename": "images/000086.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:38:54+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:38:54.320+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 160.786,
+          "contrast": 216.0,
+          "mean_luma": 110.963,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000085.jpg",
+      "seq": 227783,
+      "camera_received_at": 63587.409850999
+    },
+    {
+      "filename": "images/000087.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:38:54+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:38:54.790+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 161.446,
+          "contrast": 216.0,
+          "mean_luma": 110.987,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000086.jpg",
+      "seq": 227790,
+      "camera_received_at": 63587.8628044
+    },
+    {
+      "filename": "images/000088.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:40:09+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:40:09.400+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 158.595,
+          "contrast": 179.0,
+          "mean_luma": 113.067,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "",
+      "seq": 228909,
+      "camera_received_at": 63662.516386175
+    },
+    {
+      "filename": "images/000089.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:40:09+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:40:09.847+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 158.923,
+          "contrast": 179.0,
+          "mean_luma": 113.079,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000088.jpg",
+      "seq": 228916,
+      "camera_received_at": 63662.951470709
+    },
+    {
+      "filename": "images/000090.jpg",
+      "width": 1280,
+      "height": 720,
+      "status": "captured",
+      "updated_at": "2026-08-28T07:40:10+00:00",
+      "capture_tag": "neutral",
+      "dataset_type": "panicle",
+      "captured_at": "2026-08-28T07:40:10.287+00:00",
+      "quality": {
+        "ok": true,
+        "reasons": [],
+        "metrics": {
+          "sharpness": 158.278,
+          "contrast": 178.0,
+          "mean_luma": 112.942,
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "duplicate_of": "000089.jpg",
+      "seq": 228922,
+      "camera_received_at": 63663.387537775
+    }
+  ],
+  "dataset_type": "panicle",
+  "normalization": {
+    "rotation": "none",
+    "source": "/home/ubuntu/jaka/wenshi/yubei/data/panicle/dataset_20260828_150142_729627"
+  }
+}

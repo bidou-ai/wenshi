@@ -1,0 +1,14 @@
+{
+  "source": "/home/ubuntu/jaka/wenshi/yubei/data/plant/dataset_normalized_dataset_20260828_154448_562619",
+  "output": "/home/ubuntu/jaka/wenshi/yubei/datasets/plant/dataset_normalized_dataset_20260828_154448_562619_20260904_133418_223584985",
+  "included_images": 20,
+  "excluded_images": 0,
+  "train_images": 16,
+  "val_images": 4,
+  "class_counts": {
+    "rice_plant": 20
+  },
+  "dataset_type": "plant",
+  "group_size": 2,
+  "seed": 17
+}

@@ -1,0 +1,10 @@
+# Project datasets and model artifacts are versioned, but Git must treat them as binary.
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.pt binary
+*.onnx binary
+*.npy binary
+*.npz binary
+*.zip binary
+*.bat text eol=crlf

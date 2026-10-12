@@ -1,0 +1,5 @@
+path: /home/ubuntu/jaka/wenshi/yubei/datasets/plant/dataset_normalized_dataset_20260828_154448_562619_20260904_133418_223584985
+train: train/images
+val: val/images
+names:
+  0: rice_plant

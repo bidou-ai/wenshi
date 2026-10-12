@@ -1,0 +1,14 @@
+{
+  "source": "/home/ubuntu/jaka/wenshi/yubei/data/panicle/dataset_normalized_dataset_20260828_150142_729627",
+  "output": "/home/ubuntu/jaka/wenshi/yubei/datasets/panicle/dataset_normalized_dataset_20260828_150142_729627_20260904_133418_676138182",
+  "included_images": 83,
+  "excluded_images": 7,
+  "train_images": 65,
+  "val_images": 18,
+  "class_counts": {
+    "panicle": 464
+  },
+  "dataset_type": "panicle",
+  "group_size": 9,
+  "seed": 17
+}

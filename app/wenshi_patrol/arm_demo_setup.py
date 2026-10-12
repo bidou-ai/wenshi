@@ -31,8 +31,8 @@ POSE_NAMES: tuple[str, ...] = (
     "rice2_scan_b",
 )
 MAX_SAMPLE_SPREAD_DEG = 0.20
-MAX_SCAN_TCP_OFFSET_MM = 120.0
-MAX_SCAN_JOINT_OFFSET_DEG = 15.0
+MAX_SCAN_TCP_OFFSET_MM = 200.0
+MAX_SCAN_JOINT_OFFSET_DEG = 30.0
 JOINT_SAMPLE_MEAN_TOLERANCE_DEG = 1e-9
 
 
@@ -442,9 +442,13 @@ def load_arm_demo_setup(path: str | Path) -> dict[str, Any]:
                 for index in range(6)
             )
             if tcp_distance > MAX_SCAN_TCP_OFFSET_MM:
-                raise ValueError(f"{name} TCP 距 center 超过 120 mm")
+                raise ValueError(
+                    f"{name} TCP 距 center 超过 {MAX_SCAN_TCP_OFFSET_MM:.0f} mm"
+                )
             if joint_distance > MAX_SCAN_JOINT_OFFSET_DEG:
-                raise ValueError(f"{name} 关节距 center 超过 15 deg")
+                raise ValueError(
+                    f"{name} 关节距 center 超过 {MAX_SCAN_JOINT_OFFSET_DEG:.0f} deg"
+                )
     return {"poses": normalized, "raw": payload, "source": str(source)}
 
 

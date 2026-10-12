@@ -258,23 +258,35 @@ def test_arm_setup_publish_replaces_destination_symlink_without_touching_target(
     assert destination.is_symlink()
 
 
-def test_arm_setup_rejects_scan_tcp_beyond_center_by_120mm(tmp_path):
+def test_arm_setup_accepts_field_taught_scans_within_200mm_and_30deg(tmp_path):
+    session = _session(tmp_path)
+    session.set_operator("operator-1")
+    _record_all(session)
+    session.poses["rice1_scan_a"]["tcp"][0] = 265.3
+    session.poses["rice1_scan_b"]["joint"][0] = 31.4
+    for sample in session.poses["rice1_scan_b"]["joint_samples"]:
+        sample[0] = 31.4
+
+    assert session.publish() == session.runtime_root / "demo_setup.json"
+
+
+def test_arm_setup_rejects_scan_tcp_beyond_center_by_200mm(tmp_path):
     session = _session(tmp_path)
     session.set_operator("operator-1")
     _record_all(session)
     session.poses["rice1_scan_a"]["tcp"][0] = 400.1
-    with pytest.raises(ValueError, match="120"):
+    with pytest.raises(ValueError, match="200"):
         session.publish()
 
 
-def test_arm_setup_rejects_scan_joint_beyond_center_by_15deg(tmp_path):
+def test_arm_setup_rejects_scan_joint_beyond_center_by_30deg(tmp_path):
     session = _session(tmp_path)
     session.set_operator("operator-1")
     _record_all(session)
-    session.poses["rice2_scan_b"]["joint"][0] = 30.1
+    session.poses["rice2_scan_b"]["joint"][0] = 40.1
     for sample in session.poses["rice2_scan_b"]["joint_samples"]:
-        sample[0] = 30.1
-    with pytest.raises(ValueError, match="15"):
+        sample[0] = 40.1
+    with pytest.raises(ValueError, match="30"):
         session.publish()
 
 

@@ -7,6 +7,7 @@ the foreground demo loop.
 
 from __future__ import annotations
 
+import base64
 import json
 import threading
 import time
@@ -140,7 +141,7 @@ class LatestSlot:
 
 
 class SnapshotCamera:
-    """HTTP client for the camera's health and JPEG snapshot endpoints only."""
+    """Read RGB from the same ``/frame`` endpoint used by the field test."""
 
     def __init__(self, base_url: str, *, timeout_s: float = 1.0, opener: Any | None = None):
         self.base_url = str(base_url).rstrip("/")
@@ -166,19 +167,30 @@ class SnapshotCamera:
         return payload
 
     def capture(self) -> RgbFrame:
-        with self._opener.open(f"{self.base_url}/snapshot.jpg", timeout=self.timeout_s) as response:
-            encoded = response.read()
+        with self._opener.open(f"{self.base_url}/frame", timeout=self.timeout_s) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+        if not isinstance(payload, dict):
+            raise RuntimeError("相机 frame 响应不是 JSON 对象")
+        if payload.get("ok") is not True:
+            raise RuntimeError(str(payload.get("error", "相机未就绪")))
+        try:
+            seq = int(payload["seq"])
+            if seq < 0:
+                raise ValueError
+        except (KeyError, TypeError, ValueError, OverflowError) as exc:
+            raise RuntimeError("相机 frame seq 无效") from exc
+        try:
+            encoded = base64.b64decode(
+                str(payload.get("color_jpeg_b64", "")).encode("ascii"),
+                validate=True,
+            )
+        except Exception as exc:
+            raise RuntimeError(f"相机 frame JPEG base64 解码失败: {exc}") from exc
         if not encoded:
-            raise RuntimeError("snapshot JPEG 为空")
+            raise RuntimeError("相机 frame JPEG 为空")
         image = cv2.imdecode(np.frombuffer(encoded, dtype=np.uint8), cv2.IMREAD_COLOR)
         if image is None:
-            raise RuntimeError("snapshot JPEG 解码失败")
-        health_seq = self._last_health.get("seq") if self._last_health else None
-        try:
-            seq = int(health_seq)
-        except (TypeError, ValueError):
-            self._fallback_seq += 1
-            seq = self._fallback_seq
+            raise RuntimeError("相机 frame JPEG 解码失败")
         self._fallback_seq = max(self._fallback_seq, seq)
         return RgbFrame(seq=seq, image=np.ascontiguousarray(image), captured_at=time.monotonic())
 
@@ -237,8 +249,6 @@ class PanicleVisionPipeline:
             loaded = detector.load_model()
             if loaded is False:
                 raise RuntimeError("稻穗识别模型加载失败")
-            # Warm up exactly once with a tiny blank RGB frame.
-            detector.detect(np.zeros((32, 32, 3), dtype=np.uint8))
             self._detector = detector
 
     def start(self) -> "PanicleVisionPipeline":
@@ -282,11 +292,10 @@ class PanicleVisionPipeline:
     def _capture_loop(self, stop_event: threading.Event) -> None:
         while not stop_event.is_set():
             try:
-                self.camera.health()
-                self._last_health_at = time.monotonic()
-                self._health_message = None
                 frame = self.camera.capture()
+                self._last_health_at = frame.captured_at
                 self._last_frame_at = frame.captured_at
+                self._health_message = None
                 self._frames.put(frame)
             except Exception as exc:
                 self._health_message = str(exc)
